@@ -1,19 +1,32 @@
 {
-  "name": "remotion-remotion-explainer",
+  "name": "vocabulary-video-pipeline",
   "version": "1.0.0",
-  "description": "My Remotion video",
+  "description": "基于 Remotion 的词汇视频自动化生成流水线，支持 TTS 拍节奏、模板库和成本统计",
   "repository": {},
-  "license": "UNLICENSED",
-  "private": true,
+  "license": "MIT",
+  "private": false,
   "dependencies": {
+    "@chinese-fonts/lxgwwenkai": "^3.0.0",
+    "@fontsource/dm-sans": "^5.2.8",
+    "@remotion/captions": "4.0.448",
     "@remotion/cli": "4.0.448",
+    "@remotion/layout-utils": "^4.0.448",
+    "@remotion/media": "4.0.448",
+    "@remotion/media-utils": "^4.0.448",
+    "@remotion/tailwind-v4": "4.0.448",
+    "@remotion/transitions": "^4.0.448",
     "@remotion/zod-types": "4.0.448",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.38.0",
+    "lucide-react": "^1.8.0",
+    "radix-ui": "^1.4.3",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "remotion": "4.0.448",
-    "zod": "4.3.6",
-    "@remotion/tailwind-v4": "4.0.448",
-    "tailwindcss": "4.0.0"
+    "tailwind-merge": "^3.5.0",
+    "tailwindcss": "4.0.0",
+    "zod": "4.3.6"
   },
   "devDependencies": {
     "@remotion/eslint-config-flat": "4.0.448",
@@ -27,7 +40,10 @@
     "dev": "remotion studio",
     "build": "remotion bundle",
     "upgrade": "remotion upgrade",
-    "lint": "eslint src && tsc"
+    "lint": "eslint src && tsc",
+    "diagnose:word": "python3 scripts/diagnose_word.py",
+    "generate:audio": "python3 scripts/generate_audio_beats.py",
+    "cost:report": "python3 scripts/tts_cost_report.py"
   },
   "sideEffects": [
     "*.css"

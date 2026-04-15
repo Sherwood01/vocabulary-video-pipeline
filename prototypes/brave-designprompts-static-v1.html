@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Brave 静态定版 v1</title>
+  <style>
+    :root {
+      --bg: #ece8df;
+      --ink: #131313;
+      --muted: #636363;
+      --line: rgba(19, 19, 19, 0.12);
+      --soft-line: rgba(19, 19, 19, 0.08);
+      --paper: #f9f7f1;
+      --white: #ffffff;
+      --pink: #f4d8de;
+      --blue: #d9e8f5;
+      --green: #dbeadf;
+      --sand: #e8decf;
+      --accent: #d46d35;
+      --shadow: 0 20px 60px rgba(28, 26, 20, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Noto Sans SC", "Helvetica Neue", Arial, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.88), transparent 32%),
+        radial-gradient(circle at top right, rgba(255, 227, 212, 0.7), transparent 24%),
+        linear-gradient(180deg, #f2efe8 0%, #e9e4d8 100%);
+    }
+
+    .wrap {
+      width: min(1400px, 100% - 48px);
+      margin: 0 auto;
+      padding: 40px 0 72px;
+    }
+
+    .topnote {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+
+    .topnote h1 {
+      margin: 0;
+      font-size: 32px;
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      font-weight: 800;
+    }
+
+    .topnote p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+      max-width: 720px;
+    }
+
+    .gallery {
+      display: grid;
+      gap: 28px;
+    }
+
+    .screen {
+      background: rgba(255,255,255,0.45);
+      border: 1px solid rgba(19, 19, 19, 0.06);
+      border-radius: 28px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .screen-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      gap: 16px;
+    }
+
+    .screen-head .idx {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .screen-head .style {
+      font-size: 13px;
+      color: var(--accent);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .artboard {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1080 / 1920;
+      background: var(--paper);
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid rgba(19, 19, 19, 0.08);
+    }
+
+    .artboard::before,
+    .artboard::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(19,19,19,0.04);
+      z-index: 0;
+    }
+
+    .artboard::before {
+      width: 180px;
+      height: 70px;
+      left: 84px;
+      top: 88px;
+    }
+
+    .artboard::after {
+      width: 220px;
+      height: 78px;
+      right: 80px;
+      top: 112px;
+    }
+
+    .page {
+      position: absolute;
+      inset: 0;
+      padding: 118px 72px 118px;
+      display: flex;
+      flex-direction: column;
+      z-index: 1;
+    }
+
+    .kicker {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .hero-title {
+      margin-top: 16px;
+      font-size: 70px;
+      line-height: 0.98;
+      letter-spacing: -0.06em;
+      font-weight: 800;
+    }
+
+    .hero-sub {
+      margin-top: 18px;
+      font-size: 27px;
+      line-height: 1.6;
+      color: #384353;
+      max-width: 720px;
+      font-weight: 600;
+    }
+
+    .rule {
+      width: 96px;
+      height: 2px;
+      background: rgba(19,19,19,0.18);
+      margin: 24px 0 0;
+    }
+
+    .grid-2 {
+      margin-top: 52px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+
+    .panel {
+      background: rgba(255,255,255,0.78);
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      padding: 28px;
+      box-shadow: 0 14px 40px rgba(28,26,20,0.05);
+    }
+
+    .panel.soft-pink { background: linear-gradient(180deg, #fbf0f3 0%, var(--pink) 100%); }
+    .panel.soft-blue { background: linear-gradient(180deg, #f4f8fc 0%, var(--blue) 100%); }
+    .panel.soft-green { background: linear-gradient(180deg, #f4faf6 0%, var(--green) 100%); }
+    .panel.soft-sand { background: linear-gradient(180deg, #fcf8f1 0%, var(--sand) 100%); }
+
+    .eyebrow {
+      font-size: 17px;
+      line-height: 1.4;
+      color: var(--muted);
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    .big-word {
+      margin-top: 10px;
+      font-size: 108px;
+      line-height: 0.92;
+      letter-spacing: -0.07em;
+      font-weight: 800;
+    }
+
+    .phonetic {
+      margin-top: 18px;
+      font-size: 38px;
+      color: #65707e;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 60px;
+      padding: 16px 24px;
+      border-radius: 999px;
+      border: 1px solid rgba(19,19,19,0.12);
+      font-size: 28px;
+      line-height: 1;
+      font-weight: 700;
+      background: rgba(255,255,255,0.72);
+      width: fit-content;
+      max-width: 100%;
+    }
+
+    .pill.blue { background: rgba(217, 232, 245, 0.84); color: #1c4e7e; }
+    .pill.pink { background: rgba(244, 216, 222, 0.9); color: #a3445b; }
+    .pill.green { background: rgba(219, 234, 223, 0.95); color: #18684d; }
+    .pill.sand { background: rgba(232, 222, 207, 0.95); color: #855d22; }
+
+    .body-copy {
+      font-size: 34px;
+      line-height: 1.5;
+      color: #26303a;
+      font-weight: 700;
+    }
+
+    .small-copy {
+      font-size: 24px;
+      line-height: 1.65;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .stack {
+      display: grid;
+      gap: 20px;
+    }
+
+    .quote {
+      font-size: 54px;
+      line-height: 1.16;
+      letter-spacing: -0.04em;
+      font-weight: 800;
+    }
+
+    .formula {
+      margin: 64px auto 0;
+      width: 100%;
+      max-width: 520px;
+      display: grid;
+      justify-items: center;
+      gap: 22px;
+    }
+
+    .formula .arrow {
+      width: 2px;
+      height: 62px;
+      background: rgba(19,19,19,0.14);
+      position: relative;
+    }
+
+    .formula .arrow::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -1px;
+      width: 14px;
+      height: 14px;
+      border-right: 2px solid rgba(19,19,19,0.2);
+      border-bottom: 2px solid rgba(19,19,19,0.2);
+      transform: translateX(-50%) rotate(45deg);
+      background: transparent;
+    }
+
+    .example-card {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 22px;
+      align-items: center;
+    }
+
+    .icon-box {
+      width: 90px;
+      height: 90px;
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 38px;
+      background: rgba(255,255,255,0.72);
+      border: 1px solid rgba(19,19,19,0.06);
+    }
+
+    .example-title {
+      font-size: 42px;
+      line-height: 1.15;
+      font-weight: 800;
+    }
+
+    .footer-note {
+      margin-top: auto;
+      align-self: center;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid rgba(19,19,19,0.10);
+      border-radius: 999px;
+      padding: 16px 28px;
+      font-size: 24px;
+      line-height: 1.35;
+      font-weight: 700;
+      box-shadow: 0 8px 24px rgba(28,26,20,0.06);
+    }
+
+    .mono-title {
+      font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+      letter-spacing: -0.04em;
+      font-weight: 700;
+    }
+
+    .mono-body {
+      font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    }
+
+    .center {
+      text-align: center;
+      align-items: center;
+    }
+
+    .center .hero-sub,
+    .center .small-copy { max-width: 760px; text-align: center; }
+
+    .spacer-xl { height: 28px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topnote">
+      <div>
+        <h1>Brave 静态定版方向 · 第一轮</h1>
+        <p>只看版式骨架，不接动效。来源只借 designprompts.dev：Academia / Swiss Minimalist / Professional。</p>
+      </div>
+    </div>
+
+    <div class="gallery">
+      <section class="screen">
+        <div class="screen-head">
+          <div class="idx">Page 01</div>
+          <div class="style">Academia · 定义页</div>
+        </div>
+        <div class="artboard">
+          <div class="page">
+            <div class="kicker">WORD</div>
+            <div class="hero-title mono-title">先认识这个词</div>
+            <div class="rule"></div>
+            <div class="grid-2" style="grid-template-columns: 360px 1fr; align-items: start;">
+              <div class="panel soft-blue">
+                <div class="eyebrow">English Word</div>
+                <div class="big-word">Brave</div>
+                <div class="phonetic">/breɪv/</div>
+                <div style="margin-top: 26px;"><span class="pill blue">它的意思是：勇敢</span></div>
+              </div>
+              <div class="stack">
+                <div class="panel soft-pink">
+                  <div class="eyebrow">不是这样理解</div>
+                  <div class="quote" style="margin-top: 12px; color:#a3445b; text-decoration: line-through; text-decoration-thickness: 8px;">一点都不怕</div>
+                </div>
+                <div class="panel">
+                  <div class="eyebrow">真正的 brave</div>
+                  <div class="body-copy" style="margin-top: 16px;">心里有一点点怕，<br>也还是愿意面对。</div>
+                </div>
+              </div>
+            </div>
+            <div class="footer-note">可是勇敢，不是一点都不害怕。</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen">
+        <div class="screen-head">
+          <div class="idx">Page 02</div>
+          <div class="style">Swiss Minimalist · 拆解页</div>
+        </div>
+        <div class="artboard">
+          <div class="page">
+            <div class="kicker">PICTURE</div>
+            <div class="hero-title">有点怕，也往前</div>
+            <div class="grid-2" style="grid-template-columns: 1fr 280px; margin-top: 46px; align-items: start;">
+              <div class="panel">
+                <div class="eyebrow">把 brave 想成一个动作</div>
+                <div class="stack" style="margin-top: 26px;">
+                  <div class="pill pink">心里有一点怕</div>
+                  <div class="panel soft-pink" style="padding:24px 26px;">
+                    <div class="body-copy">心里会紧一下，<br>但没有停住。</div>
+                  </div>
+                  <div class="pill blue">还是愿意往前走</div>
+                  <div class="panel soft-blue" style="padding:24px 26px;">
+                    <div class="body-copy">脚还是往前，<br>先走出一小步。</div>
+                  </div>
+                </div>
+              </div>
+              <div class="panel" style="padding:28px 24px;">
+                <div class="eyebrow">孩子可以这样说</div>
+                <div class="body-copy" style="margin-top: 18px; font-size: 32px; line-height:1.5;">“我有点紧张，<br>但我还是想试一下。”</div>
+              </div>
+            </div>
+            <div class="footer-note">还是愿意举手试一试。</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen">
+        <div class="screen-head">
+          <div class="idx">Page 03</div>
+          <div class="style">Professional · 例子页</div>
+        </div>
+        <div class="artboard">
+          <div class="page">
+            <div class="kicker">EXAMPLE</div>
+            <div class="hero-title">生活里的勇敢</div>
+            <div class="hero-sub">轮到你的时候，认真说出口，或走过去帮一把。</div>
+            <div class="stack" style="margin-top: 54px; gap: 24px; max-width: 760px;">
+              <div class="panel soft-pink">
+                <div class="example-card">
+                  <div class="icon-box">💬</div>
+                  <div>
+                    <div class="example-title">敢说对不起</div>
+                    <div class="small-copy" style="margin-top: 8px;">做错了，不躲开，认真把“对不起”说出来。</div>
+                  </div>
+                </div>
+              </div>
+              <div class="panel soft-green">
+                <div class="example-card">
+                  <div class="icon-box">🤝</div>
+                  <div>
+                    <div class="example-title">愿意站出来帮一把</div>
+                    <div class="small-copy" style="margin-top: 8px;">看到别人需要帮助，愿意走过去，把手伸出来。</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="footer-note">愿意站出来帮一把，也是一种 brave。</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen">
+        <div class="screen-head">
+          <div class="idx">Page 04</div>
+          <div class="style">Swiss Minimalist · 公式页</div>
+        </div>
+        <div class="artboard">
+          <div class="page center">
+            <div class="kicker">FORMULA</div>
+            <div class="hero-title">勇敢的小公式</div>
+            <div class="hero-sub">你可以这样记：</div>
+            <div class="formula">
+              <div class="pill pink" style="font-size:34px;">有一点怕</div>
+              <div class="arrow"></div>
+              <div class="pill blue" style="font-size:34px;">往前一步</div>
+              <div class="arrow"></div>
+              <div class="pill green" style="font-size:34px;">做对的事</div>
+              <div class="arrow"></div>
+              <div class="pill sand" style="font-size:38px;">Brave</div>
+            </div>
+            <div class="footer-note">就很接近 Brave 了。</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen">
+        <div class="screen-head">
+          <div class="idx">Page 05</div>
+          <div class="style">Academia × Monochrome · 结尾页</div>
+        </div>
+        <div class="artboard">
+          <div class="page center">
+            <div class="kicker">QUOTE</div>
+            <div class="hero-title mono-title">记住这句话</div>
+            <div class="panel soft-blue" style="margin-top: 72px; width: 100%; max-width: 780px; padding: 36px 32px;">
+              <div class="quote" style="font-size: 56px; line-height:1.14;">Brave doesn’t mean you’re not afraid.</div>
+            </div>
+            <div class="panel" style="margin-top: 24px; width: fit-content; padding: 18px 24px; border-radius: 999px;">
+              <div class="body-copy" style="font-size: 32px; line-height:1.3;">勇敢，不是完全不害怕。</div>
+            </div>
+            <div class="panel soft-green" style="margin-top: 28px; width: 100%; max-width: 680px; padding: 30px 32px;">
+              <div class="eyebrow">真正的 brave</div>
+              <div class="body-copy" style="margin-top: 14px;">而是害怕的时候，<br>也还是愿意往前。</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</body>
+</html>

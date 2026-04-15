@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Brave 16:9 横版探索</title>
+  <style>
+    :root {
+      --bg: #f2efe8;
+      --paper: #faf7f1;
+      --ink: #171717;
+      --muted: #666a66;
+      --line: rgba(23,23,23,.10);
+      --pink: #f3d9df;
+      --blue: #dce9f4;
+      --green: #ddeade;
+      --sand: #e8dfcf;
+      --accent: #cc6b34;
+      --shadow: 0 24px 72px rgba(31,26,20,.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", Arial, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(255,255,255,.9), transparent 28%),
+        radial-gradient(circle at 90% 4%, rgba(255,227,212,.72), transparent 24%),
+        linear-gradient(180deg, #f5f2ea 0%, #ebe5d8 100%);
+    }
+    .wrap { width: min(1800px, calc(100% - 40px)); margin: 0 auto; padding: 28px 0 56px; }
+    h1 { margin: 0; font-size: 32px; line-height: 1.05; letter-spacing: -.04em; }
+    .desc { margin: 10px 0 0; color: var(--muted); font-size: 15px; line-height: 1.6; max-width: 900px; }
+    .gallery { display: grid; gap: 28px; margin-top: 24px; }
+    .screen { background: rgba(255,255,255,.42); border: 1px solid rgba(23,23,23,.06); border-radius: 24px; padding: 16px; box-shadow: var(--shadow); }
+    .head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
+    .idx { font-size: 13px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+    .style { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
+    .artboard {
+      position: relative; width: 100%; aspect-ratio: 16/9; background: var(--paper); border: 1px solid rgba(23,23,23,.08);
+      border-radius: 20px; overflow: hidden;
+    }
+    .artboard::before,.artboard::after {
+      content:""; position:absolute; border-radius:999px; background:rgba(255,255,255,.76); border:1px solid rgba(23,23,23,.04); z-index:0;
+    }
+    .artboard::before { width: 180px; height: 60px; left: 60px; top: 44px; }
+    .artboard::after { width: 220px; height: 68px; right: 54px; top: 64px; }
+    .page { position:absolute; inset:0; padding: 64px 72px 48px; z-index:1; display:flex; flex-direction:column; }
+    .kicker { font-size: 15px; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+    .title { margin-top: 10px; font-size: 62px; line-height: .98; letter-spacing: -.06em; font-weight: 800; }
+    .sub { margin-top: 14px; font-size: 26px; line-height: 1.5; color: #34404c; font-weight: 600; max-width: 880px; }
+    .row { display:grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 28px; align-items: start; }
+    .row-3 { display:grid; grid-template-columns: 1.12fr .96fr .92fr; gap: 22px; margin-top: 28px; align-items: start; }
+    .panel { border-radius: 24px; border:1px solid var(--line); background: rgba(255,255,255,.86); box-shadow: 0 12px 32px rgba(31,26,20,.05); padding: 22px; }
+    .soft-pink { background: linear-gradient(180deg, #fbf1f4 0%, var(--pink) 100%); }
+    .soft-blue { background: linear-gradient(180deg, #f5f9fd 0%, var(--blue) 100%); }
+    .soft-green { background: linear-gradient(180deg, #f5fbf6 0%, var(--green) 100%); }
+    .soft-sand { background: linear-gradient(180deg, #fcf8f1 0%, var(--sand) 100%); }
+    .eyebrow { font-size: 16px; line-height: 1.4; color: var(--muted); font-weight: 700; }
+    .big-word { margin-top: 8px; font-size: 92px; line-height: .92; letter-spacing: -.07em; font-weight: 800; }
+    .phonetic { margin-top: 14px; font-size: 34px; color: #68727f; font-weight: 600; }
+    .pill { display:inline-flex; align-items:center; min-height: 52px; padding: 12px 20px; border-radius: 999px; border:1px solid rgba(23,23,23,.12); font-size: 24px; font-weight: 700; width: fit-content; max-width: 100%; }
+    .pill.blue { background: rgba(220,233,244,.94); color: #1f4d7d; }
+    .pill.pink { background: rgba(243,217,223,.94); color: #b04b63; }
+    .pill.green { background: rgba(221,234,222,.98); color: #23624b; }
+    .pill.sand { background: rgba(232,223,207,.98); color: #8d6332; }
+    .quote { font-size: 46px; line-height: 1.14; letter-spacing: -.04em; font-weight: 800; }
+    .body { font-size: 28px; line-height: 1.48; color: #27313b; font-weight: 700; }
+    .small { font-size: 20px; line-height: 1.6; color: var(--muted); font-weight: 600; }
+    .stack { display:grid; gap: 16px; }
+    .mini-grid { display:grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
+    .mini { padding: 16px 18px; border-radius: 18px; background: rgba(255,255,255,.76); border:1px solid rgba(23,23,23,.08); font-size: 18px; line-height: 1.5; color: #3a434d; font-weight: 700; }
+    .example { display:grid; grid-template-columns: 72px 1fr; gap: 18px; align-items:center; }
+    .icon { width:72px; height:72px; border-radius: 18px; display:flex; align-items:center; justify-content:center; font-size: 32px; background: rgba(255,255,255,.74); border:1px solid rgba(23,23,23,.06); }
+    .example-title { font-size: 34px; line-height: 1.14; font-weight: 800; }
+    .footer { margin-top: auto; align-self: center; background: rgba(255,255,255,.92); border:1px solid rgba(23,23,23,.10); border-radius: 999px; padding: 14px 24px; font-size: 20px; line-height: 1.35; font-weight: 700; box-shadow: 0 8px 24px rgba(31,26,20,.06); }
+    .formula {
+      margin-top: 30px; display:grid; grid-template-columns: 1fr 120px 1fr 120px 1fr 120px 1fr; align-items:center; gap: 10px;
+    }
+    .line { height:2px; background: rgba(23,23,23,.14); position: relative; }
+    .line::after { content:""; position:absolute; right:-1px; top:50%; width:12px; height:12px; border-top:2px solid rgba(23,23,23,.18); border-right:2px solid rgba(23,23,23,.18); transform: translateY(-50%) rotate(45deg); }
+    .center { text-align: center; align-items: center; }
+    .center .sub, .center .small { text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Brave 16:9 横版探索 · 第一轮</h1>
+    <p class="desc">横版的核心好处很直接：同一屏能更自然地做左右分栏，解释卡、例子卡、公式链条都更容易吃满空间，不会再动不动出现“上面挤、下面空”的毛病。</p>
+
+    <div class="gallery">
+      <section class="screen">
+        <div class="head"><div class="idx">Frame A</div><div class="style">Academia × Professional · 定义页</div></div>
+        <div class="artboard">
+          <div class="page">
+            <div class="kicker">WORD</div>
+            <div class="title">先认识这个词</div>
+            <div class="row-3">
+              <div class="panel soft-blue">
+                <div class="eyebrow">English Word</div>
+                <div class="big-word">Brave</div>
+                <div class="phonetic">/breɪv/</div>
+                <div style="margin-top:18px;"><span class="pill blue">它的意思是：勇敢</span></div>
+              </div>
+              <div class="stack">
+                <div class="panel soft-pink">
+                  <div class="eyebrow">不是这样理解</div>
+                  <div class="quote" style="margin-top:10px;color:#b04b63;text-decoration: line-through; text-decoration-thickness: 7px;">一点都不怕</div>
+                </div>
+                <div class="panel soft-sand">
+                  <div class="eyebrow">一句话记住</div>
+                  <div class="body" style="margin-top:10px;font-size:26px;">不是一点都不怕，<br>是会怕，也愿意面对。</div>
+                </div>
+              </div>
+              <div class="panel">
+                <div class="eyebrow">真正的 brave</div>
+                <div class="body" style="margin-top:14px;">心里有一点点怕，<br>也还是愿意面对。</div>
+                <div class="mini-grid">
+                  <div class="mini">会怕，不等于退缩</div>
+                  <div class="mini">愿意面对，才是关键</div>
+                </div>
+              </div>
+            </div>
+            <div class="footer">可是勇敢，不是一点都不害怕。</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen">
+        <div class="head"><div class="idx">Frame B</div><div class="style">Swiss Minimalist · 拆解页</div></div>
+        <div class="artboard">
+          <div class="page">
+            <div class="kicker">PICTURE</div>
+            <div class="title">有点怕，也往前</div>
+            <div class="row" style="grid-template-columns: 1.2fr .9fr;">
+              <div class="panel">
+                <div class="eyebrow">把 brave 想成一个动作</div>
+                <div class="stack" style="margin-top: 18px;">
+                  <div class="pill pink">心里有一点怕</div>
+                  <div class="panel soft-pink" style="padding:20px 22px;"><div class="body">心里会紧一下，<br>但没有停住。</div></div>
+                  <div class="pill blue">还是愿意往前走</div>
+                  <div class="panel soft-blue" style="padding:20px 22px;"><div class="body">脚还是往前，<br>先走出一小步。</div></div>
+                </div>
+              </div>
+              <div class="stack">
+                <div class="panel">
+                  <div class="eyebrow">孩子可以这样说</div>
+                  <div class="body" style="margin-top:14px; font-size:26px;">“我有点紧张，<br>但我还是想试一下。”</div>
+                </div>
+                <div class="panel soft-green">
+                  <div class="eyebrow">落到真实动作</div>
+                  <div class="body" style="margin-top:14px; font-size:26px;">轮到你的时候，<br>也可以先举手试一下。</div>
+                </div>
+              </div>
+            </div>
+            <div class="footer">勇敢不是硬撑，是带着一点怕继续做。</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen">
+        <div class="head"><div class="idx">Frame C</div><div class="style">Swiss Minimalist · 公式页</div></div>
+        <div class="artboard">
+          <div class="page center">
+            <div class="kicker">FORMULA</div>
+            <div class="title">勇敢的小公式</div>
+            <div class="sub">横版更适合把“关系”排成一条线，而不是竖着吊四块贴纸。</div>
+            <div class="formula">
+              <div class="pill pink" style="justify-self:center; min-width: 220px; justify-content:center;">有一点怕</div>
+              <div class="line"></div>
+              <div class="pill blue" style="justify-self:center; min-width: 220px; justify-content:center;">往前一步</div>
+              <div class="line"></div>
+              <div class="pill green" style="justify-self:center; min-width: 220px; justify-content:center;">做对的事</div>
+              <div class="line"></div>
+              <div class="pill sand" style="justify-self:center; min-width: 220px; justify-content:center; font-size: 30px;">Brave</div>
+            </div>
+            <div class="row" style="margin-top: 34px; grid-template-columns: 1fr 1fr; width: 100%; max-width: 1180px;">
+              <div class="panel soft-sand"><div class="body" style="font-size:26px;">不是先等到不怕，<br>而是先走出那一步。</div></div>
+              <div class="panel"><div class="body" style="font-size:26px;">横版让“因果链”一眼看懂，<br>不会再出现上面挤、下面空。</div></div>
+            </div>
+            <div class="footer">就很接近 Brave 了。</div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</body>
+</html>

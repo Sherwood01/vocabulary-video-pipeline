@@ -1,0 +1,75 @@
+word: cascade
+title: 层层叠叠落下
+theme: midnight
+fps: 30
+audioPrefix: cascade-audio-v1
+scenes:
+  - type: hero-word
+    props:
+      word: cascade
+      subtitle: 小瀑布
+      tags: [水流, 层层, 落下]
+    text: >-
+      你有没有见过山间的小瀑布？
+      水流不是笔直地冲下去，而是一层一层，像台阶一样不断地跌落。
+      英语里，这样美丽的景象叫做 cascade。
+
+  - type: origin-chain
+    props:
+      title: 从拉丁语走来
+      kicker: 它的来历
+      nodes:
+        - { label: cadere, note: 落下, color: "#22d3ee" }
+        - { label: cascare, note: 跌落, color: "#0ea5e9" }
+        - { label: cascade, note: 小瀑布, color: "#2dd4bf" }
+        - { label: 引申, note: 连锁反应, color: "#fde047" }
+      arrowLabel: 拉丁词根 → 意大利语 → 英语
+    text: >-
+      cascade 来自拉丁语 cadere，意思是落下。
+      后来演变成意大利语的 cascare，意思是跌落。
+      进入英语后，cascade 就变成了小瀑布的意思。
+      现在，人们也用它来形容一连串连锁发生的事情。
+
+  - type: meaning-compare
+    props:
+      title: 它和 waterfall 有什么不同
+      kicker: 意义辨析
+      leftLabel: waterfall
+      leftNote: 大瀑布
+      rightLabel: cascade
+      rightNote: 小瀑布，层层跌落
+      bottomText: cascade 更轻盈，更温柔
+    text: >-
+      cascade 和 waterfall 不一样。
+      waterfall 是巨大的瀑布，气势磅礴；
+      但 cascade 是层层叠叠的小瀑布，像一首轻柔的乐曲。
+
+  - type: emoji-storyboard
+    props:
+      title: 生活中的 cascade
+      kicker: 层层落下的美
+      storyItems:
+        - { text: 山间的溪流一层层跌落, emoji: 🏔️, emojiLabel: 山间, emojiColor: "#0ea5e9" }
+        - { text: 楼梯盘旋而下, emoji: 🪜, emojiLabel: 楼梯, emojiColor: "#fde047" }
+        - { text: 多米诺骨牌接连倒下, emoji: 🀰, emojiLabel: 骨牌, emojiColor: "#22d3ee" }
+        - { text: 好消息一个接一个传来, emoji: 💌, emojiLabel: 好消息, emojiColor: "#f472b6" }
+      highlight: 一层接一层，就是 cascade
+    text: >-
+      生活中处处都有 cascade。
+      山间的溪流一层层跌落，楼梯盘旋而下，
+      多米诺骨牌接连倒下，好消息一个接一个传来。
+      它们都是一层接一层的 cascade。
+
+  - type: ending-summary
+    props:
+      title: cascade 的三件事
+      kicker: 记住它
+      formula: cascade = ?
+      points:
+        - { text: 水流, color: "#22d3ee" }
+        - { text: 层层, color: "#2dd4bf" }
+        - { text: 跌落, color: "#0ea5e9" }
+      closing: 愿你像 cascade 一样，一步一步，勇敢落下
+    text: >-
+      所以记住，cascade 就是三件事：水流、层层、跌落。
+      愿你像 cascade 一样，一步一步，勇敢落下。

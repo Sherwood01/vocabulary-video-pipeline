@@ -1,0 +1,226 @@
+{
+  "version": "1.0",
+  "description": "模板订单制注册表：每个词先在这里匹配适合的模板组合，无法匹配则申请新模板",
+  "templates": [
+    {
+      "id": "hero-word",
+      "name": "词汇点题",
+      "narrativeRole": "快速建立词汇印象",
+      "bestFor": [
+        "所有词的开头"
+      ],
+      "mandatory": true,
+      "framerMotion": false,
+      "iconSource": "emoji/text"
+    },
+    {
+      "id": "origin-chain",
+      "name": "词源链",
+      "narrativeRole": "展示词的历史演变和来历",
+      "bestFor": [
+        "有源可考的词",
+        "涉及历史典故的词"
+      ],
+      "mandatory": false,
+      "framerMotion": false,
+      "iconSource": "emoji/text"
+    },
+    {
+      "id": "meaning-compare",
+      "name": "意义辨析",
+      "narrativeRole": "通过对比码放正确含义",
+      "bestFor": [
+        "易混淆的词",
+        "常被误解的词"
+      ],
+      "mandatory": false,
+      "framerMotion": false,
+      "iconSource": "emoji/text"
+    },
+    {
+      "id": "emoji-storyboard",
+      "name": "图标故事板",
+      "narrativeRole": "用具象化图标讲生活故事",
+      "bestFor": [
+        "生活化的词",
+        "孩童向内容"
+      ],
+      "mandatory": false,
+      "framerMotion": false,
+      "iconSource": "emoji"
+    },
+    {
+      "id": "profile-story",
+      "name": "人物侧写",
+      "narrativeRole": "通过人物经历传达词的内涵",
+      "bestFor": [
+        "涉及人物精神的词",
+        "情感类词汇"
+      ],
+      "mandatory": false,
+      "framerMotion": false,
+      "iconSource": "svg"
+    },
+    {
+      "id": "full-screen-mood",
+      "name": "全屏氛围",
+      "narrativeRole": "用诗意语言和色彩营造情感",
+      "bestFor": [
+        "抽象情感词",
+        "意象类词汇"
+      ],
+      "mandatory": false,
+      "framerMotion": false,
+      "iconSource": "emoji"
+    },
+    {
+      "id": "ending-summary",
+      "name": "总结归纳",
+      "narrativeRole": "用公式和要点帮助记忆",
+      "bestFor": [
+        "所有词的结尾"
+      ],
+      "mandatory": true,
+      "framerMotion": false,
+      "iconSource": "text"
+    },
+    {
+      "id": "quote-page",
+      "name": "名言引用",
+      "narrativeRole": "用名人名言点缮词的深度",
+      "bestFor": [
+        "有文化底蕴的词",
+        "被文学家/哲学家讨论过的词"
+      ],
+      "mandatory": false,
+      "framerMotion": true,
+      "iconSource": "lucide"
+    },
+    {
+      "id": "timeline-page",
+      "name": "时间演变轴",
+      "narrativeRole": "展示词义在历史中的演变",
+      "bestFor": [
+        "有历史叙事的词",
+        "语义发生过重大变化的词"
+      ],
+      "mandatory": false,
+      "framerMotion": true,
+      "iconSource": "lucide"
+    }
+  ],
+  "strategies": {
+    "story-driven": {
+      "description": "有典型故事或历史人物可讲",
+      "defaultScenes": [
+        "hero-word",
+        "origin-chain",
+        "emoji-storyboard",
+        "ending-summary"
+      ],
+      "exampleWords": [
+        "serendipity",
+        "courage"
+      ]
+    },
+    "mood-driven": {
+      "description": "抽象情感、意象类，需要氛围营造",
+      "defaultScenes": [
+        "hero-word",
+        "full-screen-mood",
+        "quote-page",
+        "ending-summary"
+      ],
+      "exampleWords": [
+        "beautiful",
+        "nostalgia",
+        "melancholy"
+      ]
+    },
+    "compare-driven": {
+      "description": "易被误解或需要边界清晰化",
+      "defaultScenes": [
+        "hero-word",
+        "meaning-compare",
+        "ending-summary"
+      ],
+      "exampleWords": [
+        "brave",
+        "beautiful"
+      ]
+    },
+    "evolution-driven": {
+      "description": "词义或概念随时代演变",
+      "defaultScenes": [
+        "hero-word",
+        "timeline-page",
+        "quote-page",
+        "ending-summary"
+      ],
+      "exampleWords": [
+        "democracy",
+        "technology"
+      ]
+    }
+  },
+  "wordHistory": [
+    {
+      "word": "serendipity",
+      "strategy": "story-driven",
+      "scenesUsed": [
+        "hero-word",
+        "origin-chain",
+        "meaning-compare",
+        "emoji-storyboard",
+        "ending-summary"
+      ]
+    },
+    {
+      "word": "beautiful",
+      "strategy": "mood-driven",
+      "scenesUsed": [
+        "hero-word",
+        "origin-chain",
+        "meaning-compare",
+        "emoji-storyboard",
+        "ending-summary"
+      ],
+      "note": "未来应该切到 mood-driven 结构"
+    }
+  ],
+  "templateBacklog": [
+    {
+      "id": "debate-page",
+      "name": "正反辩论台",
+      "triggerWords": [
+        "democracy",
+        "freedom",
+        "justice"
+      ],
+      "narrativeRole": "用正反方视角展示争议性词汇",
+      "recommendedStrategy": "compare-driven"
+    },
+    {
+      "id": "formula-page",
+      "name": "公式演绎页",
+      "triggerWords": [
+        "gravity",
+        "momentum",
+        "energy"
+      ],
+      "narrativeRole": "展示科学/数学公式和实际意义",
+      "recommendedStrategy": "compare-driven"
+    },
+    {
+      "id": "etymology-tree",
+      "name": "词根树状图",
+      "triggerWords": [
+        "benevolent",
+        "microscope",
+        "transport"
+      ],
+      "narrativeRole": "展示词根、前后缀和派生词",
+      "recommendedStrategy": "evolution-driven"
+    }
+  ]
+}

@@ -1,45 +1,123 @@
 import "./index.css";
 import { Composition } from "remotion";
-import { HelloWorld, myCompSchema } from "./HelloWorld";
-import { Logo, myCompSchema2 } from "./HelloWorld/Logo";
-
-// Each <Composition> is an entry in the sidebar!
+import { BRAVE_KID_TOTAL_FRAMES } from "./braveKidNarration";
+import { BraveWidePage01 } from "./BraveWidePage01";
+import { LjgWordBraveKid } from "./LjgWordBraveKid";
+import { RemotionExplained } from "./RemotionExplained";
+import { HYBRID_TOTAL_FRAMES, VocabularyHybridPrototype } from "./VocabularyHybridPrototype";
+import { SERENDIPITY_V1_TOTAL_FRAMES, SerendipityHybridV1 } from "./SerendipityHybridV1";
+import { SILHOUETTE_V1_TOTAL_FRAMES, SilhouetteHybridV1 } from "./SilhouetteHybridV1";
+import { WordVideoPlayer } from "./pipeline/player";
+import { BeautifulWordVideo } from "./BeautifulWordVideo";
+import { BreakfastWordVideo } from "./BreakfastWordVideo";
+import { LemonadeWordVideo } from "./LemonadeWordVideo";
+import { TariffWordVideo } from "./TariffWordVideo";
+import type { WordConfig } from "./pipeline/types";
 
 export const RemotionRoot: React.FC = () => {
   return (
     <>
       <Composition
-        // You can take the "id" to render a video:
-        // npx remotion render HelloWorld
-        id="HelloWorld"
-        component={HelloWorld}
-        durationInFrames={150}
+        id="RemotionExplained"
+        component={RemotionExplained}
+        durationInFrames={510}
         fps={30}
         width={1920}
         height={1080}
-        // You can override these props for each render:
-        // https://www.remotion.dev/docs/parametrized-rendering
-        schema={myCompSchema}
-        defaultProps={{
-          titleText: "Welcome to Remotion",
-          titleColor: "#000000",
-          logoColor1: "#91EAE4",
-          logoColor2: "#86A8E7",
-        }}
       />
-
-      {/* Mount any React component to make it show up in the sidebar and work on it individually! */}
       <Composition
-        id="OnlyLogo"
-        component={Logo}
-        durationInFrames={150}
+        id="BraveWidePage01"
+        component={BraveWidePage01}
+        durationInFrames={180}
         fps={30}
         width={1920}
         height={1080}
-        schema={myCompSchema2}
+      />
+      <Composition
+        id="LjgWordBraveKid"
+        component={LjgWordBraveKid}
+        durationInFrames={BRAVE_KID_TOTAL_FRAMES}
+        fps={30}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="VocabularyHybridPrototype"
+        component={VocabularyHybridPrototype}
+        durationInFrames={HYBRID_TOTAL_FRAMES}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="SerendipityHybridV1"
+        component={SerendipityHybridV1}
+        durationInFrames={SERENDIPITY_V1_TOTAL_FRAMES}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="SilhouetteHybridV1"
+        component={SilhouetteHybridV1}
+        durationInFrames={SILHOUETTE_V1_TOTAL_FRAMES}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="BeautifulWordVideo"
+        component={BeautifulWordVideo}
+        durationInFrames={1581}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="BreakfastWordVideo"
+        component={BreakfastWordVideo}
+        durationInFrames={2092}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="LemonadeWordVideo"
+        component={LemonadeWordVideo}
+        durationInFrames={1894}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="TariffWordVideo"
+        component={TariffWordVideo}
+        durationInFrames={1717}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="WordVideo"
+        component={(props: WordConfig) => <WordVideoPlayer config={props} />}
+        durationInFrames={2400}
+        fps={30}
+        width={1920}
+        height={1080}
+        calculateMetadata={({ props }) => {
+          const total = (props.scenes || []).reduce((sum, s) => {
+            const last = s.beats?.[s.beats.length - 1];
+            return sum + (last ? last.endFrame + 5 : 300);
+          }, 0);
+          return { durationInFrames: Math.max(300, total) };
+        }}
         defaultProps={{
-          logoColor1: "#91dAE2" as const,
-          logoColor2: "#86A8E7" as const,
+          word: "cascade",
+          title: "Cascade",
+          theme: "midnight",
+          fps: 30,
+          audioPrefix: "cascade-audio-v1",
+          scenes: [],
         }}
       />
     </>

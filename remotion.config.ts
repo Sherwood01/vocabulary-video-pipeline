@@ -6,6 +6,20 @@
 import { Config } from "@remotion/cli/config";
 import { enableTailwind } from '@remotion/tailwind-v4';
 
+const srcDir = require("path").join(process.cwd(), "src");
+
 Config.setVideoImageFormat("jpeg");
 Config.setOverwriteOutput(true);
-Config.overrideWebpackConfig(enableTailwind);
+Config.overrideWebpackConfig((currentConfiguration) => {
+  const withTailwind = enableTailwind(currentConfiguration);
+  return {
+    ...withTailwind,
+    resolve: {
+      ...withTailwind.resolve,
+      alias: {
+        ...withTailwind.resolve?.alias,
+        "@": srcDir,
+      },
+    },
+  };
+});

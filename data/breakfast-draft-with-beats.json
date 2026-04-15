@@ -1,0 +1,199 @@
+{
+  "word": "breakfast",
+  "title": "Breakfast",
+  "theme": "midnight",
+  "fps": 30,
+  "audioPrefix": "breakfast-audio-v1",
+  "scenes": [
+    {
+      "type": "hero-word",
+      "props": {
+        "kicker": "Word of the Day",
+        "title": "Breakfast",
+        "word": "breakfast",
+        "subtitle": "它不只是填饱肚子的一顿饭，它背后藏着一个很美的故事。",
+        "tags": [
+          "身体",
+          "生活",
+          "仪式感"
+        ]
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 71,
+          "text": "今天我们要讲的词，是 breakfast。"
+        },
+        {
+          "startFrame": 99,
+          "endFrame": 224,
+          "text": "它不只是填饱肚子的一顿饭，它背后藏着一个很美的故事。"
+        },
+        {
+          "startFrame": 247,
+          "endFrame": 364,
+          "text": "它关于我们的身体、生活，和一种温暖的仪式感。"
+        }
+      ]
+    },
+    {
+      "type": "origin-chain",
+      "props": {
+        "kicker": "Etymology",
+        "title": "一个词源的秘密",
+        "nodes": [
+          {
+            "label": "break",
+            "note": "打破\n终结",
+            "color": "#f59e0b"
+          },
+          {
+            "label": "fast",
+            "note": "斋戒\n禁食",
+            "color": "#f59e0b"
+          },
+          {
+            "label": "breakfast",
+            "note": "打破禁食\n开始进食",
+            "color": "#22c55e"
+          }
+        ],
+        "arrowLabel": "清晨的第一口饭，终结了漫长黑夜的等待"
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 100,
+          "text": "breakfast 拆开来看，其实是两个古英语单词的组合。"
+        },
+        {
+          "startFrame": 121,
+          "endFrame": 255,
+          "text": "第一个是 break，意思是打破。"
+        },
+        {
+          "startFrame": 267,
+          "endFrame": 384,
+          "text": "第二个是 fast，不是快，而是斋戒、禁食的意思。"
+        },
+        {
+          "startFrame": 392,
+          "endFrame": 489,
+          "text": "所以 breakfast 真正的意思，就是打破一夜的禁食。"
+        },
+        {
+          "startFrame": 499,
+          "endFrame": 554,
+          "text": "清晨的第一口饭，终结了漫长黑夜的等待。"
+        }
+      ]
+    },
+    {
+      "type": "answer-cards",
+      "props": {
+        "kicker": "Three Meanings",
+        "title": "为什么 breakfast 如此重要？",
+        "question": "为什么 breakfast 如此重要？",
+        "cards": [
+          {
+            "number": "01",
+            "icon": "Zap",
+            "headline": "身体的重启",
+            "body": "一夜睡眠之后，早餐就是为你按下启动键。",
+            "color": "#f59e0b"
+          },
+          {
+            "number": "02",
+            "icon": "Heart",
+            "headline": "情感的相聚",
+            "body": "围坐在餐桌前，是一天中最温柔的约定。",
+            "color": "#ec4899"
+          },
+          {
+            "number": "03",
+            "icon": "Smile",
+            "headline": "对自己的善待",
+            "body": "无论今天有多忙，好好吃早餐，就是在告诉自己，我值得被好好对待。",
+            "color": "#22c55e"
+          }
+        ]
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 184,
+          "text": "那么，为什么 breakfast 如此重要？"
+        },
+        {
+          "startFrame": 191,
+          "endFrame": 311,
+          "text": "首先，它是身体的重启。一夜睡眠之后，早餐就是为你按下启动键。"
+        },
+        {
+          "startFrame": 327,
+          "endFrame": 483,
+          "text": "第二，它是情感的相聚。围坐在餐桌前，是一天中最温柔的约定。"
+        },
+        {
+          "startFrame": 499,
+          "endFrame": 660,
+          "text": "第三，它是对自己的善待。无论今天有多忙，好好吃早餐，就是在告诉自己，我值得被好好对待。"
+        }
+      ]
+    },
+    {
+      "type": "ending-summary",
+      "props": {
+        "kicker": "Takeaway",
+        "title": "记住这个词",
+        "formula": "break + fast = breakfast",
+        "points": [
+          {
+            "text": "打破禁食",
+            "color": "#f59e0b"
+          },
+          {
+            "text": "重启身心",
+            "color": "#22c55e"
+          },
+          {
+            "text": "爱的仪式",
+            "color": "#ec4899"
+          }
+        ],
+        "closing": "明天早上，请记得好好吃一顿 breakfast。"
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 121,
+          "text": "记住这个公式：break 加上 fast，等于 breakfast。"
+        },
+        {
+          "startFrame": 150,
+          "endFrame": 199,
+          "text": "它意味着打破禁食。"
+        },
+        {
+          "startFrame": 212,
+          "endFrame": 258,
+          "text": "意味着重启身心。"
+        },
+        {
+          "startFrame": 272,
+          "endFrame": 359,
+          "text": "也意味着一份爱的仪式感。"
+        },
+        {
+          "startFrame": 370,
+          "endFrame": 414,
+          "text": "明天早上，请记得好好吃一顿 breakfast。"
+        }
+      ]
+    }
+  ],
+  "_meta": {
+    "strategy": "story-driven",
+    "note": "脚本重写：TTS为完整演讲稿，视觉元素仅配合节奏出现，不直接念诵"
+  }
+}

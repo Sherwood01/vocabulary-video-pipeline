@@ -1,0 +1,87 @@
+{
+  "word": "tariff",
+  "title": "Tariff",
+  "theme": "midnight",
+  "fps": 30,
+  "audioPrefix": "tariff-audio-v1",
+  "scenes": [
+    {
+      "type": "hero-word",
+      "props": {
+        "kicker": "Word of the Day",
+        "title": "Tariff",
+        "word": "tariff",
+        "subtitle": "一个和国际贸易息息相关的词。",
+        "tags": ["贸易", "税收", "进口"]
+      },
+      "beats": [
+        { "startFrame": 0, "endFrame": 0, "text": "今天我们要讲的词是 tariff。" },
+        { "startFrame": 0, "endFrame": 0, "text": "它是一个和国际贸易息息相关的词。" },
+        { "startFrame": 0, "endFrame": 0, "text": "贸易、税收、进口。" }
+      ]
+    },
+    {
+      "type": "origin-chain",
+      "props": {
+        "kicker": "它的来历",
+        "title": "从阿拉伯语到世界贸易",
+        "nodes": [
+          { "label": "阿拉伯语", "note": "ta'rīf，通知", "color": "#60a5fa" },
+          { "label": "价格清单", "note": "列出商品价格", "color": "#facc15" },
+          { "label": "进口税", "note": "对外国货物收的税", "color": "#fb7185" },
+          { "label": "tariff", "note": "现代贸易核心词", "color": "#4ade80" }
+        ],
+        "arrowLabel": "语义演变"
+      },
+      "beats": [
+        { "startFrame": 0, "endFrame": 0, "text": "tariff 来自阿拉伯语的 ta'rīf，原意是通知。" },
+        { "startFrame": 0, "endFrame": 0, "text": "后来它变成了列出商品价格的清单。" },
+        { "startFrame": 0, "endFrame": 0, "text": "再到后来，它指的是对外国货物收取的税。" },
+        { "startFrame": 0, "endFrame": 0, "text": "现在，tariff 已经是国际贸易里的核心词汇之一。" }
+      ]
+    },
+    {
+      "type": "answer-cards",
+      "props": {
+        "kicker": "三个关键问题",
+        "title": "关于 tariff，你需要知道的",
+        "cards": [
+          { "number": 1, "question": "什么是 tariff？", "answer": "对进口商品征收的特殊税收", "icon": "package" },
+          { "number": 2, "question": "谁来付这笔钱？", "answer": "进口商支付，但最终价格往往转移给消费者", "icon": "users" },
+          { "number": 3, "question": "为什么要收？", "answer": "保护本国企业，增加政府收入", "icon": "shield" }
+        ]
+      },
+      "beats": [
+        { "startFrame": 0, "endFrame": 0, "text": "关于 tariff，有三个关键问题。" },
+        { "startFrame": 0, "endFrame": 0, "text": "第一，什么是 tariff？它是对进口商品征收的特殊税收。" },
+        { "startFrame": 0, "endFrame": 0, "text": "第二，谁来付这笔钱？虽然进口商先支付，但最终价格往往会转移给消费者。" },
+        { "startFrame": 0, "endFrame": 0, "text": "第三，为什么要收 tariff？主要是为了保护本国企业，同时也能增加政府收入。" }
+      ]
+    },
+    {
+      "type": "ending-summary",
+      "props": {
+        "kicker": "Takeaway",
+        "title": "记住这个词",
+        "formula": "tariff = 进口税",
+        "points": [
+          { "text": "保护本土企业", "color": "#60a5fa" },
+          { "text": "增加政府收入", "color": "#facc15" },
+          { "text": "影响商品价格", "color": "#fb7185" }
+        ],
+        "closing": "下次看到新闻里的 tariff，你就知道它是什么意思了。"
+      },
+      "beats": [
+        { "startFrame": 0, "endFrame": 0, "text": "tariff 的核心意思就是进口税。" },
+        { "startFrame": 0, "endFrame": 0, "text": "它能保护本土企业。" },
+        { "startFrame": 0, "endFrame": 0, "text": "增加政府收入。" },
+        { "startFrame": 0, "endFrame": 0, "text": "但也可能影响商品价格。" },
+        { "startFrame": 0, "endFrame": 0, "text": "下次看到新闻里的 tariff，你就知道它是什么意思了。" }
+      ]
+    }
+  ],
+  "_meta": {
+    "strategy": "origin-driven",
+    "note": "走知识讲解路线：hero 入题 → origin 词源 → answer-cards 三问答 → ending 收尾"
+  }
+}

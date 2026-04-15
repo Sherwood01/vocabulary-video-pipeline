@@ -1,0 +1,33 @@
+{
+  "word": "nostalgia",
+  "title": "Nostalgia",
+  "theme": "midnight",
+  "fps": 30,
+  "audioPrefix": "nostalgia-audio-v1",
+  "scenes": [
+    {
+      "type": "hero-word",
+      "props": {},
+      "beats": []
+    },
+    {
+      "type": "full-screen-mood",
+      "props": {},
+      "beats": []
+    },
+    {
+      "type": "quote-page",
+      "props": {},
+      "beats": []
+    },
+    {
+      "type": "ending-summary",
+      "props": {},
+      "beats": []
+    }
+  ],
+  "_meta": {
+    "strategy": "mood-driven",
+    "generatedBy": "diagnose_word.py"
+  }
+}

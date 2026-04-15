@@ -1,0 +1,33 @@
+{
+  "word": "democracy",
+  "title": "Democracy",
+  "theme": "midnight",
+  "fps": 30,
+  "audioPrefix": "democracy-audio-v1",
+  "scenes": [
+    {
+      "type": "hero-word",
+      "props": {},
+      "beats": []
+    },
+    {
+      "type": "timeline-page",
+      "props": {},
+      "beats": []
+    },
+    {
+      "type": "quote-page",
+      "props": {},
+      "beats": []
+    },
+    {
+      "type": "ending-summary",
+      "props": {},
+      "beats": []
+    }
+  ],
+  "_meta": {
+    "strategy": "evolution-driven",
+    "generatedBy": "diagnose_word.py"
+  }
+}

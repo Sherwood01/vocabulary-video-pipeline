@@ -1,0 +1,28 @@
+{
+  "word": "gravity",
+  "title": "Gravity",
+  "theme": "midnight",
+  "fps": 30,
+  "audioPrefix": "gravity-audio-v1",
+  "scenes": [
+    {
+      "type": "hero-word",
+      "props": {},
+      "beats": []
+    },
+    {
+      "type": "meaning-compare",
+      "props": {},
+      "beats": []
+    },
+    {
+      "type": "ending-summary",
+      "props": {},
+      "beats": []
+    }
+  ],
+  "_meta": {
+    "strategy": "compare-driven",
+    "generatedBy": "diagnose_word.py"
+  }
+}

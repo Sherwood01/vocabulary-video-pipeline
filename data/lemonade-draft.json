@@ -1,0 +1,88 @@
+{
+  "word": "lemonade",
+  "title": "Lemonade",
+  "theme": "midnight",
+  "fps": 30,
+  "audioPrefix": "lemonade-audio-v2",
+  "scenes": [
+    {
+      "type": "hero-word",
+      "props": {
+        "kicker": "Word of the Day",
+        "title": "Lemonade",
+        "word": "lemonade",
+        "subtitle": "不只是一杯饮料，更是一种夏日心情。",
+        "tags": ["清爽", "夏日", "治愈"]
+      },
+      "beats": [
+        { "startFrame": 0, "endFrame": 0, "text": "今天我们要讲的词是 lemonade。" },
+        { "startFrame": 0, "endFrame": 0, "text": "它不只是一杯饮料，更是一种夏日心情。" },
+        { "startFrame": 0, "endFrame": 0, "text": "清爽、阳光、治愈。" }
+      ]
+    },
+    {
+      "type": "full-screen-mood",
+      "props": {
+        "kicker": "Summer Vibes",
+        "title": "那种感觉，就像一杯冰镇的 lemonade",
+        "lines": [
+          { "text": "阳光倒进透明的玻璃杯", "size": "xl" },
+          { "text": "气泡在液面上轻轻跳跃", "size": "xl" },
+          { "text": "酸甜触到唇尖的那一刻", "size": "xl" },
+          { "text": "所有烦恼似乎都被冲淡了", "size": "xl" }
+        ],
+        "backgroundGradient": "linear-gradient(135deg, #0f172a 0%, #1e1b4b 40%, #d97706 100%)"
+      },
+      "beats": [
+        { "startFrame": 0, "endFrame": 0, "text": "你想象过这样的画面吗？" },
+        { "startFrame": 0, "endFrame": 0, "text": "阳光倒进透明的玻璃杯，冰块在里面发出细微的碰撞声。" },
+        { "startFrame": 0, "endFrame": 0, "text": "气泡从杯底缓缓升起，在液面上轻轻跳跃。" },
+        { "startFrame": 0, "endFrame": 0, "text": "酸甜触到唇尖的那一刻，所有烦恼似乎都被冲淡了。" }
+      ]
+    },
+    {
+      "type": "quote-page",
+      "props": {
+        "kicker": "A Famous Saying",
+        "title": "一句有名的话",
+        "quote": "When life gives you lemons, make lemonade.",
+        "translation": "当生活给你柠檬时，就做成柠檬水吧。",
+        "author": "传统谚语",
+        "context": "遇到困难时，把它变成机会——这就是 lemonade 精神。"
+      },
+      "beats": [
+        { "startFrame": 0, "endFrame": 0, "text": "关于 lemonade，英语里有一句很有名的话。" },
+        { "startFrame": 0, "endFrame": 0, "text": "When life gives you lemons, make lemonade." },
+        { "startFrame": 0, "endFrame": 0, "text": "它的意思是：当生活给你柠檬时，就做成柠檬水吧。" },
+        { "startFrame": 0, "endFrame": 0, "text": "这不只是做饮料的智慧，更是遇到困难时保持乐观的态度。" }
+      ]
+    },
+    {
+      "type": "ending-summary",
+      "props": {
+        "kicker": "Takeaway",
+        "title": "记住这个词",
+        "formula": "lemon + ade = lemonade",
+        "formulaNote": "ade 是英语后缀，意思是「果汁饮料」",
+        "points": [
+          { "text": "夏日清爽", "color": "#facc15" },
+          { "text": "酸甜平衡", "color": "#f59e0b" },
+          { "text": "乐观生活", "color": "#22c55e" }
+        ],
+        "closing": "希望你的每一天，都能喝到一杯好喝的 lemonade。"
+      },
+      "beats": [
+        { "startFrame": 0, "endFrame": 0, "text": "lemonade 这个词，来自 lemon 加上后缀 ade。" },
+        { "startFrame": 0, "endFrame": 0, "text": "ade 的意思是果汁饮料，比如 orangeade 就是橙汁汽水。" },
+        { "startFrame": 0, "endFrame": 0, "text": "它代表着夏日的清爽。" },
+        { "startFrame": 0, "endFrame": 0, "text": "酸甜的平衡。" },
+        { "startFrame": 0, "endFrame": 0, "text": "和一种乐观的生活态度。" },
+        { "startFrame": 0, "endFrame": 0, "text": "希望你的每一天，都能喝到一杯好喝的 lemonade。" }
+      ]
+    }
+  ],
+  "_meta": {
+    "strategy": "mood-driven",
+    "note": "走情绪氛围路线：hero 入题 → mood 场景描绘 → quote 人生哲理 → ending 收尾"
+  }
+}

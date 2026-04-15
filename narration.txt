@@ -1,0 +1,1 @@
+Remotion 的核心，不是拖时间轴，而是用 React 组件按帧计算画面。你读取当前 frame，用 interpolate 或 spring 算出位置、透明度和缩放。然后，Remotion 把每一帧渲染出来，再交给 FFmpeg 编码成视频。
