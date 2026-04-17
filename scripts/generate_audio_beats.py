@@ -5,17 +5,26 @@ TTS + 音频静默检测 beats 生成器
 输出：每个 scene 的 mp3 + beats JSON（startFrame/endFrame）
 """
 
+import os
+from pathlib import Path
+
+# 加载 .env 文件
+env_path = Path(__file__).parent.parent.resolve() / ".env"
+if env_path.exists():
+    for line in env_path.read_text(encoding="utf-8").strip().split("\n"):
+        line = line.strip()
+        if line and not line.startswith("#") and "=" in line:
+            key, value = line.split("=", 1)
+            os.environ[key.strip()] = value.strip()
+
 import argparse
-import base64
 import json
 import math
-import os
 import sys
-import uuid
 from datetime import datetime, timezone
 from pathlib import Path
-from urllib.request import Request, urlopen
-from urllib.error import HTTPError, URLError
+
+import requests
 
 try:
     from pydub import AudioSegment
@@ -27,56 +36,67 @@ except ImportError as e:
 DEFAULT_FPS = 30
 MIN_SILENCE_LEN = 300  # ms
 SILENCE_THRESH = -42   # dBFS
-COST_PER_10K_CHARS = 3.0  # 豆包 TTS 2.0 后付费单价：3元/万字符
+COST_PER_10K_CHARS = 0.1  # 参考单价（元/万字符）
+
+AZURE_TTS_URL = "https://{region}.tts.speech.microsoft.com/cognitiveservices/v1"
 
 
-def choose_voice(voice: str) -> str:
-    if voice == "male":
-        return os.environ["VOLCENGINE_TTS_VOICE_TYPE_MALE"]
-    return os.environ["VOLCENGINE_TTS_VOICE_TYPE_FEMALE"]
+def synthesize_azure(text: str, voice: str = "female") -> bytes:
+    """使用微软 Azure TTS 合成语音"""
+    subscription_key = os.environ["AZURE_SPEECH_KEY"]
+    region = os.environ["AZURE_SPEECH_REGION"]
+    voice_name = os.environ.get("AZURE_SPEECH_VOICE", "zh-CN-XiaoxiaoNeural")
+    speech_rate = os.environ.get("AZURE_SPEECH_RATE", "1.0")
+    speech_style = os.environ.get("AZURE_SPEECH_STYLE", None)  # e.g., "cheerful", "sad"
 
+    url = AZURE_TTS_URL.format(region=region)
 
-def synthesize_volcengine(text: str, voice: str = "female") -> bytes:
-    token = os.environ["VOLCENGINE_TTS_ACCESS_TOKEN"]
-    payload = {
-        "app": {
-            "appid": os.environ["VOLCENGINE_TTS_APP_ID"],
-            "token": token,
-            "cluster": "volcano_tts",
-        },
-        "user": {"uid": "hermes-volcengine-tts-local"},
-        "audio": {
-            "voice_type": choose_voice(voice),
-            "encoding": "mp3",
-            "speed_ratio": 1.0,
-            "volume_ratio": 1.0,
-            "pitch_ratio": 1.0,
-        },
-        "request": {
-            "reqid": str(uuid.uuid4()),
-            "text": text,
-            "operation": "query",
-            "with_frontend": 1,
-            "frontend_type": "unitTson",
-            "resource_id": os.environ["VOLCENGINE_TTS_2_RESOURCE_ID"],
-        },
-    }
-    data = json.dumps(payload).encode("utf-8")
-    req = Request(
-        "https://openspeech.bytedance.com/api/v1/tts",
-        data=data,
+    # 将速率转换为 Azure SSML 格式（如 1.1 -> "+10.00%"，0.9 -> "-10.00%"）
+    try:
+        rate_float = float(speech_rate)
+        if rate_float > 1.0:
+            rate_ssml = f"+{(rate_float - 1.0) * 100:.2f}%"
+        elif rate_float < 1.0:
+            rate_ssml = f"{(rate_float - 1.0) * 100:.2f}%"
+        else:
+            rate_ssml = "1.0"
+    except ValueError:
+        rate_ssml = "1.0"  # fallback
+
+    # 构建 SSML
+    if speech_style:
+        ssml = f"""<speak version='1.0'
+            xmlns='http://www.w3.org/2001/10/synthesis'
+            xml:lang='zh-CN'
+            xmlns:mstts='http://www.w3.org/2001/10/synthesis'>
+            <voice name='{voice_name}'>
+                <prosody rate="{rate_ssml}">
+                    <mstts:express-as style="{speech_style}">{text}</mstts:express-as>
+                </prosody>
+            </voice>
+        </speak>"""
+    else:
+        ssml = f"""<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='zh-CN'>
+            <voice name='{voice_name}'>
+                <prosody rate="{rate_ssml}">{text}</prosody>
+            </voice>
+        </speak>"""
+
+    response = requests.post(
+        url,
         headers={
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer; {token}",
+            "Ocp-Apim-Subscription-Key": subscription_key,
+            "Content-Type": "application/ssml+xml",
+            "X-Microsoft-OutputFormat": "audio-24khz-48kbitrate-mono-mp3",
         },
-        method="POST",
+        data=ssml.encode("utf-8"),
+        timeout=120,
     )
-    with urlopen(req, timeout=120) as resp:
-        raw = resp.read().decode("utf-8")
-    result = json.loads(raw)
-    if result.get("code") != 3000 or not result.get("data"):
-        raise RuntimeError(f"Volcengine TTS error: {result}")
-    return base64.b64decode(result["data"])
+
+    if response.status_code != 200:
+        raise RuntimeError(f"Azure TTS error: {response.status_code} - {response.text}")
+
+    return response.content
 
 
 def ms_to_frame(ms: int, fps: int) -> int:
@@ -152,23 +172,70 @@ def split_beats_by_silence(audio: AudioSegment, beat_texts: list[str], fps: int 
     return beats
 
 
+MAX_TTS_CHARS = 800  # Azure TTS 单次请求最大字符数（留出余量）
+
 def process_scene(scene_index: int, scene: dict, audio_prefix: str, fps: int, voice: str, out_dir: Path):
     beats_input = scene.get("beats", [])
+    scene_type = scene.get("type", "")
+    props = scene.get("props", {})
+
     if not beats_input:
-        print(f"  Scene {scene_index}: no beats, skip")
-        return 0
+        # For ending-summary scenes with a closing text, generate TTS for it
+        closing = props.get("closing", "")
+        if scene_type == "ending-summary" and closing:
+            print(f"Scene {scene_index}: no beats input, generating closing narration...")
+            full_text = closing
+            char_count = len(full_text)
+            print(f"  synthesizing TTS: {char_count} chars...")
+
+            audio_bytes = synthesize_azure(full_text, voice)
+            audio_path = out_dir / f"scene{scene_index}.mp3"
+            audio_path.write_bytes(audio_bytes)
+            print(f"  saved {audio_path} ({len(audio_bytes)} bytes)")
+
+            audio = AudioSegment.from_mp3(str(audio_path))
+            detected_beats = split_beats_by_silence(audio, [full_text], fps)
+
+            beats_path = out_dir / f"scene{scene_index}-beats.json"
+            beats_path.write_text(json.dumps(detected_beats, ensure_ascii=False, indent=2), encoding="utf-8")
+            print(f"  saved {beats_path}")
+            for b in detected_beats:
+                print(f"    [{b['startFrame']:4d} - {b['endFrame']:4d}] {b['text']}")
+            return char_count
+        else:
+            print(f"  Scene {scene_index}: no beats, skip")
+            return 0
 
     texts = [b["text"] for b in beats_input]
     full_text = "。".join(texts) + "。"
     char_count = len(full_text)
     print(f"Scene {scene_index}: synthesizing TTS for {len(texts)} beats, {char_count} chars...")
 
-    audio_bytes = synthesize_volcengine(full_text, voice)
-    audio_path = out_dir / f"scene{scene_index}.mp3"
-    audio_path.write_bytes(audio_bytes)
-    print(f"  saved {audio_path} ({len(audio_bytes)} bytes)")
+    # 如果文本过长，分段合成后拼接
+    if char_count > MAX_TTS_CHARS:
+        print(f"  Text too long ({char_count} chars), splitting into chunks...")
+        audio = AudioSegment.empty()
+        for i, text in enumerate(texts):
+            text_with_punct = text if i == len(texts) - 1 else text + "。"
+            if len(text_with_punct) > MAX_TTS_CHARS:
+                # 单句仍然过长，按字符数均分
+                chunk_audio = _synthesize_chunk(text_with_punct, voice)
+            else:
+                chunk_audio = synthesize_azure(text_with_punct, voice)
+            seg = AudioSegment.from_mp3(chunk_audio)
+            audio += seg
+            if i < len(texts) - 1:
+                audio += AudioSegment.silent(duration=300)  # 300ms静音间隔
+        audio_path = out_dir / f"scene{scene_index}.mp3"
+        audio.export(str(audio_path), format="mp3")
+        print(f"  saved {audio_path} ({os.path.getsize(audio_path)} bytes)")
+    else:
+        audio_bytes = synthesize_azure(full_text, voice)
+        audio_path = out_dir / f"scene{scene_index}.mp3"
+        audio_path.write_bytes(audio_bytes)
+        print(f"  saved {audio_path} ({len(audio_bytes)} bytes)")
+        audio = AudioSegment.from_mp3(str(audio_path))
 
-    audio = AudioSegment.from_mp3(str(audio_path))
     detected_beats = split_beats_by_silence(audio, texts, fps)
 
     beats_path = out_dir / f"scene{scene_index}-beats.json"
@@ -178,6 +245,22 @@ def process_scene(scene_index: int, scene: dict, audio_prefix: str, fps: int, vo
         print(f"    [{b['startFrame']:4d} - {b['endFrame']:4d}] {b['text']}")
 
     return char_count
+
+
+def _synthesize_chunk(text: str, voice: str) -> bytes:
+    """将长文本按句子分割后分别合成再拼接"""
+    import re
+    sentences = re.split(r'(?<=[。！？……])', text)
+    sentences = [s.strip() for s in sentences if s.strip()]
+    audio = AudioSegment.empty()
+    for sent in sentences:
+        if not sent:
+            continue
+        chunk_bytes = synthesize_azure(sent, voice)
+        seg = AudioSegment.from_mp3(chunk_bytes)
+        audio += seg
+        audio += AudioSegment.silent(duration=150)
+    return audio.export(format="mp3")
 
 
 def log_cost(project_root: Path, word: str, total_chars: int, cost: float, scenes_count: int, beats_count: int):
@@ -195,17 +278,106 @@ def log_cost(project_root: Path, word: str, total_chars: int, cost: float, scene
         f.write(json.dumps(record, ensure_ascii=False) + "\n")
 
 
+def calculate_total_frames(scenes: list[dict], default: int = 300) -> int:
+    """Calculate total frames from scenes beats data.
+
+    Each scene's beats are relative to that scene's start (frame 0),
+    so we need to calculate scene duration (last.endFrame - first.start + gap)
+    and accumulate across all scenes.
+    """
+    total = 0
+    for scene in scenes:
+        beats = scene.get("beats", [])
+        if beats:
+            first_start = beats[0].get("startFrame", 0)
+            last_end = beats[-1].get("endFrame", 0)
+            # Scene duration = last beat's end - first beat's start + gap
+            scene_duration = last_end - first_start + 60
+            total += max(scene_duration, 300)
+    return max(default, total)
+
+
+def create_word_video_entry(word: str, project_root: Path):
+    """Create src/{Word}WordVideo.tsx entry component if it doesn't exist."""
+    word_cap = word.capitalize()
+    entry_path = project_root / "src" / f"{word_cap}WordVideo.tsx"
+    if entry_path.exists():
+        print(f"Entry component already exists: {entry_path}")
+        return
+
+    template = f'''import React from "react";
+import {{ WordVideoPlayer }} from "./pipeline/player";
+import {word}Config from "../data/{word}-draft-with-beats.json";
+import type {{ WordConfig }} from "./pipeline/types";
+
+export const {word_cap}WordVideo: React.FC = () => {{
+  return <WordVideoPlayer config={{{word}Config as WordConfig}} />;
+}};
+'''
+    entry_path.write_text(template, encoding="utf-8")
+    print(f"Created entry component: {entry_path}")
+
+
+def register_composition_in_root(word: str, project_root: Path, total_frames: int):
+    """Add or update Composition registration and import in Root.tsx."""
+    word_cap = word.capitalize()
+    composition_id = f"{word_cap}WordVideo"
+    root_path = project_root / "src" / "Root.tsx"
+    content = root_path.read_text(encoding="utf-8")
+
+    # Add import statement if not present
+    import_line = f'import {{ {word_cap}WordVideo }} from "./{word_cap}WordVideo";'
+    if import_line not in content:
+        import_lines = [line for line in content.split('\n') if line.strip().startswith('import ') and 'from "./' in line]
+        if import_lines:
+            last_import = import_lines[-1]
+            content = content.replace(last_import, last_import + "\n" + import_line)
+            print(f"Added import to Root.tsx: {import_line}")
+
+    if composition_id in content:
+        # Composition exists - update durationInFrames
+        import re
+        pattern = rf'(<Composition\s+id="{re.escape(composition_id)}"[^>]*durationInFrames={{)(\d+)(}}[^>]*>)'
+        match = re.search(pattern, content)
+        if match:
+            old_frames = match.group(2)
+            content = re.sub(pattern, rf'\g<1>{total_frames}\g<3>', content)
+            root_path.write_text(content, encoding="utf-8")
+            print(f"Updated {composition_id} durationInFrames: {old_frames} -> {total_frames}")
+        else:
+            print(f"WARNING: Could not find durationInFrames for {composition_id}")
+        return
+
+    new_composition = f'''      <Composition
+        id="{composition_id}"
+        component={{{composition_id}}}
+        durationInFrames={{{total_frames}}}
+        fps={{30}}
+        width={{1920}}
+        height={{1080}}
+      />
+'''
+
+    # Insert before the closing </> of RemotionRoot
+    if "    </>" in content:
+        content = content.replace("    </>", f"{new_composition}    </>")
+        root_path.write_text(content, encoding="utf-8")
+        print(f"Registered Composition in Root.tsx: {composition_id} ({total_frames} frames)")
+    else:
+        print(f"WARNING: Could not find insertion point in Root.tsx")
+
+
 def print_cost_report(word: str, total_chars: int, cost: float, scene_details: list):
     print("\n" + "=" * 50)
-    print(f"TTS 成本统计报告 — {word}")
+    print(f"TTS Cost Report - {word}")
     print("=" * 50)
     for idx, chars in scene_details:
         scene_cost = chars / 10000 * COST_PER_10K_CHARS
-        print(f"  Scene {idx}: {chars:4d} 字符 → ¥{scene_cost:.4f}")
+        print(f"  Scene {idx}: {chars:4d} chars -> CNY {scene_cost:.4f}")
     print("-" * 50)
-    print(f"  总计: {total_chars} 字符")
-    print(f"  单价: {COST_PER_10K_CHARS}元/万字符")
-    print(f"  实际 TTS 成本: ¥{cost:.4f}")
+    print(f"  Total: {total_chars} chars")
+    print(f"  Unit: {COST_PER_10K_CHARS} CNY/10k chars")
+    print(f"  Actual Cost: CNY {cost:.4f}")
     print("=" * 50 + "\n")
 
 
@@ -218,11 +390,9 @@ def main():
     args = parser.parse_args()
 
     required_env = [
-        "VOLCENGINE_TTS_ACCESS_TOKEN",
-        "VOLCENGINE_TTS_APP_ID",
-        "VOLCENGINE_TTS_VOICE_TYPE_FEMALE",
-        "VOLCENGINE_TTS_VOICE_TYPE_MALE",
-        "VOLCENGINE_TTS_2_RESOURCE_ID",
+        "AZURE_SPEECH_KEY",
+        "AZURE_SPEECH_REGION",
+        "AZURE_SPEECH_VOICE",
     ]
     missing = [k for k in required_env if not os.getenv(k)]
     if missing:
@@ -264,6 +434,11 @@ def main():
     print_cost_report(word, total_chars, cost, scene_details)
     log_cost(project_root, word, total_chars, cost, len(scenes), total_beats)
     print(f"成本记录已追加到: {project_root / 'data' / 'tts-cost-log.jsonl'}")
+
+    # Create entry component and register in Root.tsx
+    total_frames = calculate_total_frames(scenes)
+    create_word_video_entry(word, project_root)
+    register_composition_in_root(word, project_root, total_frames)
 
 
 if __name__ == "__main__":

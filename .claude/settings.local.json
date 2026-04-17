@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:github.com)",
+      "Bash(git -C \"d:/Claude code/vocabulary-video-pipeline\" branch -a)",
+      "Bash(git -C \"d:/Claude code/vocabulary-video-pipeline\" log --oneline -15)",
+      "Bash(timeout 5 python3 scripts/diagnose_word.py --word breakfast)",
+      "Bash(python -c \"import openai; print\\('openai OK'\\)\")"
+    ]
+  }
+}

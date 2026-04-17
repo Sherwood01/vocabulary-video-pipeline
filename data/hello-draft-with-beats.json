@@ -1,0 +1,165 @@
+{
+  "word": "hello",
+  "title": "Hello",
+  "theme": "midnight",
+  "fps": 30,
+  "audioPrefix": "hello-audio-v1",
+  "scenes": [
+    {
+      "type": "hero-word",
+      "props": {
+        "kicker": "每日一词",
+        "title": "hello",
+        "word": "hello",
+        "subtitle": "从问候到世界通用的第一声招呼，它跨越语言与文化的桥梁。",
+        "tags": [
+          "问候",
+          "文化",
+          "沟通"
+        ]
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 145,
+          "text": "你有没有想过，一个简单的‘hello’，怎么会在全球每一个角落响起？"
+        },
+        {
+          "startFrame": 172,
+          "endFrame": 236,
+          "text": "它最早来源于19世纪的英语"
+        }
+      ]
+    },
+    {
+      "type": "full-screen-mood",
+      "props": {
+        "kicker": "清晨问候",
+        "title": "晨光中的轻声呼唤",
+        "subtitle": "在第一缕阳光洒落的瞬间，一句温柔的“你好”，如微风拂面，点亮心房。",
+        "emoji": "🌅",
+        "beats": [
+          "第一拍：星星逐渐隐去，薄雾轻绕。",
+          "第二拍：曙光初现，金色光线缓缓铺展开来。",
+          "第三拍：光影交织，温暖的光斑在屏幕中心聚拢。",
+          "第四拍：轻柔的风声响起，伴随低语般的“你好”。",
+          "第五拍：全屏被温柔的光辉笼罩，心境随之舒展。"
+        ]
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 99,
+          "text": "清晨的第一缕光是如何唤醒沉睡的世界？"
+        },
+        {
+          "startFrame": 122,
+          "endFrame": 243,
+          "text": "今天，我们跟随那淡淡的金色，一起走进晨曦的温柔。"
+        },
+        {
+          "startFrame": 269,
+          "endFrame": 583,
+          "text": "当星星慢慢隐去，薄雾轻绕，曙光悄然绽放；光线像柔软的绸缎，慢慢铺展开来，光影交织成温暖的光斑在屏幕中心聚拢。"
+        },
+        {
+          "startFrame": 612,
+          "endFrame": 777,
+          "text": "此时，微风轻拂，低语般的‘你好’在耳畔响起，仿佛把心轻轻敲开。"
+        },
+        {
+          "startFrame": 804,
+          "endFrame": 1013,
+          "text": "全屏被温柔的光辉笼罩，你的心境也随之舒展，仿佛在新的一天里，重新与自己相遇。"
+        }
+      ]
+    },
+    {
+      "type": "quote-page",
+      "props": {
+        "kicker": "Wise Words",
+        "quote": "A simple 'hello' can change someone's day.",
+        "translation": "一句简单的‘你好’可以改变一个人的一天。",
+        "author": "佚名"
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 124,
+          "text": "一句轻轻的‘你好’，在不经意间能点亮陌生人的一天？"
+        },
+        {
+          "startFrame": 147,
+          "endFrame": 304,
+          "text": "今天我们一起走进这句平凡却温暖的话语背后，感受它蕴含的力量。"
+        },
+        {
+          "startFrame": 327,
+          "endFrame": 540,
+          "text": "每一次真诚的问候，都是人与人之间的第一束光，它能冲淡忙碌的冷漠，唤起心底的柔软。"
+        },
+        {
+          "startFrame": 565,
+          "endFrame": 712,
+          "text": "也许就在你转头一笑的瞬间，已经在别人的世界里种下了希望的种子。"
+        },
+        {
+          "startFrame": 737,
+          "endFrame": 873,
+          "text": "让我们记住，简单的‘你好’，可以成为改变一天的神奇钥匙。"
+        }
+      ]
+    },
+    {
+      "type": "ending-summary",
+      "props": {
+        "kicker": "记住这个词",
+        "title": "温暖的问候：hello",
+        "formula": "h + ell + o = hello",
+        "points": [
+          {
+            "text": "hello 是全球通用的问候语，简洁易记。",
+            "color": "#FF6B6B"
+          },
+          {
+            "text": "发音为 /həˈloʊ/，音节分明，朗朗上口。",
+            "color": "#4ECDC4"
+          },
+          {
+            "text": "可用于正式和非正式场合，传递友好与开放。",
+            "color": "#45B7D1"
+          }
+        ],
+        "closing": "让每一次问候都充满温度，世界将因你的微笑而更加美好。",
+        "narration": "在日常交流中，‘hello’是最常用的问候语，它跨越语言障碍，瞬间拉近人与人之间的距离。它的拼写由‘h’、‘e’、‘l’、‘l’、‘o’五个字母组成，发音朗朗上口，易于记忆。掌握‘hello’的多种用法，如正式场合的‘您好’和非正式的‘嗨’，可以让沟通更加自如。别忘了，用真诚的笑容和温暖的声调说‘hello’，会让对方感受到你的善意与尊重。"
+      },
+      "beats": [
+        {
+          "startFrame": 8,
+          "endFrame": 333,
+          "text": "在日常交流中，‘hello’是最常用的问候语，它跨越语言障碍，瞬间拉近人与人之间的距离。"
+        },
+        {
+          "startFrame": 343,
+          "endFrame": 512,
+          "text": "它的拼写由‘h’、‘e’、‘l’、‘l’、‘o’五个字母组成，发音朗朗上口，易于记忆。"
+        },
+        {
+          "startFrame": 518,
+          "endFrame": 654,
+          "text": "掌握‘hello’的多种用法，如正式场合的‘您好’和非正式的‘嗨’，可以让沟通更加自如。"
+        },
+        {
+          "startFrame": 680,
+          "endFrame": 873,
+          "text": "别忘了，用真诚的笑容和温暖的声调说‘hello’，会让对方感受到你的善意与尊重。"
+        }
+      ]
+    }
+  ],
+  "_meta": {
+    "strategy": "mood-driven",
+    "generatedBy": "diagnose_word.py",
+    "contentGeneratedBy": "MiniMax LLM"
+  }
+}

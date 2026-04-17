@@ -37,8 +37,9 @@ export const WordVideoPlayer: React.FC<{ config: WordConfig }> = ({ config }) =>
   const { scenes, audioPrefix, theme } = config;
 
   const sceneDurations = scenes.map((scene) => {
-    const lastBeat = scene.beats[scene.beats.length - 1];
-    return lastBeat ? lastBeat.endFrame + 25 : 300;
+    if (!scene.beats || scene.beats.length === 0) return 300;
+    const maxEndFrame = Math.max(...scene.beats.map((b) => b.endFrame));
+    return maxEndFrame + 25;
   });
 
   return (

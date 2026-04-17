@@ -12,6 +12,7 @@ import { BeautifulWordVideo } from "./BeautifulWordVideo";
 import { BreakfastWordVideo } from "./BreakfastWordVideo";
 import { LemonadeWordVideo } from "./LemonadeWordVideo";
 import { TariffWordVideo } from "./TariffWordVideo";
+import { HelloWordVideo } from "./HelloWordVideo";
 import type { WordConfig } from "./pipeline/types";
 
 export const RemotionRoot: React.FC = () => {
@@ -119,6 +120,14 @@ export const RemotionRoot: React.FC = () => {
           audioPrefix: "cascade-audio-v1",
           scenes: [],
         }}
+      />
+      <Composition
+        id="HelloWordVideo"
+        component={HelloWordVideo}
+        durationInFrames={3231}
+        fps={30}
+        width={1920}
+        height={1080}
       />
     </>
   );

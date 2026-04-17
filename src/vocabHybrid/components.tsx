@@ -358,10 +358,11 @@ export const EndingSummaryPage: React.FC<{
   closing: string;
 }> = ({ frame, beats, kicker, title, themeName, formula, formulaNote, points, closing }) => {
   const theme = getTheme(themeName);
+  const safePoints = points ?? [];
   const b = (i: number, fallback: number) => getBeatStart(beats, i, fallback);
   const bFormula = b(0, 15);
-  const pointStarts = points.map((_, i) => b(1 + i, bFormula + 30 + i * 20));
-  const bClosing = b(1 + points.length, (pointStarts[points.length - 1] ?? bFormula) + 30);
+  const pointStarts = safePoints.map((_, i) => b(1 + i, bFormula + 30 + i * 20));
+  const bClosing = b(1 + safePoints.length, (pointStarts[safePoints.length - 1] ?? bFormula) + 30);
 
   return (
     <SceneShell kicker={kicker} title={title} themeName={themeName}>

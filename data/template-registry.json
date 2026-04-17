@@ -107,6 +107,18 @@
       "mandatory": false,
       "framerMotion": true,
       "iconSource": "lucide"
+    },
+    {
+      "id": "answer-cards",
+      "name": "问答卡片",
+      "narrativeRole": "用三个问题卡片式解答深入理解词义",
+      "bestFor": [
+        "需要多角度诠释的词",
+        "有深层含义的词"
+      ],
+      "mandatory": false,
+      "framerMotion": false,
+      "iconSource": "lucide"
     }
   ],
   "strategies": {
@@ -115,12 +127,13 @@
       "defaultScenes": [
         "hero-word",
         "origin-chain",
-        "emoji-storyboard",
+        "answer-cards",
         "ending-summary"
       ],
       "exampleWords": [
         "serendipity",
-        "courage"
+        "courage",
+        "breakfast"
       ]
     },
     "mood-driven": {

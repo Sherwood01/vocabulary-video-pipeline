@@ -41,9 +41,10 @@
     "build": "remotion bundle",
     "upgrade": "remotion upgrade",
     "lint": "eslint src && tsc",
-    "diagnose:word": "python3 scripts/diagnose_word.py",
-    "generate:audio": "python3 scripts/generate_audio_beats.py",
-    "cost:report": "python3 scripts/tts_cost_report.py"
+    "diagnose:word": "py scripts/diagnose_word.py",
+    "generate:audio": "py scripts/generate_audio_beats.py",
+    "pipeline": "py scripts/pipeline.py",
+    "cost:report": "py scripts/tts_cost_report.py"
   },
   "sideEffects": [
     "*.css"

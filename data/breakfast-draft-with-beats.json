@@ -8,192 +8,204 @@
     {
       "type": "hero-word",
       "props": {
-        "kicker": "Word of the Day",
-        "title": "Breakfast",
+        "kicker": "每日一词",
+        "title": "breakfast",
         "word": "breakfast",
-        "subtitle": "它不只是填饱肚子的一顿饭，它背后藏着一个很美的故事。",
+        "subtitle": "开启新一天的仪式感，一口早餐唤醒无限活力。",
         "tags": [
-          "身体",
           "生活",
+          "饮食",
           "仪式感"
         ]
       },
       "beats": [
         {
-          "startFrame": 0,
-          "endFrame": 71,
-          "text": "今天我们要讲的词，是 breakfast。"
+          "startFrame": 8,
+          "endFrame": 386,
+          "text": "清晨的第一缕光线透过窗帘，你是否想过，那份热腾腾的早餐背后藏着怎样的力量？"
         },
         {
-          "startFrame": 99,
-          "endFrame": 224,
-          "text": "它不只是填饱肚子的一顿饭，它背后藏着一个很美的故事。"
+          "startFrame": 397,
+          "endFrame": 636,
+          "text": "breakfast不只是填饱肚子，它是一种仪式感，是用一口温热的食物唤醒沉睡的身体，点燃新一天的活力。"
         },
         {
-          "startFrame": 247,
-          "endFrame": 364,
-          "text": "它关于我们的身体、生活，和一种温暖的仪式感。"
+          "startFrame": 647,
+          "endFrame": 854,
+          "text": "让我们在匆忙中停下脚步，用心感受每一口带来的温暖与期待，让早餐成为连接过去与未来的桥梁。"
         }
       ]
     },
     {
       "type": "origin-chain",
       "props": {
-        "kicker": "Etymology",
-        "title": "一个词源的秘密",
+        "kicker": "词源",
+        "title": "从‘打断禁食’到‘早餐’的千年之旅",
         "nodes": [
           {
-            "label": "break",
-            "note": "打破\n终结",
+            "label": "*bʰreg-",
+            "note": "原始印欧语词根，表示“打破”。\n是“break” 的最早期形态。",
+            "color": "#3b82f6"
+          },
+          {
+            "label": "brecan",
+            "note": "古英语动词，意为“打破”。\n在“breakfast”中指中止禁食。",
+            "color": "#10b981"
+          },
+          {
+            "label": "fæst",
+            "note": "古英语形容词，意为“稳固的、禁食的”。\n后转名词，指不吃东西的状态。",
             "color": "#f59e0b"
           },
           {
-            "label": "fast",
-            "note": "斋戒\n禁食",
-            "color": "#f59e0b"
+            "label": "brekefast",
+            "note": "中英语组合，最早出现于1460年代的文献。\n逐渐演变为专指早餐的词。",
+            "color": "#ef4444"
           },
           {
             "label": "breakfast",
-            "note": "打破禁食\n开始进食",
-            "color": "#22c55e"
+            "note": "现代英语的拼写，源自“break”+“fast”。\n现指一天中的第一餐。",
+            "color": "#8b5cf6"
           }
         ],
-        "arrowLabel": "清晨的第一口饭，终结了漫长黑夜的等待"
+        "arrowLabel": "“breakfast” 由‘break’（打破）和‘fast’（禁食）组成，字面意思为‘打破禁食’，从古英语‘brecan’和‘fæst’演化而来，最早在15世纪出现并逐渐固定为早餐的专有名词。"
       },
       "beats": [
         {
           "startFrame": 0,
-          "endFrame": 100,
-          "text": "breakfast 拆开来看，其实是两个古英语单词的组合。"
-        },
-        {
-          "startFrame": 121,
-          "endFrame": 255,
-          "text": "第一个是 break，意思是打破。"
-        },
-        {
-          "startFrame": 267,
-          "endFrame": 384,
-          "text": "第二个是 fast，不是快，而是斋戒、禁食的意思。"
-        },
-        {
-          "startFrame": 392,
-          "endFrame": 489,
-          "text": "所以 breakfast 真正的意思，就是打破一夜的禁食。"
-        },
-        {
-          "startFrame": 499,
-          "endFrame": 554,
-          "text": "清晨的第一口饭，终结了漫长黑夜的等待。"
+          "endFrame": 59,
+          "text": "你有没有想过，‘breakfast"
         }
       ]
     },
     {
       "type": "answer-cards",
       "props": {
-        "kicker": "Three Meanings",
-        "title": "为什么 breakfast 如此重要？",
-        "question": "为什么 breakfast 如此重要？",
+        "kicker": "三个要点",
+        "title": "为什么早餐被称为一天的“能量源泉”？",
+        "question": "为什么早餐被称为一天的“能量源泉”？",
         "cards": [
           {
             "number": "01",
             "icon": "Zap",
-            "headline": "身体的重启",
-            "body": "一夜睡眠之后，早餐就是为你按下启动键。",
-            "color": "#f59e0b"
+            "headline": "快速供能",
+            "body": "早餐摄入的碳水化合物和蛋白质能在短时间内转化为葡萄糖，为大脑和肌肉提供即时能量。",
+            "color": "#FFD700"
           },
           {
             "number": "02",
-            "icon": "Heart",
-            "headline": "情感的相聚",
-            "body": "围坐在餐桌前，是一天中最温柔的约定。",
-            "color": "#ec4899"
+            "icon": "Brain",
+            "headline": "提升专注",
+            "body": "研究表明，吃早餐可以显著提高上午的注意力、记忆力与学习效率，帮助更好地完成工作任务。",
+            "color": "#FF6347"
           },
           {
             "number": "03",
-            "icon": "Smile",
-            "headline": "对自己的善待",
-            "body": "无论今天有多忙，好好吃早餐，就是在告诉自己，我值得被好好对待。",
-            "color": "#22c55e"
+            "icon": "Activity",
+            "headline": "调节代谢",
+            "body": "规律的早餐可以启动体内代谢，帮助调节血糖水平，减少午餐和晚餐时的暴饮暴食。",
+            "color": "#00CED1"
+          }
+        ],
+        "beats": [
+          {
+            "text": "早餐是夜间禁食后首次补给能量的机会，能快速恢复血糖，为一天的活动奠定基础。"
+          },
+          {
+            "text": "充足的能量供应能够提升大脑的认知功能，让人在上午的工作学习中保持更高的专注度。"
+          },
+          {
+            "text": "规律的早餐还能帮助调节体内的代谢节律，使全天的能量分配更均衡，有助于体重管理。"
           }
         ]
       },
       "beats": [
         {
           "startFrame": 0,
-          "endFrame": 184,
-          "text": "那么，为什么 breakfast 如此重要？"
+          "endFrame": 242,
+          "text": "你有没有想过，为什么早餐被称为一天的‘能量源泉’？"
         },
         {
-          "startFrame": 191,
-          "endFrame": 311,
-          "text": "首先，它是身体的重启。一夜睡眠之后，早餐就是为你按下启动键。"
+          "startFrame": 259,
+          "endFrame": 399,
+          "text": "经过一夜的禁食，身体急需补给。"
         },
         {
-          "startFrame": 327,
-          "endFrame": 483,
-          "text": "第二，它是情感的相聚。围坐在餐桌前，是一天中最温柔的约定。"
+          "startFrame": 408,
+          "endFrame": 556,
+          "text": "早餐摄入的碳水化合物和蛋白质能迅速转化为葡萄糖，为大脑和肌肉提供即时能量，让我们瞬间恢复活力。"
         },
         {
-          "startFrame": 499,
-          "endFrame": 660,
-          "text": "第三，它是对自己的善待。无论今天有多忙，好好吃早餐，就是在告诉自己，我值得被好好对待。"
+          "startFrame": 570,
+          "endFrame": 689,
+          "text": "充足的能量还能提升上午的专注力和记忆力，让工作学习更高效。"
+        },
+        {
+          "startFrame": 701,
+          "endFrame": 979,
+          "text": "更重要的是，规律的早餐启动代谢，帮助调节血糖，减少午餐暴饮暴食，让全天的能量分配更均衡。"
+        },
+        {
+          "startFrame": 986,
+          "endFrame": 1245,
+          "text": "坚持每天吃好早餐，就是为一天的健康和活力奠定坚实基础。"
         }
       ]
     },
     {
       "type": "ending-summary",
       "props": {
-        "kicker": "Takeaway",
-        "title": "记住这个词",
+        "kicker": "记住这个词",
+        "title": "breakfast 的构成与意义",
         "formula": "break + fast = breakfast",
         "points": [
           {
-            "text": "打破禁食",
-            "color": "#f59e0b"
+            "text": "break 意为‘打破’，在早餐中指结束夜间禁食状态",
+            "color": "#E74C3C"
           },
           {
-            "text": "重启身心",
-            "color": "#22c55e"
+            "text": "fast 意为‘禁食’，早晨的第一餐即是‘打破禁食’的时刻",
+            "color": "#3498DB"
           },
           {
-            "text": "爱的仪式",
-            "color": "#ec4899"
+            "text": "记住这两个词的组合，帮助你更直观地理解并记忆 breakfast",
+            "color": "#2ECC71"
           }
         ],
-        "closing": "明天早上，请记得好好吃一顿 breakfast。"
+        "closing": "让每个清晨的早餐都充满活力，愿你在学习英语的路上不断前行！"
       },
       "beats": [
         {
           "startFrame": 0,
-          "endFrame": 121,
-          "text": "记住这个公式：break 加上 fast，等于 breakfast。"
+          "endFrame": 141,
+          "text": "你有没有想过，breakfast 这个词背后隐藏着怎样的故事？"
         },
         {
-          "startFrame": 150,
-          "endFrame": 199,
-          "text": "它意味着打破禁食。"
+          "startFrame": 153,
+          "endFrame": 452,
+          "text": "它的构成其实非常简单——break 加上 fast，等于早餐。"
         },
         {
-          "startFrame": 212,
-          "endFrame": 258,
-          "text": "意味着重启身心。"
+          "startFrame": 466,
+          "endFrame": 634,
+          "text": "顾名思义，break 是‘打破’，fast 是‘禁食’，早晨的第一餐正是我们结束夜间禁食、‘打破’这段空腹状态的时刻。"
         },
         {
-          "startFrame": 272,
-          "endFrame": 359,
-          "text": "也意味着一份爱的仪式感。"
+          "startFrame": 660,
+          "endFrame": 821,
+          "text": "记住这两个词的组合，能够帮助你更直观地理解并牢牢记住 breakfast。"
         },
         {
-          "startFrame": 370,
-          "endFrame": 414,
-          "text": "明天早上，请记得好好吃一顿 breakfast。"
+          "startFrame": 828,
+          "endFrame": 1060,
+          "text": "让每个清晨的早餐都充满活力，愿你在学习英语的路上不断前行！"
         }
       ]
     }
   ],
   "_meta": {
     "strategy": "story-driven",
-    "note": "脚本重写：TTS为完整演讲稿，视觉元素仅配合节奏出现，不直接念诵"
+    "generatedBy": "diagnose_word.py",
+    "contentGeneratedBy": "MiniMax LLM"
   }
 }
