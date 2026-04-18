@@ -13,6 +13,8 @@ import { BreakfastWordVideo } from "./BreakfastWordVideo";
 import { LemonadeWordVideo } from "./LemonadeWordVideo";
 import { TariffWordVideo } from "./TariffWordVideo";
 import { HelloWordVideo } from "./HelloWordVideo";
+import { SpacewalkWordVideo } from "./SpacewalkWordVideo";
+import { GhosttakeoutWordVideo } from "./GhosttakeoutWordVideo";
 import type { WordConfig } from "./pipeline/types";
 
 export const RemotionRoot: React.FC = () => {
@@ -124,7 +126,23 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="HelloWordVideo"
         component={HelloWordVideo}
-        durationInFrames={3231}
+        durationInFrames={3441}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="SpacewalkWordVideo"
+        component={SpacewalkWordVideo}
+        durationInFrames={4346}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="GhosttakeoutWordVideo"
+        component={GhosttakeoutWordVideo}
+        durationInFrames={3149}
         fps={30}
         width={1920}
         height={1080}

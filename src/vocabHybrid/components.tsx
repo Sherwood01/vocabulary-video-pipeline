@@ -382,7 +382,7 @@ export const EndingSummaryPage: React.FC<{
         </SyncReveal>
 
         <div className="grid grid-cols-3 gap-6">
-          {points.map((pt, i) => {
+          {safePoints.map((pt, i) => {
             const s = pointStarts[i];
             return (
               <Card

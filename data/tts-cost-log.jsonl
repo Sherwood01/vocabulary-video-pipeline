@@ -21,3 +21,8 @@
 {"timestamp": "2026-04-17T09:21:18.727735+00:00", "word": "hello", "totalChars": 653, "costCNY": 0.00653, "scenesCount": 4, "beatsCount": 20, "unitPrice": "0.1元/万字符"}
 {"timestamp": "2026-04-17T09:41:01.567923+00:00", "word": "hello", "totalChars": 567, "costCNY": 0.00567, "scenesCount": 4, "beatsCount": 16, "unitPrice": "0.1元/万字符"}
 {"timestamp": "2026-04-17T09:49:14.395975+00:00", "word": "hello", "totalChars": 553, "costCNY": 0.00553, "scenesCount": 4, "beatsCount": 16, "unitPrice": "0.1元/万字符"}
+{"timestamp": "2026-04-17T11:44:56.311465+00:00", "word": "hello", "totalChars": 609, "costCNY": 0.00609, "scenesCount": 4, "beatsCount": 17, "unitPrice": "0.1元/万字符"}
+{"timestamp": "2026-04-18T06:54:50.819716+00:00", "word": "spacewalk", "totalChars": 685, "costCNY": 0.00685, "scenesCount": 4, "beatsCount": 20, "unitPrice": "0.1元/万字符"}
+{"timestamp": "2026-04-18T07:05:44.610153+00:00", "word": "spacewalk", "totalChars": 818, "costCNY": 0.00818, "scenesCount": 4, "beatsCount": 19, "unitPrice": "0.1元/万字符"}
+{"timestamp": "2026-04-18T07:20:40.928761+00:00", "word": "ghosttakeout", "totalChars": 532, "costCNY": 0.00532, "scenesCount": 4, "beatsCount": 14, "unitPrice": "0.1元/万字符"}
+{"timestamp": "2026-04-18T07:46:16.406417+00:00", "word": "ghosttakeout", "totalChars": 661, "costCNY": 0.00661, "scenesCount": 4, "beatsCount": 17, "unitPrice": "0.1元/万字符"}

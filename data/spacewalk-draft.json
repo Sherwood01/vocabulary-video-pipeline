@@ -1,0 +1,179 @@
+{
+  "word": "spacewalk",
+  "title": "Spacewalk",
+  "theme": "midnight",
+  "fps": 30,
+  "audioPrefix": "spacewalk-audio-v1",
+  "scenes": [
+    {
+      "type": "hero-word",
+      "props": {
+        "kicker": "每日一词",
+        "title": "spacewalk",
+        "word": "spacewalk",
+        "subtitle": "在无垠的星海中，宇航员踏出舱门，漫步于星际之间，感受太空的孤寂与壮丽。",
+        "tags": [
+          "太空",
+          "探索",
+          "科技"
+        ]
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "你有没有想过，当宇航员踏出舱门，置身于浩瀚星空的那一瞬，是怎样的心境？"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "今天我们来聊聊‘spacewalk’，这个词背后藏着人类的勇气与梦想。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "每一次舱外漫步，都是在无垠星海中与寂静对话，感受太空的孤寂与壮丽；也是在科技的护航下，突破极限，书写探索的新篇章。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "让我们一起仰望那片星空，心怀敬意，继续追寻更远的未知。"
+        }
+      ]
+    },
+    {
+      "type": "full-screen-mood",
+      "props": {
+        "kicker": "太空漫步",
+        "title": "星河踏歌",
+        "subtitle": "在无垠宇宙的深渊中，宇航员轻盈地踏出每一步，星光如绸，奏响无声的交响",
+        "emoji": "🚀🌌✨",
+        "beats": [
+          "微弱的呼吸，轻柔而有韵律",
+          "星光划过的节奏，缓缓展开",
+          "心跳与机械同步，渐次加速",
+          "远方的星系脉动，形成壮阔的回响"
+        ]
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "在无垠宇宙的深渊里，太空漫步的宇航员轻盈踏出每一步，星光如绸，奏响星河踏歌般的无声交响。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "你有没有想过，那一瞬间的呼吸为何如此轻柔而有韵律？"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "星光划过的节奏缓缓展开，心跳与机械同步，渐次加速，仿佛宇宙的心跳在耳畔回荡。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "远方的星系脉动，形成壮阔的回响，引领我们穿越寂静的星海，感受每一次踏步背后的力量与宁静。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "让我们在这星河之中，一起聆听那份无声的交响。"
+        }
+      ]
+    },
+    {
+      "type": "quote-page",
+      "props": {
+        "kicker": "Astronaut Insight",
+        "quote": "A spacewalk is the ultimate reminder that we are all explorers on a tiny blue dot.",
+        "translation": "太空行走是对我们都是微小蓝色星球上探索者的终极提醒。",
+        "author": "Chris Hadfield"
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "你有没有想过，当宇航员在漆黑的宇宙中踏上舱外的那一刻，脚下是无垠的星空，心中却映出那抹蓝色？"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "正如宇航员克里斯·哈德菲尔德所说：‘A spacewalk is the ultimate reminder that we are all explorers on a tiny blue dot.’ 太空行走，是对我们在微小的蓝色星球上共同探索的终极提醒。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "每一次舱外漂浮，都是对人类好奇心的礼赞，提醒我们每个人都是星辰的旅者。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "在那片寂静的真空中，舱外的每一步都让我们意识到，地球不过是宇宙里的一粒尘埃，却也孕育了无尽的可能。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "每当我们回顾这段壮丽的旅程，心中便涌起对未知的渴望，激励我们继续在星辰之间前行。"
+        }
+      ]
+    },
+    {
+      "type": "ending-summary",
+      "props": {
+        "kicker": "记住这个词",
+        "title": "太空漫步",
+        "formula": "space + walk = spacewalk",
+        "points": [
+          {
+            "text": "Spacewalk 表示宇航员在太空舱外的活动。",
+            "color": "#4CAF50"
+          },
+          {
+            "text": "由 'space'（太空）和 'walk'（行走）两个词根组成。",
+            "color": "#2196F3"
+          },
+          {
+            "text": "在航天新闻和科普文章中常见，掌握它能提升航天词汇量。",
+            "color": "#FF9800"
+          }
+        ],
+        "closing": "让 'spacewalk' 成为你航天词汇库中的闪亮星辰！",
+        "narration": "大家好，今天我们来认识单词 spacewalk。spacewalk 由 space 和 walk 两个词合成，字面意思即太空行走。它专指宇航员在轨道或深空中离开航天器，进行维修、实验等任务的活动。掌握这个词能帮助我们更轻松地阅读航天新闻和科普资料，也能在谈论太空探索时表达得更精准。希望大家记住 spacewalk，感受人类在宇宙中的勇敢足迹。"
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "大家好，今天我们来认识单词 spacewalk。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "spacewalk 由 space 和 walk 两个词合成，字面意思即太空行走。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "它专指宇航员在轨道或深空中离开航天器，进行维修、实验等任务的活动。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "掌握这个词能帮助我们更轻松地阅读航天新闻和科普资料，也能在谈论太空探索时表达得更精准。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "希望大家记住 spacewalk，感受人类在宇宙中的勇敢足迹。"
+        }
+      ]
+    }
+  ],
+  "_meta": {
+    "strategy": "mood-driven",
+    "generatedBy": "diagnose_word.py",
+    "contentGeneratedBy": "MiniMax LLM"
+  }
+}

@@ -1,0 +1,197 @@
+{
+  "word": "ghosttakeout",
+  "title": "Ghosttakeout",
+  "theme": "midnight",
+  "fps": 30,
+  "audioPrefix": "ghosttakeout-audio-v1",
+  "scenes": [
+    {
+      "type": "hero-word",
+      "props": {
+        "kicker": "每日一词",
+        "title": "ghosttakeout",
+        "word": "ghosttakeout",
+        "subtitle": "指在看不见的厨房里准备的暗藏惊喜，像幽灵一样悄然送来的外卖，让人惊喜又好奇。",
+        "tags": [
+          "神秘",
+          "外卖",
+          "奇趣"
+        ]
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "每日一词，今天我们来聊一个神秘的词——ghosttakeout。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "你有没有想象过，外卖背后竟然藏着一间看不见的厨房，像幽灵一样悄然准备好惊喜？"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "当你打开盒子，发现原本不知情的菜品被巧妙包装，瞬间让人既惊讶又好奇。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "它的出现让点餐变成了一场探险，惊喜的味道在舌尖绽放，也让我们对未知的期待变得充满趣味。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "ghosttakeout，正是那种在暗处潜伏、在瞬间点亮惊喜的奇妙体验。"
+        }
+      ]
+    },
+    {
+      "type": "full-screen-mood",
+      "props": {
+        "kicker": "幽灵外卖",
+        "title": "幽魂速递·暗夜佳肴",
+        "subtitle": "灯火阑珊处，幽魂携暖香轻抚夜色，美味如梦。",
+        "emoji": "👻🍜",
+        "beats": [
+          {
+            "time": "0:00",
+            "desc": "夜色低沉，低音如潮汐轻敲"
+          },
+          {
+            "time": "0:03",
+            "desc": "街灯摇曳，微光映出幽灵轮廓"
+          },
+          {
+            "time": "0:06",
+            "desc": "外卖箱轻轻打开，热气如呼吸"
+          },
+          {
+            "time": "0:09",
+            "desc": "香气如丝，飘散于寒风中"
+          },
+          {
+            "time": "0:12",
+            "desc": "碗中汤汁闪烁，似星屑落入"
+          },
+          {
+            "time": "0:15",
+            "desc": "舌尖触感柔软，回荡幽暗余韵"
+          },
+          {
+            "time": "0:18",
+            "desc": "灯光忽暗，幽灵身影渐隐"
+          },
+          {
+            "time": "0:21",
+            "desc": "余香残留在夜幕中，化作温柔的回响"
+          }
+        ]
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "你有没有想过，当夜色降临，街灯摇曳时，一个幽灵提着外卖箱悄然出现？"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "它打开箱子，热气如呼吸般升腾，香气在寒风中飘散。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "碗中汤汁闪烁似星屑落入，舌尖触感柔软，回荡着幽暗的余韵。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "灯光忽暗，幽灵身影渐隐，只余一缕香气残留在夜幕中，化作温柔的回响。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "这就是幽魂速递——为你送上暗夜中的那份独特的温暖。"
+        }
+      ]
+    },
+    {
+      "type": "quote-page",
+      "props": {
+        "kicker": "Wise Words",
+        "quote": "In the realm of midnight cravings, ghosttakeout is the unseen chef, delivering mystery and flavor beyond the ordinary.",
+        "translation": "在午夜渴望的王国里，幽灵外卖是一位看不见的厨师，递送超越寻常的神秘与风味。",
+        "author": "佚名"
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "你有没有想过，深夜的街灯下，总有一双看不见的手在为你准备一份神秘的美味？"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "今天我们就聊聊幽灵外卖——它像一位隐形的厨师，在午夜渴望的王国里，递送超越寻常的风味与惊喜。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "每一次订单背后，都是未知的期待与细致的匠心，正是这种看不见的存在，让平凡的宵夜变成了一场味觉的探险。"
+        }
+      ]
+    },
+    {
+      "type": "ending-summary",
+      "props": {
+        "kicker": "记住这个词",
+        "title": "幽灵外卖：ghosttakeout",
+        "formula": "ghost + takeout = ghosttakeout",
+        "points": [
+          {
+            "text": "ghost（幽灵）与 takeout（外卖）组合，形成‘幽灵外卖’的意象，暗示神秘、快速的外卖体验。",
+            "color": "#FF6F61"
+          },
+          {
+            "text": "常用于网络语境，形容深夜或无形的送餐服务，也可指代提供隐蔽地点的餐饮店。",
+            "color": "#4CAF50"
+          },
+          {
+            "text": "记忆技巧：把‘ghost’想象成无形的送餐员，‘takeout’则是美味的外卖，两者合一，就是 ghosttakeout。",
+            "color": "#2196F3"
+          }
+        ],
+        "closing": "愿你在文字的世界里，像幽灵一样轻盈地捕获每一份外卖的惊喜！",
+        "narration": "ghosttakeout 是由英文单词 ghost（幽灵）和 takeout（外卖）混合而成的新词，字面意思是‘幽灵外卖’。它形象地描绘了一种在深夜悄然送达、让人感受到神秘与惊喜的外卖服务。该词在社交媒体上常被用来形容极快或隐蔽的送餐体验，也用于调侃外卖平台的‘幽灵’配送。掌握 ghosttakeout 不仅能丰富英语混合词的表达，还能帮助我们更好地理解新词的生成规律。"
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "ghosttakeout 是由英文单词 ghost（幽灵）和 takeout（外卖）混合而成的新词，字面意思是‘幽灵外卖’。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "它形象地描绘了一种在深夜悄然送达、让人感受到神秘与惊喜的外卖服务。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "该词在社交媒体上常被用来形容极快或隐蔽的送餐体验，也用于调侃外卖平台的‘幽灵’配送。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "掌握 ghosttakeout 不仅能丰富英语混合词的表达，还能帮助我们更好地理解新词的生成规律。"
+        }
+      ]
+    }
+  ],
+  "_meta": {
+    "strategy": "mood-driven",
+    "generatedBy": "diagnose_word.py",
+    "contentGeneratedBy": "MiniMax LLM"
+  }
+}

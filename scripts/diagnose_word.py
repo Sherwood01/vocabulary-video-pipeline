@@ -49,6 +49,7 @@ def load_registry(project_root: Path) -> dict:
 def infer_strategy(word: str, registry: dict) -> tuple[str, str]:
     """
     推断策略。返回 (strategy_key, reason)
+    Rule-based 匹配失败时调用 LLM 分析词义自动分类。
     """
     word_lower = word.lower()
 
@@ -70,8 +71,53 @@ def infer_strategy(word: str, registry: dict) -> tuple[str, str]:
             rec = item.get("recommendedStrategy", "mood-driven")
             return rec, f"命中 backlog 模板 triggerWords（{item['id']}），推荐策略 {rec}"
 
-    # 4. 默认 fallback
-    return "mood-driven", "未命中任何规则，默认使用 mood-driven（可用 --strategy 覆盖）"
+    # 4. LLM 自动分析
+    llm_strategy = llm_infer_strategy(word, registry)
+    if llm_strategy:
+        return llm_strategy, f"LLM 分析词义自动归类为 {llm_strategy}"
+
+    # 5. 默认 fallback
+    return "mood-driven", "LLM 分析失败，默认使用 mood-driven（可用 --strategy 覆盖）"
+
+
+def llm_infer_strategy(word: str, registry: dict) -> str | None:
+    """调用 LLM 分析词义，返回最适合的策略 key。失败返回 None。"""
+    if not MINIMAX_API_KEY:
+        return None
+
+    strategies = registry.get("strategies", {})
+    strategy_list = "\n".join(
+        f"- {key}: {val.get('description', '')}"
+        for key, val in strategies.items()
+    )
+
+    prompt = f"""分析单词 "{word}" 的语义特征，从以下策略中选择最合适的一个：
+
+{strategy_list}
+
+## 判断标准
+- **story-driven**: 单词有明确的故事、历史人物、典故，或可拆解为有画面感的生活场景
+- **mood-driven**: 单词是抽象情感、意象、主观感受，难以用实物具象化
+- **compare-driven**: 单词有明确对立面、常被误解、或需要正反对比才能理解
+- **evolution-driven**: 单词的词义随历史发生过显著演变，或有多个时代特征
+
+## 分析要求
+1. 先解释你为什么选择这个策略（1-2句话）
+2. 直接返回策略 key（如 "story-driven"），不要其他内容
+
+直接返回策略 key："""
+
+    try:
+        response = call_minimax_llm(prompt)
+        if not response:
+            return None
+        strategy = response.strip().lower()
+        # 验证返回的是有效策略 key
+        if strategy in strategies:
+            return strategy
+        return None
+    except Exception:
+        return None
 
 
 def resolve_scenes(strategy_key: str, registry: dict) -> list[str]:

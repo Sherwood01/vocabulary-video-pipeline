@@ -324,15 +324,19 @@ def register_composition_in_root(word: str, project_root: Path, total_frames: in
     composition_id = f"{word_cap}WordVideo"
     root_path = project_root / "src" / "Root.tsx"
     content = root_path.read_text(encoding="utf-8")
+    changed = False
 
     # Add import statement if not present
     import_line = f'import {{ {word_cap}WordVideo }} from "./{word_cap}WordVideo";'
     if import_line not in content:
-        import_lines = [line for line in content.split('\n') if line.strip().startswith('import ') and 'from "./' in line]
+        import_lines = [line for line in content.split('\n')
+                        if (line.strip().startswith('import ') or line.strip().startswith('import type '))
+                        and 'from "./' in line]
         if import_lines:
             last_import = import_lines[-1]
             content = content.replace(last_import, last_import + "\n" + import_line)
-            print(f"Added import to Root.tsx: {import_line}")
+            changed = True
+            print(f"  [Root] Added import: {import_line}")
 
     if composition_id in content:
         # Composition exists - update durationInFrames
@@ -341,11 +345,10 @@ def register_composition_in_root(word: str, project_root: Path, total_frames: in
         match = re.search(pattern, content)
         if match:
             old_frames = match.group(2)
-            content = re.sub(pattern, rf'\g<1>{total_frames}\g<3>', content)
-            root_path.write_text(content, encoding="utf-8")
-            print(f"Updated {composition_id} durationInFrames: {old_frames} -> {total_frames}")
-        else:
-            print(f"WARNING: Could not find durationInFrames for {composition_id}")
+            if int(old_frames) != total_frames:
+                content = re.sub(pattern, rf'\g<1>{total_frames}\g<3>', content)
+                changed = True
+                print(f"  [Root] Updated {composition_id} durationInFrames: {old_frames} -> {total_frames}")
         return
 
     new_composition = f'''      <Composition
@@ -361,10 +364,19 @@ def register_composition_in_root(word: str, project_root: Path, total_frames: in
     # Insert before the closing </> of RemotionRoot
     if "    </>" in content:
         content = content.replace("    </>", f"{new_composition}    </>")
-        root_path.write_text(content, encoding="utf-8")
-        print(f"Registered Composition in Root.tsx: {composition_id} ({total_frames} frames)")
+        changed = True
+        print(f"  [Root] Registered Composition: {composition_id} ({total_frames} frames)")
     else:
-        print(f"WARNING: Could not find insertion point in Root.tsx")
+        print(f"  [Root] ERROR: Could not find insertion point in Root.tsx")
+
+    if changed:
+        root_path.write_text(content, encoding="utf-8")
+        # Verify
+        verify = root_path.read_text(encoding="utf-8")
+        if composition_id in verify:
+            print(f"  [Root] SUCCESS: {composition_id} is registered")
+        else:
+            print(f"  [Root] FAILURE: {composition_id} NOT found after write!")
 
 
 def print_cost_report(word: str, total_chars: int, cost: float, scene_details: list):
@@ -411,6 +423,17 @@ def main():
     print(f"Output directory: {out_dir}\n")
 
     scenes = config.get("scenes", [])
+
+    # Calculate total frames for Root.tsx registration
+    total_frames = calculate_total_frames(scenes)
+
+    # Register in Root.tsx BEFORE TTS synthesis.
+    # This ensures the composition is registered even if TTS fails.
+    print(f"\n[Step 0] Registering {word} in Root.tsx...")
+    create_word_video_entry(word, project_root)
+    register_composition_in_root(word, project_root, total_frames)
+
+    # TTS synthesis
     total_chars = 0
     scene_details = []
     total_beats = 0
@@ -434,11 +457,6 @@ def main():
     print_cost_report(word, total_chars, cost, scene_details)
     log_cost(project_root, word, total_chars, cost, len(scenes), total_beats)
     print(f"成本记录已追加到: {project_root / 'data' / 'tts-cost-log.jsonl'}")
-
-    # Create entry component and register in Root.tsx
-    total_frames = calculate_total_frames(scenes)
-    create_word_video_entry(word, project_root)
-    register_composition_in_root(word, project_root, total_frames)
 
 
 if __name__ == "__main__":
