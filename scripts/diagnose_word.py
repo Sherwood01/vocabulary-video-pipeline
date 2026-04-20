@@ -49,72 +49,75 @@ def load_registry(project_root: Path) -> dict:
 def infer_strategy(word: str, registry: dict) -> tuple[str, str]:
     """
     推断策略。返回 (strategy_key, reason)
-    Rule-based 匹配失败时调用 LLM 分析词义自动分类。
+    优先级：LLM 分析（最优先）-> 规则兜底 -> mood-driven fallback
     """
     word_lower = word.lower()
 
-    # 1. 查历史记录
+    # 1. LLM 自动分析（最优先，真正实现自动化）
+    llm_strategy = llm_infer_strategy(word, registry)
+    if llm_strategy:
+        return llm_strategy  # (strategy_key, reason) from LLM
+
+    # 2. 查历史记录
     for entry in registry.get("wordHistory", []):
         if entry.get("word", "").lower() == word_lower:
             return entry.get("strategy", "mood-driven"), f"复用历史记录（{entry['word']} 曾使用 {entry['strategy']}）"
 
-    # 2. 查策略的 exampleWords
+    # 3. 查策略的 exampleWords
     for key, val in registry.get("strategies", {}).items():
         examples = [e.lower() for e in val.get("exampleWords", [])]
         if word_lower in examples:
             return key, f"命中策略 exampleWords（{key}）"
 
-    # 3. 查 backlog 的 triggerWords
+    # 4. 查 backlog 的 triggerWords
     for item in registry.get("templateBacklog", []):
         triggers = [t.lower() for t in item.get("triggerWords", [])]
         if word_lower in triggers:
             rec = item.get("recommendedStrategy", "mood-driven")
             return rec, f"命中 backlog 模板 triggerWords（{item['id']}），推荐策略 {rec}"
 
-    # 4. LLM 自动分析
-    llm_strategy = llm_infer_strategy(word, registry)
-    if llm_strategy:
-        return llm_strategy, f"LLM 分析词义自动归类为 {llm_strategy}"
-
     # 5. 默认 fallback
-    return "mood-driven", "LLM 分析失败，默认使用 mood-driven（可用 --strategy 覆盖）"
+    return "mood-driven", "所有推断方式均失败，默认 mood-driven（可用 --strategy 覆盖）"
 
 
-def llm_infer_strategy(word: str, registry: dict) -> str | None:
-    """调用 LLM 分析词义，返回最适合的策略 key。失败返回 None。"""
+def llm_infer_strategy(word: str, registry: dict) -> tuple[str, str] | None:
+    """
+    调用 LLM 分析词义，强制归类到已知策略之一，返回 (strategy_key, reason)。
+    不依赖预定义规则，完全自动化。
+    """
     if not MINIMAX_API_KEY:
+        print(f"{YELLOW}⚠️  MINIMAX_API_KEY 未设置，LLM 策略推断跳过{RESET}")
         return None
 
     strategies = registry.get("strategies", {})
-    strategy_list = "\n".join(
-        f"- {key}: {val.get('description', '')}"
-        for key, val in strategies.items()
-    )
 
-    prompt = f"""分析单词 "{word}" 的语义特征，从以下策略中选择最合适的一个：
+    prompt = f"""分析单词 "{word}" 的语义特征，从以下四个策略中选择最合适的一个，并返回 JSON：
 
-{strategy_list}
-
-## 判断标准
+## 四个策略（必选其一，不可返回其他）
 - **story-driven**: 单词有明确的故事、历史人物、典故，或可拆解为有画面感的生活场景
 - **mood-driven**: 单词是抽象情感、意象、主观感受，难以用实物具象化
 - **compare-driven**: 单词有明确对立面、常被误解、或需要正反对比才能理解
 - **evolution-driven**: 单词的词义随历史发生过显著演变，或有多个时代特征
 
-## 分析要求
-1. 先解释你为什么选择这个策略（1-2句话）
-2. 直接返回策略 key（如 "story-driven"），不要其他内容
-
-直接返回策略 key："""
+## 输出要求
+必须返回以下 JSON 格式，strategy 只能是以上四个值之一：
+{{"strategy": "story-driven", "reason": "该词源自希腊神话，有明确的人物和故事脉络"}}
+直接返回 JSON，不要有其他内容。"""
 
     try:
         response = call_minimax_llm(prompt)
         if not response:
             return None
-        strategy = response.strip().lower()
-        # 验证返回的是有效策略 key
-        if strategy in strategies:
-            return strategy
+        import json, re
+        # 提取 JSON 对象
+        json_match = re.search(r'\{.*?"strategy".*?"reason".*?\}', response, re.DOTALL)
+        if not json_match:
+            return None
+        parsed = json.loads(json_match.group())
+        strategy = parsed.get("strategy", "").strip().lower()
+        reason = parsed.get("reason", "").strip()
+        if strategy in strategies and reason:
+            return strategy, reason
         return None
     except Exception:
         return None
@@ -345,65 +348,66 @@ def generate_scene_content(word: str, scene_type: str, scene_index: int, total_s
 
 def generate_beats_for_scene(word: str, scene_type: str, props: dict) -> list:
     """
-    为场景生成 beats（讲解节奏）
+    为场景生成 beats（讲解节奏）。如果 beats 为空会自动重试，最多 3 次。
     """
+    import re
+
     # 如果 props 中已有 narration 字段（ending-summary 场景），直接使用
     narration = props.get("narration", "")
     if narration:
-        # 按句子标点分切
-        import re
         sentences = re.split(r'(?<=[。！？……\n])\s*', narration)
         sentences = [s.strip() for s in sentences if s.strip()]
-        beats = []
-        for s in sentences:
-            beats.append({"startFrame": 0, "endFrame": 0, "text": s})
+        beats = [{"startFrame": 0, "endFrame": 0, "text": s} for s in sentences]
         return beats
 
     # 生成讲解文本的 prompt
-    prompt = f"""为单词 "{word}" 的 {scene_type} 场景撰写一段 TTS 旁白配音稿。
+    prompt = f"""为单词 "{word}" 的 {scene_type} 场景撰写 TTS 旁白配音稿。
 
 场景类型: {scene_type}
 场景内容: {json.dumps(props, ensure_ascii=False)}
 
-## 要求
-你是一个纪录片配音演员。请根据上面的场景内容，写一段**完整、流畅的中文旁白**。
-
-**写作风格**：
-- 开头要抓住听众，比如"你有没有想过..."、"今天我们来聊聊..."
-- 用"你"或"我们"来称呼听众，像朋友聊天一样自然
-- 整个 narrative 是**一气呵成的讲解**，不是"第1点、第2点"这种列表
-- 中间有自然的转折和连接，听起来像一个人在讲故事
-- 结尾要有升华或呼应，让人印象深刻
-- 全篇 120-200 个中文字符，适合 15-25 秒配音
+## 强制要求
+- **每句话必须以句号「。」结尾**，不得省略
+- 全文 3-5 句话，总字数 80-200 字
+- 开头要有吸引力，如"你有没有想过..."、"今天我们来聊聊..."
+- 语气自然，像朋友聊天，不是念稿
+- 结尾要有升华或呼应
 
 ## 输出格式
-请返回一段 narrtaive，不要分段，直接返回纯文本。不要加任何前缀说明。"""
+直接返回纯文本，每句话以「。」结尾。不要加前缀、不要分段、不要 JSON。"""
 
-    print(f"{CYAN}   正在生成 beats 节奏...{RESET}")
-    response = call_minimax_llm(prompt)
+    for attempt in range(1, 4):
+        print(f"{CYAN}   正在生成 beats 节奏... (尝试 {attempt}/3){RESET}")
+        response = call_minimax_llm(prompt)
 
-    if not response:
-        return []
+        if not response:
+            if attempt < 3:
+                print(f"{YELLOW}   LLM 返回为空，重试...{RESET}")
+                continue
+            return []
 
-    # 清理响应文本
-    text = response.strip()
-    if text.startswith("```"):
-        text = text.split("```")[1]
-        if text.startswith("json"):
-            text = text[4:]
-    text = text.strip()
+        # 清理响应文本
+        text = response.strip()
+        if text.startswith("```"):
+            text = text.split("```")[1]
+            if text.startswith("json"):
+                text = text[4:]
+        text = text.strip()
 
-    # 按句子标点分切成 beats
-    import re
-    # 按句子结束标点分切：。！？……以及换行
-    sentences = re.split(r'(?<=[。！？……\n])\s*', text)
-    sentences = [s.strip() for s in sentences if s.strip()]
+        # 按句子标点分切成 beats
+        sentences = re.split(r'(?<=[。！？……\n])\s*', text)
+        sentences = [s.strip() for s in sentences if s.strip()]
 
-    beats = []
-    for s in sentences:
-        beats.append({"startFrame": 0, "endFrame": 0, "text": s})
+        if not sentences:
+            if attempt < 3:
+                print(f"{YELLOW}   beats 分切为空，重试...{RESET}")
+                continue
+            return []
 
-    return beats
+        beats = [{"startFrame": 0, "endFrame": 0, "text": s} for s in sentences]
+        return beats
+
+    return []
 
 
 def generate_draft_json(word: str, strategy_key: str, scenes: list[str], out_path: Path) -> None:

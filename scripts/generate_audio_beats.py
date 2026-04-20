@@ -458,6 +458,24 @@ def main():
     log_cost(project_root, word, total_chars, cost, len(scenes), total_beats)
     print(f"成本记录已追加到: {project_root / 'data' / 'tts-cost-log.jsonl'}")
 
+    # Validate: all scene audio and beats files must exist
+    print(f"\n[Validation] Checking audio outputs in {out_dir}...")
+    missing = []
+    for i in range(1, len(scenes) + 1):
+        mp3_path = out_dir / f"scene{i}.mp3"
+        beats_path = out_dir / f"scene{i}-beats.json"
+        if not mp3_path.exists():
+            missing.append(f"scene{i}.mp3")
+        if not beats_path.exists():
+            missing.append(f"scene{i}-beats.json")
+    if missing:
+        print(f"\nFATAL: Missing {len(missing)} required file(s):", file=sys.stderr)
+        for f in missing:
+            print(f"  - {f}", file=sys.stderr)
+        print(f"\nAudio files are required for all {len(scenes)} scenes. Please check TTS synthesis errors above.", file=sys.stderr)
+        sys.exit(1)
+    print(f"[Validation] All {len(scenes)} scene audio files present.")
+
 
 if __name__ == "__main__":
     main()

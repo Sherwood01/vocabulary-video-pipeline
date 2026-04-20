@@ -1,0 +1,212 @@
+{
+  "word": "serendipity",
+  "title": "Serendipity",
+  "theme": "midnight",
+  "fps": 30,
+  "audioPrefix": "serendipity-audio-v1",
+  "scenes": [
+    {
+      "type": "hero-word",
+      "props": {
+        "kicker": "每日一词",
+        "title": "serendipity",
+        "word": "serendipity",
+        "subtitle": "那些不期而遇的美好，恰似命运在转角处为你精心准备的温柔馈赠",
+        "tags": [
+          "生活",
+          "情感",
+          "美好"
+        ]
+      },
+      "beats": [
+        {
+          "startFrame": 8,
+          "endFrame": 150,
+          "text": "生活中那些不经意的惊喜，其实是一种叫‘serendipity’的奇妙缘分。"
+        },
+        {
+          "startFrame": 172,
+          "endFrame": 357,
+          "text": "也许就在转角的咖啡店，窗外的雨滴与手心的热茶相遇，绽放出意想不到的温暖。"
+        },
+        {
+          "startFrame": 382,
+          "endFrame": 606,
+          "text": "这些不期而遇的美好，像是命运精心准备的礼物，让我们在平凡的日子里，也能感受到被宠爱的惊喜。"
+        },
+        {
+          "startFrame": 639,
+          "endFrame": 874,
+          "text": "所以，当你下次在不经意间发现惊喜时，记得把这份 serendipity 悄悄收藏，它会让你的生活更加绚烂。"
+        }
+      ]
+    },
+    {
+      "type": "origin-chain",
+      "props": {
+        "kicker": "词源",
+        "title": "意外的惊喜：Serendipity的词源之旅",
+        "nodes": [
+          {
+            "label": "Serendip",
+            "note": "古波斯语\n指锡兰（斯里兰卡）",
+            "color": "#f59e0b"
+          },
+          {
+            "label": "Three Princes of Serendip",
+            "note": "童话中的三位王子\n常意外发现宝藏",
+            "color": "#10b981"
+          },
+          {
+            "label": "Horace Walpole",
+            "note": "1754年英国作家\n依据童话创造此词",
+            "color": "#3b82f6"
+          },
+          {
+            "label": "serendipity",
+            "note": "意外发现美好事物\n的运气或机遇",
+            "color": "#8b5cf6"
+          }
+        ],
+        "arrowLabel": "“Serendipity”源自波斯童话《三位王子》，经沃波尔赋予新义，意为意外的好运。"
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 294,
+          "text": "你有没有想过，‘意外的好运’这个词到底从哪里来。"
+        },
+        {
+          "startFrame": 321,
+          "endFrame": 469,
+          "text": "它的源头可以追溯到古波斯语里的‘Serendip’，也就是今天的斯里兰卡。"
+        },
+        {
+          "startFrame": 478,
+          "endFrame": 685,
+          "text": "在童话《三位王子》里，这片土地的三位王子常在旅途中意外发现宝藏，故事的灵感后来被英国作家霍勒斯·沃尔波在1754年借用，创造了‘serendipity’这个新词。"
+        },
+        {
+          "startFrame": 713,
+          "endFrame": 854,
+          "text": "所以，当你遇到意想不到的美好时，就是一次serendipity的小奇迹。"
+        }
+      ]
+    },
+    {
+      "type": "answer-cards",
+      "props": {
+        "kicker": "三个要点",
+        "title": "什么是 serendipity，如何在生活中发现它？",
+        "question": "什么是 serendipity，如何在生活中发现它？",
+        "cards": [
+          {
+            "number": "01",
+            "icon": "Zap",
+            "headline": "意外的惊喜",
+            "body": "Serendipity 指在偶然中发现美好事物的惊喜体验，例如在旧书里翻到一张手写的信笺。",
+            "color": "#FF6B6B"
+          },
+          {
+            "number": "02",
+            "icon": "Heart",
+            "headline": "敏锐的观察",
+            "body": "发现 serendipity 需要保持开放的心态，留意身边的细微变化，往往在不经意间得到意想不到的收获。",
+            "color": "#4ECDC4"
+          },
+          {
+            "number": "03",
+            "icon": "Smile",
+            "headline": "积极的行动",
+            "body": "主动尝试新事物、探索未知领域会提升遇到 serendipity 的概率，让生活充满惊奇与乐趣。",
+            "color": "#FFE66D"
+          }
+        ],
+        "beats": [
+          {
+            "text": "首先介绍 serendipity 的定义，帮助听众把握概念核心。"
+          },
+          {
+            "text": "接着通过具体例子说明如何在日常生活中捕捉偶然的美好。"
+          },
+          {
+            "text": "最后给出实用技巧，鼓励大家在探索中主动创造 serendipity 的机会。"
+          }
+        ]
+      },
+      "beats": [
+        {
+          "startFrame": 9,
+          "endFrame": 192,
+          "text": "那些不经意的美好其实有个名字——serendipity，它指的是在偶然中发现惊喜的体验。"
+        },
+        {
+          "startFrame": 216,
+          "endFrame": 357,
+          "text": "比如在旧书里翻到一张手写的信笺，那种感觉就是 serendipity。"
+        },
+        {
+          "startFrame": 382,
+          "endFrame": 605,
+          "text": "发现它需要我们保持开放的心态，留意身边的细微变化，往往在不经意间就能收获意想不到的礼物。"
+        },
+        {
+          "startFrame": 630,
+          "endFrame": 815,
+          "text": "主动尝试新事物、多走出去探索，你会发现生活其实充满了惊奇与美好。"
+        }
+      ]
+    },
+    {
+      "type": "ending-summary",
+      "props": {
+        "kicker": "记住这个词",
+        "title": "Serendipity：意外的美好",
+        "formula": "serendip + ity = serendipity",
+        "points": [
+          {
+            "text": "意外发现的美好或运气，中文常译为“机缘巧合”。",
+            "color": "#FF6F61"
+          },
+          {
+            "text": "在日常、文学或职场中都可使用，形容不经意的惊喜。",
+            "color": "#4CAF50"
+          },
+          {
+            "text": "记忆技巧：把 serendipity 拆成 “serendip + ity”，联想到古老故事中意外宝藏的奇遇。",
+            "color": "#2196F3"
+          }
+        ],
+        "closing": "愿你在生活的每个转角，都能遇见属于自己的 serendipity。",
+        "narration": "Serendipity，这个源自古波斯语的词汇，原本是指在旅行中意外发现宝藏的幸运。如今，它常被用来形容在不经意间遇到的美好事物或惊喜。无论是生活中的小插曲，还是职场上的偶然机会，都可能是serendipity的体现。下次当你发现自己在毫无预期的情况下收获惊喜时，记得这就是serendipity在悄悄作祟。"
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 193,
+          "text": "Serendipity，这个源自古波斯语的词汇，原本是指在旅行中意外发现宝藏的幸运。"
+        },
+        {
+          "startFrame": 216,
+          "endFrame": 347,
+          "text": "如今，它常被用来形容在不经意间遇到的美好事物或惊喜。"
+        },
+        {
+          "startFrame": 376,
+          "endFrame": 548,
+          "text": "无论是生活中的小插曲，还是职场上的偶然机会，都可能是serendipity的体现。"
+        },
+        {
+          "startFrame": 575,
+          "endFrame": 783,
+          "text": "下次当你发现自己在毫无预期的情况下收获惊喜时，记得这就是serendipity在悄悄作祟。"
+        }
+      ]
+    }
+  ],
+  "_meta": {
+    "strategy": "story-driven",
+    "generatedBy": "diagnose_word.py",
+    "contentGeneratedBy": "MiniMax LLM"
+  }
+}

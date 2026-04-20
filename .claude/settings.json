@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c ':*)",
+      "Bash(python -c \"import json; d=json.load\\(open\\('data/beautiful-with-beats.json'\\)\\); print\\(f'beautiful-with-beats.json: {len\\(d[\\\\\"scenes\\\\\"]\\)} scenes, audioPrefix={d[\\\\\"audioPrefix\\\\\"]}'\\)\")",
+      "Bash(python -c \"import json; d=json.load\\(open\\('data/beautiful-draft-with-beats.json'\\)\\); print\\(f'beautiful-draft-with-beats.json: {len\\(d[\\\\\"scenes\\\\\"]\\)} scenes, audioPrefix={d[\\\\\"audioPrefix\\\\\"]}'\\)\")",
+      "Bash(python -c \"import json; d=json.load\\(open\\('data/beautiful-draft.json'\\)\\); print\\(f'beautiful-draft.json: {len\\(d[\\\\\"scenes\\\\\"]\\)} scenes, audioPrefix={d[\\\\\"audioPrefix\\\\\"]}'\\)\")",
+      "Bash(python -c \"import json; d=json.load\\(open\\('data/beautiful-with-beats.json', encoding='utf-8'\\)\\); print\\(f'beautiful-with-beats.json: {len\\(d[\\\\\"scenes\\\\\"]\\)} scenes, audioPrefix={d[\\\\\"audioPrefix\\\\\"]}'\\)\")",
+      "Bash(python -c \"import json; d=json.load\\(open\\('data/beautiful-draft-with-beats.json', encoding='utf-8'\\)\\); print\\(f'beautiful-draft-with-beats.json: {len\\(d[\\\\\"scenes\\\\\"]\\)} scenes, audioPrefix={d[\\\\\"audioPrefix\\\\\"]}'\\)\")"
+    ]
+  }
+}

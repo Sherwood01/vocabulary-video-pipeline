@@ -1,0 +1,174 @@
+{
+  "word": "beautiful",
+  "title": "Beautiful",
+  "theme": "midnight",
+  "fps": 30,
+  "audioPrefix": "beautiful-audio-v1",
+  "scenes": [
+    {
+      "type": "hero-word",
+      "props": {
+        "kicker": "每日一词",
+        "title": "beautiful",
+        "word": "beautiful",
+        "subtitle": "在平凡中发现不凡的光彩，让每一个瞬间都充满温柔与希望。",
+        "tags": [
+          "美学",
+          "情感",
+          "生活"
+        ]
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "你有没有想过，平凡的日子里藏匿着怎样的光芒？"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "今天，我们走进“beautiful”这个词，它不只是美的形容，更是一种感知——雨后街道的彩虹、朋友笑时的眼神、深夜灯火里的一抹温柔。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "每一个细微的瞬间，只要用心体会，都能让生活绽放出不凡的光彩，提醒我们：在忙碌的日常中，仍要保持温柔与希望，让心灵在每一次呼吸间，都被美好点亮。"
+        }
+      ]
+    },
+    {
+      "type": "full-screen-mood",
+      "props": {
+        "kicker": "光与影的交织",
+        "title": "晨光潋滟",
+        "subtitle": "当第一缕阳光洒在花瓣上，世界的美好在此刻绽放，温柔而绚烂。",
+        "emoji": "🌸✨🌅",
+        "beats": [
+          "轻柔的开场",
+          "渐进的叙述",
+          "高潮的描绘",
+          "余韵的收尾"
+        ]
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "光与影的交织在清晨悄然展开，这便是 beautiful 的瞬间。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "你有没有想过，当第一缕阳光洒在花瓣上，世界会在瞬间绽放出怎样的温柔？"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "晨光潋滟🌸✨🌅，柔和的光线像金色画笔，在露珠间跳跃，轻轻描摹每一寸柔软。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "我们慢慢走进这幅画面，感受光与暗的对话，聆听微风与花瓣的低语。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "高潮时分，光芒洒满整个视野，绚烂而不刺眼，像是自然的微笑在呼唤。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "余韵悠长，心中留下那份宁静与美好，像晨光一样永远在记忆里闪烁。"
+        }
+      ]
+    },
+    {
+      "type": "quote-page",
+      "props": {
+        "kicker": "Wise Words",
+        "quote": "Everything has beauty, but not everyone sees it.",
+        "translation": "万物皆美，但并非每个人都能看到它。",
+        "author": "佚名"
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "你有没有想过，为什么同样的世界，却有人看见光明，有人却只在阴影里徘徊？"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "今天我们聊聊‘万物皆美，但并非每个人都能看到它’这句古语。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "其实美就在我们身旁，只要用心去感受、去倾听，就能在平凡的瞬间发现不平凡的光彩。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "愿我们都能成为那个发现美的眼睛，让生活因看见而更加温暖。"
+        }
+      ]
+    },
+    {
+      "type": "ending-summary",
+      "props": {
+        "kicker": "Takeaway",
+        "title": "Beautiful：美丽的本质",
+        "formula": "beauty + ful = beautiful",
+        "points": [
+          {
+            "text": "Beautiful 意味着外在与内在的统一，常用于形容视觉与情感的美好。",
+            "color": "#FF6F91"
+          },
+          {
+            "text": "词根 “beaut” 源自古法语 “beauté”，意为‘美’，后加后缀 “-ful” 形成形容词。",
+            "color": "#6B5B95"
+          },
+          {
+            "text": "在口语和写作中，使用 Beautiful 能提升表达的感染力与画面感。",
+            "color": "#88B04B"
+          }
+        ],
+        "closing": "让 Beautiful 成为你语言中的光，照亮每一次沟通的瞬间。",
+        "narration": "今天我们来回顾beautiful这个词的整体结构。它由‘beauty’（美）和‘ful’（充满…的）两部分组成，完整表达‘充满美’的含义。使用时注意它的情感色彩，能够让描述更加生动。让我们一起把这个单词的精髓记住，并在日常表达中灵活运用吧。"
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "今天我们来回顾beautiful这个词的整体结构。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "它由‘beauty’（美）和‘ful’（充满…"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "的）两部分组成，完整表达‘充满美’的含义。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "使用时注意它的情感色彩，能够让描述更加生动。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "让我们一起把这个单词的精髓记住，并在日常表达中灵活运用吧。"
+        }
+      ]
+    }
+  ],
+  "_meta": {
+    "strategy": "mood-driven",
+    "generatedBy": "diagnose_word.py",
+    "contentGeneratedBy": "MiniMax LLM"
+  }
+}

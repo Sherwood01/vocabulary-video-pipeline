@@ -16,6 +16,8 @@ import { HelloWordVideo } from "./HelloWordVideo";
 import { SpacewalkWordVideo } from "./SpacewalkWordVideo";
 import { GhosttakeoutWordVideo } from "./GhosttakeoutWordVideo";
 import type { WordConfig } from "./pipeline/types";
+import { CometWordVideo } from "./CometWordVideo";
+import { SerendipityWordVideo } from "./SerendipityWordVideo";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -71,7 +73,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="BeautifulWordVideo"
         component={BeautifulWordVideo}
-        durationInFrames={1581}
+        durationInFrames={3619}
         fps={30}
         width={1920}
         height={1080}
@@ -143,6 +145,22 @@ export const RemotionRoot: React.FC = () => {
         id="GhosttakeoutWordVideo"
         component={GhosttakeoutWordVideo}
         durationInFrames={3149}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="CometWordVideo"
+        component={CometWordVideo}
+        durationInFrames={3889}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="SerendipityWordVideo"
+        component={SerendipityWordVideo}
+        durationInFrames={3986}
         fps={30}
         width={1920}
         height={1080}
