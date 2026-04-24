@@ -18,6 +18,10 @@ import { GhosttakeoutWordVideo } from "./GhosttakeoutWordVideo";
 import type { WordConfig } from "./pipeline/types";
 import { CometWordVideo } from "./CometWordVideo";
 import { SerendipityWordVideo } from "./SerendipityWordVideo";
+import { EarthquakeWordVideo } from "./EarthquakeWordVideo";
+import { MysteryWordVideo } from "./MysteryWordVideo";
+import { WisdomWordVideo } from "./WisdomWordVideo";
+import { SolutionWordVideo } from "./SolutionWordVideo";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -161,6 +165,38 @@ export const RemotionRoot: React.FC = () => {
         id="SerendipityWordVideo"
         component={SerendipityWordVideo}
         durationInFrames={3986}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="EarthquakeWordVideo"
+        component={EarthquakeWordVideo}
+        durationInFrames={4260}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="MysteryWordVideo"
+        component={MysteryWordVideo}
+        durationInFrames={3614}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="WisdomWordVideo"
+        component={WisdomWordVideo}
+        durationInFrames={2894}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="SolutionWordVideo"
+        component={SolutionWordVideo}
+        durationInFrames={4050}
         fps={30}
         width={1920}
         height={1080}

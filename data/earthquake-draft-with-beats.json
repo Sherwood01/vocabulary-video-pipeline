@@ -1,0 +1,220 @@
+{
+  "word": "earthquake",
+  "title": "Earthquake",
+  "theme": "midnight",
+  "fps": 30,
+  "audioPrefix": "earthquake-audio-v1",
+  "scenes": [
+    {
+      "type": "hero-word",
+      "props": {
+        "kicker": "每日一词",
+        "title": "earthquake",
+        "word": "earthquake",
+        "subtitle": "地震的瞬间，地球内部力量骤然而动，提醒人类敬畏自然的无穷威力。",
+        "tags": [
+          "自然",
+          "灾害",
+          "科学"
+        ]
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 164,
+          "text": "你有没有想过，当地球内部的能量突然释放时，会出现怎样的震撼场景。"
+        },
+        {
+          "startFrame": 191,
+          "endFrame": 384,
+          "text": "earthquake，这个词把大地的颤抖直接翻译成人类的语言，提醒我们自然的威力不可小觑。"
+        },
+        {
+          "startFrame": 407,
+          "endFrame": 642,
+          "text": "当房屋摇晃、街道颤抖时，正是地球内部断层释放能量的瞬间，让人不禁对自然的浩大产生敬畏。"
+        },
+        {
+          "startFrame": 669,
+          "endFrame": 898,
+          "text": "正是这种瞬间的力量，让我们更加懂得珍惜每一次平稳的日子，也提醒我们在自然的舞台上保持谦逊。"
+        }
+      ]
+    },
+    {
+      "type": "origin-chain",
+      "props": {
+        "kicker": "词源",
+        "title": "大地的震颤：earthquake 词源探秘",
+        "nodes": [
+          {
+            "label": "earth",
+            "note": "来源于古英语 eorþe\n意为“土地、土壤”。",
+            "color": "#f59e0b"
+          },
+          {
+            "label": "quake",
+            "note": "源自古英语 cwacian\n意为“摇动、颤抖”。",
+            "color": "#3b82f6"
+          },
+          {
+            "label": "earthquake",
+            "note": "14 世纪中叶首次记录\n由 earth + quake 组成，表示“大地的震动”。",
+            "color": "#10b981"
+          }
+        ],
+        "arrowLabel": "‘地震’一词源自古英语中的‘earth’与‘quake’，本意是‘大地的摇动’，体现了人类对自然力量的直观感受。"
+      },
+      "beats": [
+        {
+          "startFrame": 10,
+          "endFrame": 253,
+          "text": "earthquake 这个词到底是怎么来的。"
+        },
+        {
+          "startFrame": 262,
+          "endFrame": 420,
+          "text": "它其实是两个古英语词的结合：earth 来自 eorþe，意为土地、土壤；quake 则源自 cwacian，意思是摇动、颤抖。"
+        },
+        {
+          "startFrame": 426,
+          "endFrame": 667,
+          "text": "14 世纪中叶，这两个字首次被拼在一起，形成了 earthquake，用来形容大地的震动。"
+        },
+        {
+          "startFrame": 674,
+          "endFrame": 831,
+          "text": "这个名字本身就好像在提醒我们，地震是一种大自然的剧烈摇动，体现了人类对自然力量的直观感受。"
+        },
+        {
+          "startFrame": 855,
+          "endFrame": 1024,
+          "text": "听完这些，下次你听到‘地震’这个词，会有不一样的感受，也让我们更敬畏自然。"
+        }
+      ]
+    },
+    {
+      "type": "answer-cards",
+      "props": {
+        "kicker": "三个要点",
+        "title": "地震是怎样产生的？",
+        "question": "地震是怎样产生的？",
+        "cards": [
+          {
+            "number": "01",
+            "icon": "Zap",
+            "headline": "板块运动的力量",
+            "body": "地震主要由地球板块相互碰撞、挤压或分离引起，释放的能量导致地面震动。",
+            "color": "#FF6B6B"
+          },
+          {
+            "number": "02",
+            "icon": "Map",
+            "headline": "震源与震中的位置",
+            "body": "震源是地震能量释放的地下点，震中是地表对应位置，了解两者有助于评估破坏范围。",
+            "color": "#4ECDC4"
+          },
+          {
+            "number": "03",
+            "icon": "AlertTriangle",
+            "headline": "防灾减灾的重要性",
+            "body": "通过地震预警、建筑抗震设计和公众演练，可在灾害来临时最大程度降低伤亡和财产损失。",
+            "color": "#FFD93D"
+          }
+        ],
+        "beats": [
+          {
+            "text": "大家好，今天我们来聊聊地震的形成机制。"
+          },
+          {
+            "text": "首先，地球表面的板块在缓慢移动，彼此之间产生的应力会逐渐积累。"
+          },
+          {
+            "text": "当应力超过岩石强度，岩石会突然断裂，释放出巨大的能量，这就是地震的震源。"
+          },
+          {
+            "text": "随后，震动沿地下传播到地表，形成我们感受到的地震波。了解这些可以帮助我们做好防护。"
+          }
+        ]
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 252,
+          "text": "脚下坚硬的岩石竟会突然颤抖，产生强大的能量？"
+        },
+        {
+          "startFrame": 265,
+          "endFrame": 443,
+          "text": "地震的根本来源是地球板块的挤压、碰撞或分离，这种应力一旦超过岩石的承受极限，便会瞬间释放，引发震动波向四周扩散。"
+        },
+        {
+          "startFrame": 470,
+          "endFrame": 718,
+          "text": "震源是地下的能量释放点，震中则是地面上对应的位置，它们之间的距离和深度决定了破坏的范围和强度。"
+        },
+        {
+          "startFrame": 744,
+          "endFrame": 1015,
+          "text": "因此，了解板块运动、掌握震源与震中的关系，并通过预警和抗震设计做好准备，是我们减轻灾害损失的关键。"
+        }
+      ]
+    },
+    {
+      "type": "ending-summary",
+      "props": {
+        "kicker": "记住这个词",
+        "title": "认识“earthquake”",
+        "formula": "earth + quake = earthquake",
+        "points": [
+          {
+            "text": "earth 表示地球，quake 意为震动，二者相加即‘地震’之意。",
+            "color": "#FF6F61"
+          },
+          {
+            "text": "在新闻报道和科学文献中，earthquake 常指突发的强烈地面振动。",
+            "color": "#4CAF50"
+          },
+          {
+            "text": "记忆技巧：把 earth 想象成脚下的大地，quake 想象成抖动，组合起来就是‘地震’。",
+            "color": "#2196F3"
+          }
+        ],
+        "closing": "掌握 earthquake，让你的英语表达更精准、更有力量！",
+        "narration": "earthquake（地震）由earth（地球）和quake（震动）两个词根组合而成，字面意思即为‘地球的震动’。在新闻报道和科学研究中，earthquake 常用来描述突发、强烈的地面振动事件。记忆技巧：把 earth 想象成脚下的大地，quake 想象成抖动，两者相加便能快速想起‘地震’的意思。掌握 earthquake，不仅丰富词汇量，也让你在谈论自然灾害时更加从容。在实际交流中，使用 earthquake 能让你的描述更专业、更有力度。"
+      },
+      "beats": [
+        {
+          "startFrame": 9,
+          "endFrame": 231,
+          "text": "earthquake（地震）由earth（地球）和quake（震动）两个词根组合而成，字面意思即为‘地球的震动’。"
+        },
+        {
+          "startFrame": 257,
+          "endFrame": 480,
+          "text": "在新闻报道和科学研究中，earthquake 常用来描述突发、强烈的地面振动事件。"
+        },
+        {
+          "startFrame": 487,
+          "endFrame": 674,
+          "text": "记忆技巧：把 earth 想象成脚下的大地，quake 想象成抖动，两者相加便能快速想起‘地震’的意思。"
+        },
+        {
+          "startFrame": 700,
+          "endFrame": 866,
+          "text": "掌握 earthquake，不仅丰富词汇量，也让你在谈论自然灾害时更加从容。"
+        },
+        {
+          "startFrame": 892,
+          "endFrame": 1033,
+          "text": "在实际交流中，使用 earthquake 能让你的描述更专业、更有力度。"
+        }
+      ]
+    }
+  ],
+  "_meta": {
+    "strategy": "story-driven",
+    "generatedBy": "diagnose_word.py",
+    "contentGeneratedBy": "MiniMax LLM"
+  }
+}

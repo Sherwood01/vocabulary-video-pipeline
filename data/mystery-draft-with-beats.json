@@ -1,0 +1,170 @@
+{
+  "word": "mystery",
+  "title": "Mystery",
+  "theme": "midnight",
+  "fps": 30,
+  "audioPrefix": "mystery-audio-v1",
+  "scenes": [
+    {
+      "type": "hero-word",
+      "props": {
+        "kicker": "每日一词",
+        "title": "mystery",
+        "word": "mystery",
+        "subtitle": "在日常与超自然之间，它总能用一缕不确定的光，挑起我们心底最深的探索欲。",
+        "tags": [
+          "谜",
+          "探索",
+          "未知"
+        ]
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 201,
+          "text": "你有没有想过，为什么某个瞬间突然出现的疑问，能让我们心里像被点燃的灯塔一样，闪耀不止。"
+        },
+        {
+          "startFrame": 228,
+          "endFrame": 532,
+          "text": "‘mystery’——这个词本身就像一扇半掩的门，既不属于日常，也不完全落入超自然。"
+        },
+        {
+          "startFrame": 539,
+          "endFrame": 659,
+          "text": "它用一缕不确定的光，轻轻挑起我们的好奇心，让我们在‘谜’、‘探索’和‘未知’的标签之间来回徘徊。"
+        },
+        {
+          "startFrame": 686,
+          "endFrame": 887,
+          "text": "所以，今天就让‘mystery’成为你的指南针，在日常的细碎里，也能感受到那份探险的乐趣。"
+        }
+      ]
+    },
+    {
+      "type": "full-screen-mood",
+      "props": {
+        "kicker": "谜之韵",
+        "title": "雾幕背后",
+        "subtitle": "在星光的细碎低语中，揭开未知的薄纱。",
+        "emoji": "🔮",
+        "beats": [
+          "第一拍：轻拂薄雾，唤起悬念",
+          "第二拍：聆听心跳的节奏，渐入佳境",
+          "第三拍：光影交错，点燃好奇之火",
+          "第四拍：高潮绽放，谜底若隐若现",
+          "第五拍：余音回荡，留下未尽的遐想"
+        ]
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 113,
+          "text": "在星空的低声呢喃里，隐藏着多少未解的谜团。"
+        },
+        {
+          "startFrame": 138,
+          "endFrame": 275,
+          "text": "轻拂薄雾的瞬间，心跳的节拍悄悄跟随，仿佛宇宙在呼吸。"
+        },
+        {
+          "startFrame": 301,
+          "endFrame": 429,
+          "text": "光影交错中，谜底若隐若现，好奇之火在胸中燃起。"
+        },
+        {
+          "startFrame": 455,
+          "endFrame": 583,
+          "text": "高潮绽放，星光碎语化作谜的旋律，在心里久久回荡。"
+        },
+        {
+          "startFrame": 609,
+          "endFrame": 750,
+          "text": "每一次的追寻，都是对未知的温柔致敬，谜之韵永不结束。"
+        }
+      ]
+    },
+    {
+      "type": "quote-page",
+      "props": {
+        "kicker": "Wise Words",
+        "quote": "The mystery of life is not a problem to be solved but a reality to be experienced.",
+        "translation": "生命的奥秘不是一个需要解决的问题，而是一种需要体验的现实。",
+        "author": "佚名"
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 168,
+          "text": "生命的奥秘并不是一道需要解答的难题，而是一种需要我们亲身感受的真实。"
+        },
+        {
+          "startFrame": 196,
+          "endFrame": 392,
+          "text": "这句话出自一位匿名的智者，提醒我们在忙碌的生活中，常常把未知当作必须解决的问题。"
+        },
+        {
+          "startFrame": 418,
+          "endFrame": 506,
+          "text": "其实，真正的成长来自于拥抱未知，体验当下的每一刻，让心灵在探索中获得自由。"
+        },
+        {
+          "startFrame": 515,
+          "endFrame": 825,
+          "text": "所以，让我们放下焦虑，敞开感官，去感受那份独特而深远的生命奇迹吧。"
+        }
+      ]
+    },
+    {
+      "type": "ending-summary",
+      "props": {
+        "kicker": "Takeaway",
+        "title": "神秘的谜团——mystery",
+        "formula": "myst + ery = mystery",
+        "points": [
+          {
+            "text": "神秘感：mystery 代表一种未知的、引人好奇的氛围",
+            "color": "#9B59B6"
+          },
+          {
+            "text": "悬疑：常用于描述悬而未决的情节或谜题",
+            "color": "#E67E22"
+          },
+          {
+            "text": "好奇心：使用 mystery 能激发听者探索未知的欲望",
+            "color": "#3498DB"
+          }
+        ],
+        "closing": "记住 mystery，点亮你的语言星光。",
+        "narration": "今天我们来拆解单词 mystery，它的本义是神秘或谜团。我们可以把它拆成 myst 加 ery 两个部分，myst 代表神秘的感觉，ery 则像是一种抽象的后缀。在实际使用时，mystery 常用于描述电影、小说或生活中的未解之谜，带给人好奇和期待。掌握了这个词，你会发现它能够帮助你在表达中增添一层神秘感，让听众产生探索的兴趣。"
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 139,
+          "text": "今天我们来拆解单词 mystery，它的本义是神秘或谜团。"
+        },
+        {
+          "startFrame": 165,
+          "endFrame": 372,
+          "text": "我们可以把它拆成 myst 加 ery 两个部分，myst 代表神秘的感觉，ery 则像是一种抽象的后缀。"
+        },
+        {
+          "startFrame": 396,
+          "endFrame": 617,
+          "text": "在实际使用时，mystery 常用于描述电影、小说或生活中的未解之谜，带给人好奇和期待。"
+        },
+        {
+          "startFrame": 641,
+          "endFrame": 847,
+          "text": "掌握了这个词，你会发现它能够帮助你在表达中增添一层神秘感，让听众产生探索的兴趣。"
+        }
+      ]
+    }
+  ],
+  "_meta": {
+    "strategy": "mood-driven",
+    "generatedBy": "diagnose_word.py",
+    "contentGeneratedBy": "MiniMax LLM"
+  }
+}

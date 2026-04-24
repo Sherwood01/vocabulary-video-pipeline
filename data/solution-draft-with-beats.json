@@ -1,0 +1,208 @@
+{
+  "word": "solution",
+  "title": "Solution",
+  "theme": "midnight",
+  "fps": 30,
+  "audioPrefix": "solution-audio-v1",
+  "scenes": [
+    {
+      "type": "hero-word",
+      "props": {
+        "kicker": "每日一词",
+        "title": "Solution",
+        "word": "solution",
+        "subtitle": "它是破解难题的钥匙，也是开启无限可能的起点，让每一次挑战都充满希望。",
+        "tags": [
+          "创新",
+          "思维",
+          "生活"
+        ]
+      },
+      "beats": [
+        {
+          "startFrame": 9,
+          "endFrame": 308,
+          "text": "提起solution，你会想到什么？"
+        },
+        {
+          "startFrame": 337,
+          "endFrame": 445,
+          "text": "它不只是一个单词，更像是破解难题的钥匙，帮助我们把看似无解的局面拆解成一步步可行的路径。"
+        },
+        {
+          "startFrame": 451,
+          "endFrame": 558,
+          "text": "当你找到那个关键点时，挑战会瞬间变成机遇，甚至会点燃心中的创造火花。"
+        },
+        {
+          "startFrame": 565,
+          "endFrame": 746,
+          "text": "所以，每当我们面对困难时，记得把 solution 当成指南针，让它引领我们走向无限可能。"
+        }
+      ]
+    },
+    {
+      "type": "timeline-page",
+      "props": {
+        "kicker": "Etymology",
+        "title": "从古罗马到现代：'solution' 的千年语义之旅",
+        "events": [
+          {
+            "year": "约公元前5世纪",
+            "description": "拉丁语词根 “solutio” 出现，源自动词 “solvere”（松开、解开），本义为‘解开’或‘释放’。"
+          },
+          {
+            "year": "公元前1世纪左右",
+            "description": "古罗马法律文献中 “solutio” 被用于描述债务的清偿，即‘履行、支付’。"
+          },
+          {
+            "year": "公元2世纪",
+            "description": "希腊词 “λύσις (lysis)” 被译为拉丁 “solutio”，引申出‘解决、解答’的意义。"
+          },
+          {
+            "year": "13世纪",
+            "description": "古法语中吸收拉丁词 “solution”，意为‘解答、解决办法’，随后进入中世纪英语。"
+          },
+          {
+            "year": "14世纪",
+            "description": "中古英语首次出现拼写 “solucioun”，用于指代‘答案、解决办法’，常出现在学术与文学作品。"
+          },
+          {
+            "year": "17世纪",
+            "description": "科学革命时期，化学领域采用 “solution” 表示‘溶液’，专指一种物质在另一物质中的均匀混合。"
+          },
+          {
+            "year": "18世纪末",
+            "description": "数学中引入 “solution” 表示方程或问题的‘解’，成为学科术语的标准词汇。"
+          },
+          {
+            "year": "19世纪",
+            "description": "工程学与机械学中，“solution” 开始指代‘设计方案、解决方案’，体现为具体的技术实现路径。"
+          },
+          {
+            "year": "20世纪中",
+            "description": "计算机科学兴起，算法与程序设计中使用 “solution” 表示‘算法解决方案’，常配合前缀 “optimal solution”。"
+          },
+          {
+            "year": "21世纪",
+            "description": "商业与日常生活中，“solution” 已成为‘一体化解决方案’的代名词，如“云计算解决方案”“企业数字化方案”。"
+          }
+        ]
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 363,
+          "text": "今天我们来聊聊 \"solution\" 这个词。"
+        },
+        {
+          "startFrame": 389,
+          "endFrame": 681,
+          "text": "你知道吗，它的源头可以追溯到约公元前5世纪的拉丁语 \"solutio\"，源自动词 \"solvere\"，本意是\"解开\"或\"释放\"。"
+        },
+        {
+          "startFrame": 706,
+          "endFrame": 964,
+          "text": "后来在罗马法律中，它被用来描述债务的清偿，而到了公元2世纪，希腊词 \"λύσις\" 被译为 \"solutio\"，这才引申出\"解决、解答\"的含义。"
+        },
+        {
+          "startFrame": 974,
+          "endFrame": 1164,
+          "text": "进入欧洲语言后，它的意义不断扩展——科学革命时期它指\"溶液\"，数学里它是\"解\"，工程学中它是\"设计方案\"，而到了21世纪，\"solution\" 已成为云计算、企业数字化等各种综合方案的代名词。"
+        },
+        {
+          "startFrame": 1190,
+          "endFrame": 1454,
+          "text": "这个词从\"解开\"到\"解决\"，走过了两千五百年的语义旅程，如今依然是我们描述问题与答案时最常用的词汇之一。"
+        }
+      ]
+    },
+    {
+      "type": "quote-page",
+      "props": {
+        "kicker": "Wise Words",
+        "quote": "We cannot solve our problems with the same thinking we used when we created them.",
+        "translation": "我们不能用制造问题时同样的思维方式来解决它们。",
+        "author": "Albert Einstein"
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 134,
+          "text": "今天我们来聊聊‘solution’，一个看似简单却充满力量的词。"
+        },
+        {
+          "startFrame": 158,
+          "endFrame": 407,
+          "text": "爱因斯坦曾说，‘我们不能用制造问题时同样的思维方式来解决它们’，这句话点出了真正的答案往往需要换位思考。"
+        },
+        {
+          "startFrame": 435,
+          "endFrame": 618,
+          "text": "所以，面对挑战时，别忘了给自己一次重新出发的机会，这才是真正的‘solution’。"
+        },
+        {
+          "startFrame": 642,
+          "endFrame": 767,
+          "text": "愿你在每一次困境中，都能找到那个让思路转弯的钥匙。"
+        }
+      ]
+    },
+    {
+      "type": "ending-summary",
+      "props": {
+        "kicker": "Takeaway",
+        "title": "掌握 solution",
+        "formula": "solve + -tion = solution",
+        "points": [
+          {
+            "text": "意义：solution 表示‘解答’或‘处理办法’，用于描述问题的最终答案。",
+            "color": "#FF6B6B"
+          },
+          {
+            "text": "构成：源自拉丁语 solutio，solve（解决） + -tion（行为或结果）构成。",
+            "color": "#4ECDC4"
+          },
+          {
+            "text": "使用：常见于正式场合，如 solution to the problem（问题的解决方案）。",
+            "color": "#FFE66D"
+          }
+        ],
+        "closing": "愿你在每一次挑战面前，都能快速找到合适的 solution，温暖前行！",
+        "narration": "今天我们一起拆解了单词 solution。它的构成十分清晰，solve 加后缀 -tion，表达了‘解决’的动作和结果。了解这个词根能帮助我们快速联想到它的核心含义——提供答案或办法。在日常对话或商务写作中，用 solution 来描述问题时，显得既专业又简洁。希望通过这次学习，你在遇到难题时，能够第一时间想到 solution，找到最佳答案。"
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 77,
+          "text": "今天我们一起拆解了单词 solution。"
+        },
+        {
+          "startFrame": 105,
+          "endFrame": 256,
+          "text": "它的构成十分清晰，solve 加后缀 -tion，表达了‘解决’的动作和结果。"
+        },
+        {
+          "startFrame": 279,
+          "endFrame": 440,
+          "text": "了解这个词根能帮助我们快速联想到它的核心含义——提供答案或办法。"
+        },
+        {
+          "startFrame": 466,
+          "endFrame": 648,
+          "text": "在日常对话或商务写作中，用 solution 来描述问题时，显得既专业又简洁。"
+        },
+        {
+          "startFrame": 675,
+          "endFrame": 852,
+          "text": "希望通过这次学习，你在遇到难题时，能够第一时间想到 solution，找到最佳答案。"
+        }
+      ]
+    }
+  ],
+  "_meta": {
+    "strategy": "evolution-driven",
+    "generatedBy": "diagnose_word.py",
+    "contentGeneratedBy": "MiniMax LLM"
+  }
+}
