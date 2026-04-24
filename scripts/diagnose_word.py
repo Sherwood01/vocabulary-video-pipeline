@@ -125,7 +125,17 @@ def llm_infer_strategy(word: str, registry: dict) -> tuple[str, str] | None:
 
 def resolve_scenes(strategy_key: str, registry: dict) -> list[str]:
     strategy = registry.get("strategies", {}).get(strategy_key, {})
-    return list(strategy.get("defaultScenes", []))
+    scenes = list(strategy.get("defaultScenes", []))
+    # Director 强制要求 origin-chain 必须存在
+    if "origin-chain" not in scenes:
+        # 插入到 hero-word 之后（如果存在），作为第一个内容深挖场景
+        # 叙事顺序：引入(hero) → 词源(origin-chain) → 内容 → 结尾
+        if "hero-word" in scenes:
+            hero_idx = scenes.index("hero-word")
+            scenes.insert(hero_idx + 1, "origin-chain")
+        else:
+            scenes.insert(0, "origin-chain")
+    return scenes
 
 
 def check_missing_templates(scenes: list[str], registry: dict) -> list[str]:
@@ -210,6 +220,11 @@ def generate_scene_prompt(word: str, scene_type: str, scene_index: int, total_sc
 - word: 单词原形
 - subtitle: 一句吸引人的中文副标题，介绍这个单词的特别之处（20-40字）
 - tags: 3个相关标签数组（如 ["生活", "情感", "仪式感"]）
+- narration: 旁白配音稿，**必须恰好 4 句**：
+  第1句：引入单词（如"今天我们来聊聊 {word}"）
+  第2-4句：围绕 subtitle 展开，自然流畅
+  **每句必须以中文句号「。」结尾，禁止使用英文句号**
+  **禁止将本 prompt 内容或 JSON 结构混入 narration**
 
 请用中文生成内容，直接返回 JSON，不要有其他文字。"""
 
@@ -219,7 +234,7 @@ def generate_scene_prompt(word: str, scene_type: str, scene_index: int, total_sc
 请生成一个 JSON 对象，包含以下字段：
 - kicker: "Etymology" 或 "词源"
 - title: 一个吸引人的中文标题
-- nodes: 词源节点数组，每个节点包含：
+- nodes: 词源节点数组（**建议 3-4 个节点**），每个节点包含：
   - label: 单词或词根
   - note: 简短的解释（用 \n 分隔两行）
   - color: 十六进制颜色码（如 "#f59e0b"）
@@ -237,11 +252,15 @@ def generate_scene_prompt(word: str, scene_type: str, scene_index: int, total_sc
 - cards: 三个卡片数组，每个卡片包含：
   - number: 编号（"01", "02", "03"）
   - icon: 图标名称（使用 lucide-react 图标名，如 "Zap", "Heart", "Smile"）
-  - headline: 简短的中文标题
+  - headline: 简短的中文标题（**关键词，必须出现在对应 beats 文本中**）
   - body: 中文解释文字（30-60字）
   - color: 十六进制颜色码
-- beats: 讲解节奏数组，每个 beat 包含：
-  - text: 讲解文本
+- narration: 旁白配音稿，必须恰好 4 句（cards.length + 1）：
+  第1句：引出问题，引人入胜
+  第2句：第1个卡片，**必须包含 cards[0]["headline"] 原文**
+  第3句：第2个卡片，**必须包含 cards[1]["headline"] 原文**
+  第4句：第3个卡片，**必须包含 cards[2]["headline"] 原文**
+  每句必须以句号「。」结尾。
 
 请用中文生成内容，直接返回 JSON，不要有其他文字。"""
 
@@ -253,10 +272,17 @@ def generate_scene_prompt(word: str, scene_type: str, scene_index: int, total_sc
 - title: 一个简短的中文标题
 - formula: 单词拆解公式（如 "break + fast = breakfast"）
 - points: 3个要点数组，每个包含：
-  - text: 要点文字
+  - text: 要点文字（**这是关键词，必须出现在对应 beats 文本中**）
   - color: 十六进制颜色码
 - closing: 一句结束语，中文，温暖有力
-- narration: 讲解配音稿，120-180字，分3-5个句子，每句以句号结尾，方便后续按句子切分 beats
+- narration: 讲解配音稿，**必须恰好 6 句**（= 3个points + 3）：
+  第1句：介绍单词拆解公式，**必须包含完整的 formula 文本**
+  第2句：第1个要点，**必须包含 points[0]["text"] 的原文**
+  第3句：第2个要点，**必须包含 points[1]["text"] 的原文**
+  第4句：第3个要点，**必须包含 points[2]["text"] 的原文**
+  第5句：结束语，温暖有力，呼应主题
+  第6句：升华语，传递情绪价值（如"愿你如 crystal 般清澈透明"）
+  **每句必须以句号「。」结尾，不得合并，不得省略**
 
 请用中文生成内容，直接返回 JSON，不要有其他文字。"""
 
@@ -280,6 +306,12 @@ def generate_scene_prompt(word: str, scene_type: str, scene_index: int, total_sc
 - quote: 一句英文名言
 - translation: 中文翻译
 - author: 作者名（如果不知道可以写 "佚名"）
+- narration: 旁白配音稿，必须恰好 4 句，格式固定：
+  第1句：引出名言的开场白（如"提起{word}，有句话说得真好..."）
+  第2句：英文名言原文（保持英文，但句末必须加中文句号「。」，不能用英文句号"."）
+  第3句：中文翻译
+  第4句：收尾评论，温暖有力（如"这句话送给正在了解{word}的你"）
+  **每句必须以中文句号「。」结尾，包括第2句英文名言也必须以中文句号结尾**
 
 请用中文和英文生成内容，直接返回 JSON，不要有其他文字。"""
 
@@ -289,7 +321,8 @@ def generate_scene_prompt(word: str, scene_type: str, scene_index: int, total_sc
 请生成一个 JSON 对象，包含以下字段：
 - kicker: "Etymology" 或 "词义演变"
 - title: 一个吸引人的中文标题
-- events: 时间线事件数组
+- events: 时间线事件数组（**建议不超过 5 个事件，因为 narration 需要一句一事件**）
+- narration: 旁白配音稿，**恰好 N 句（N = events.length）**，每句描述对应事件，包括年份和核心内容，句句以句号「。」结尾。
 
 请用中文生成内容，直接返回 JSON，不要有其他文字。"""
 
@@ -349,23 +382,65 @@ def generate_scene_content(word: str, scene_type: str, scene_index: int, total_s
 def generate_beats_for_scene(word: str, scene_type: str, props: dict) -> list:
     """
     为场景生成 beats（讲解节奏）。如果 beats 为空会自动重试，最多 3 次。
+    对于 origin-chain/answer-cards/ending-summary，会嵌入关键词要求。
     """
     import re
 
-    # 如果 props 中已有 narration 字段（ending-summary 场景），直接使用
+    # 如果 props 中已有 narration 字段（ending-summary/quote-page 等场景），直接使用
     narration = props.get("narration", "")
     if narration:
+        if isinstance(narration, list):
+            beats = [{"startFrame": 0, "endFrame": 0, "text": s} for s in narration if s.strip()]
+            return beats
         sentences = re.split(r'(?<=[。！？……\n])\s*', narration)
         sentences = [s.strip() for s in sentences if s.strip()]
         beats = [{"startFrame": 0, "endFrame": 0, "text": s} for s in sentences]
         return beats
+
+    # ── 各场景的关键词要求（来自 Director 校验规则）─────────────────────────────
+    keyword_instruction = ""
+    if scene_type == "origin-chain":
+        nodes = props.get("nodes", [])
+        if nodes:
+            # 去掉括号里的语言标注，只保留核心词形
+            clean_labels = []
+            for n in nodes:
+                label = n["label"]
+                # 去掉形如"xxx（古希腊语）""xxx（拉丁语）"的后缀
+                label_clean = re.sub(r'（[^）]+）$', '', label)
+                clean_labels.append(label_clean)
+            label_list = "、".join(f'"{l}"' for l in clean_labels)
+            keyword_instruction = (
+                f'\n## 关键词约束（必须满足）\n'
+                f'每个 beats[i] 必须包含节点词形：{label_list}。\n'
+                f'生成恰好 {len(nodes)} 句，第 i 句必须包含第 i 个节点的词形。\n'
+            )
+
+    elif scene_type == "answer-cards":
+        cards = props.get("cards", [])
+        if cards:
+            headline_list = "、".join(f'"{c["headline"]}"' for c in cards)
+            keyword_instruction = (
+                f'\n## 关键词约束（必须满足）\n'
+                f'第1句为开场白，第 1+i 句必须包含 cards[{i}]["headline"]：{headline_list}。\n'
+                f'生成恰好 {len(cards) + 1} 句。\n'
+            )
+
+    elif scene_type == "timeline-page":
+        events = props.get("events", [])
+        if events:
+            keyword_instruction = (
+                f'\n## 关键词约束（必须满足）\n'
+                f'每个 beats[i] 必须描述 events[{i}]["year"] 和 events[{i}]["description"]。\n'
+                f'生成恰好 {len(events)} 句，每句对应一个事件。\n'
+            )
 
     # 生成讲解文本的 prompt
     prompt = f"""为单词 "{word}" 的 {scene_type} 场景撰写 TTS 旁白配音稿。
 
 场景类型: {scene_type}
 场景内容: {json.dumps(props, ensure_ascii=False)}
-
+{keyword_instruction}
 ## 强制要求
 - **每句话必须以句号「。」结尾**，不得省略
 - 全文 3-5 句话，总字数 80-200 字

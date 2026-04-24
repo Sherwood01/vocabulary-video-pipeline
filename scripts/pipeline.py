@@ -166,9 +166,26 @@ def main():
     if not success:
         sys.exit(1)
 
-    # Step 3: Register composition in Root.tsx (before render)
+    # Step 3: Director signoff validation
+    draft_with_beats_path = PROJECT_ROOT / "data" / f"{word}-draft-with-beats.json"
+    if draft_with_beats_path.exists():
+        print(f"\n{'='*50}")
+        print("Step 3: Director signoff validation")
+        print('='*50)
+        result = subprocess.run(
+            ["py", "scripts/director_validate.py", "--input", str(draft_with_beats_path)],
+            cwd=PROJECT_ROOT,
+        )
+        if result.returncode != 0:
+            print("❌ Director signoff FAILED. Pipeline aborted.", file=sys.stderr)
+            sys.exit(1)
+        print("✅ Director signoff PASSED.")
+    else:
+        print(f"\n⚠️  {draft_with_beats_path} not found, skipping Director validation")
+
+    # Step 4: Register composition in Root.tsx (before render)
     print(f"\n{'='*50}")
-    print("Step 3: Register WordVideo in Root.tsx")
+    print("Step 4: Register WordVideo in Root.tsx")
     print('='*50)
 
     draft_with_beats_path = PROJECT_ROOT / "data" / f"{word}-draft-with-beats.json"
@@ -185,7 +202,7 @@ def main():
 
     # Validate audio files before render
     print(f"\n{'='*50}")
-    print("Step 3b: Validate audio assets")
+    print("Step 4b: Validate audio assets")
     print('='*50)
     audio_prefix = draft_config.get("audioPrefix", f"{word}-audio-v1")
     audio_dir = PROJECT_ROOT / "public" / audio_prefix
@@ -206,16 +223,16 @@ def main():
         sys.exit(1)
     print(f"Validated {len(scenes)} scenes, all audio files present.")
 
-    # Step 4: Render video
+    # Step 5: Render video
     if args.skip_render:
         print(f"\n{'='*50}")
-        print("Step 4: Render skipped (--skip-render)")
+        print("Step 5: Render skipped (--skip-render)")
         print('='*50)
     else:
         word_cap = word.capitalize()
         video_output = PROJECT_ROOT / "renders" / f"{word}-word-video.mp4"
         success = run_step(
-            "Step 4: Render video",
+            "Step 5: Render video",
             [NPX_CMD, "remotion", "render", f"{word_cap}WordVideo", str(video_output), "--cache=never"]
         )
         if not success:

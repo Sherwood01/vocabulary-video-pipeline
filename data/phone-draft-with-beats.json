@@ -1,0 +1,189 @@
+{
+  "word": "phone",
+  "title": "Phone",
+  "theme": "midnight",
+  "fps": 30,
+  "audioPrefix": "phone-audio-v1",
+  "scenes": [
+    {
+      "type": "hero-word",
+      "props": {
+        "kicker": "每日一词",
+        "title": "phone",
+        "word": "phone",
+        "subtitle": "从最初的通话工具到智能生活中心，手机已渗透到我们日常的每一个细节。",
+        "tags": [
+          "科技",
+          "生活",
+          "沟通"
+        ]
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 170,
+          "text": "今天我们来聊聊phone，这个从最初的电话工具演变成智能生活中心的过程。"
+        },
+        {
+          "startFrame": 195,
+          "endFrame": 406,
+          "text": "从拨打第一通电话到随时随地刷视频、支付、导航，手机已经渗透到我们日常的每一个细节。"
+        },
+        {
+          "startFrame": 433,
+          "endFrame": 609,
+          "text": "它不只是通讯工具，更是我们记录灵感、连接世界、表达自我的隐形英雄。"
+        },
+        {
+          "startFrame": 637,
+          "endFrame": 865,
+          "text": "当指尖轻触屏幕的那一刻，仿佛打开了通往未来的大门，而phone正站在这扇门的入口，引领我们前行。"
+        }
+      ]
+    },
+    {
+      "type": "timeline-page",
+      "props": {
+        "kicker": "Etymology",
+        "title": "跨越百年的‘Phone’：从声波到智能手机的奇妙旅程",
+        "events": [
+          {
+            "year": -600,
+            "description": "古希腊词根 φωνή (phōnē) 出现，表示‘声音、嗓音’，为后世‘phone’的起源奠定基础。"
+          },
+          {
+            "year": 1656,
+            "description": "英国学者托马斯·布朗在《医学词典》中首次使用 'phoné'，意指‘声音的记录’。"
+          },
+          {
+            "year": 1837,
+            "description": "塞缪尔·莫尔斯发明电报，首次实现远距离电信号传递，为电话的出现提供了技术铺垫。"
+          },
+          {
+            "year": 1876,
+            "description": "亚历山大·格雷厄姆·贝尔在美国专利局登记‘电话’，正式将 'telephone' 简称为 'phone'。"
+          },
+          {
+            "year": 1900,
+            "description": "公共电话交换台普及，普通家庭通过线路接入电话网络，'phone' 成为日常沟通的代名词。"
+          },
+          {
+            "year": 1973,
+            "description": "马丁·库珀在摩托罗拉展示第一部移动电话原型，标志‘phone’进入无线时代。"
+          },
+          {
+            "year": 1992,
+            "description": "诺基亚推出第一款商业化GSM手机，'phone' 开始向便携式设备转变。"
+          },
+          {
+            "year": 2007,
+            "description": "苹果公司发布iPhone，智能手机时代开启，'phone' 融入了互联网、多媒体与人工智能。"
+          },
+          {
+            "year": 2020,
+            "description": "5G网络全球铺开，'phone' 的功能从通信扩展至万物互联，成为连接一切的关键终端。"
+          }
+        ]
+      },
+      "beats": [
+        {
+          "startFrame": 9,
+          "endFrame": 193,
+          "text": "提起“phone”，你会想到什么？"
+        },
+        {
+          "startFrame": 218,
+          "endFrame": 334,
+          "text": "一块屏幕、一款APP，还是每天解锁上百次的习惯？"
+        },
+        {
+          "startFrame": 358,
+          "endFrame": 582,
+          "text": "但这个词的旅程，其实始于两千六百年前的古希腊。"
+        },
+        {
+          "startFrame": 590,
+          "endFrame": 794,
+          "text": "“φωνή”意为“声音”，从布朗1656年首次用“phoné”记录声音，到1876年贝尔为它注册“电话”的名字，再到2007年iPhone开启智能时代——“phone”从传递声波的设备，演变成连接万物的终端。"
+        },
+        {
+          "startFrame": 819,
+          "endFrame": 977,
+          "text": "如今5G铺开，手机早已不只是通话工具，而是我们触摸世界的窗口。"
+        }
+      ]
+    },
+    {
+      "type": "quote-page",
+      "props": {
+        "kicker": "Wise Words",
+        "quote": "A phone is more than a tool; it is the lifeline that binds humanity together.",
+        "translation": "手机不仅仅是工具；它是把人类联系在一起的命脉。",
+        "author": "佚名"
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 268,
+          "text": "提起手机，你会想到什么？"
+        },
+        {
+          "startFrame": 275,
+          "endFrame": 418,
+          "text": "是一块冰冷的屏幕，还是连接世界的窗口？"
+        },
+        {
+          "startFrame": 427,
+          "endFrame": 562,
+          "text": "古人曾言：“手机不仅仅是工具；它是把人类联系在一起的命脉。"
+        },
+        {
+          "startFrame": 587,
+          "endFrame": 744,
+          "text": "”这句话道出了手机的真正意义——它不仅仅是沟通的工具，更是连接人心、跨越距离的桥梁。"
+        },
+        {
+          "startFrame": 758,
+          "endFrame": 911,
+          "text": "在这个信息飞速传递的时代，手机让相隔万里的人也能感受到彼此的温度，它承载着思念、传递着关怀，成为现代人生活中不可或缺的一部分。"
+        }
+      ]
+    },
+    {
+      "type": "ending-summary",
+      "props": {},
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 211,
+          "text": "今天我们来聊聊phone。"
+        },
+        {
+          "startFrame": 239,
+          "endFrame": 303,
+          "text": "它已经从单纯的通话工具，演变成我们连接世界的全能入口。"
+        },
+        {
+          "startFrame": 310,
+          "endFrame": 406,
+          "text": "从清晨的闹钟到夜晚的娱乐，phone无处不在，悄悄地改变了我们的生活方式。"
+        },
+        {
+          "startFrame": 432,
+          "endFrame": 667,
+          "text": "而在这背后，技术的进步与人们的情感需求交织成一张无形的网。"
+        },
+        {
+          "startFrame": 673,
+          "endFrame": 808,
+          "text": "所以，当你再次拿起phone时，不妨感受它承载的记忆与可能，感恩它让世界变得更近。"
+        }
+      ]
+    }
+  ],
+  "_meta": {
+    "strategy": "evolution-driven",
+    "generatedBy": "diagnose_word.py",
+    "contentGeneratedBy": "MiniMax LLM"
+  }
+}

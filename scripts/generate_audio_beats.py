@@ -157,7 +157,11 @@ def split_beats_by_silence(audio: AudioSegment, beat_texts: list[str], fps: int 
     adjusted = []
     for i, (start, end) in enumerate(ranges):
         start = max(0, start - 50)
-        end = min(total_ms, end + 50)
+        if i == len(ranges) - 1:
+            # 最后一个 beat：直接延伸到音频末尾，不依赖静音检测
+            end = total_ms
+        else:
+            end = min(total_ms, end + 300)  # 300ms 尾部余量，防止句末被截断
         adjusted.append((start, end))
 
     beats = []
@@ -217,12 +221,15 @@ def process_scene(scene_index: int, scene: dict, audio_prefix: str, fps: int, vo
         audio = AudioSegment.empty()
         for i, text in enumerate(texts):
             text_with_punct = text if i == len(texts) - 1 else text + "。"
+            chunk_path = out_dir / f"scene{scene_index}_chunk{i}.mp3"
             if len(text_with_punct) > MAX_TTS_CHARS:
-                # 单句仍然过长，按字符数均分
-                chunk_audio = _synthesize_chunk(text_with_punct, voice)
+                # 单句仍然过长，写入临时文件后加载
+                _synthesize_chunk(text_with_punct, voice, chunk_path)
+                seg = AudioSegment.from_mp3(str(chunk_path))
             else:
-                chunk_audio = synthesize_azure(text_with_punct, voice)
-            seg = AudioSegment.from_mp3(chunk_audio)
+                chunk_bytes = synthesize_azure(text_with_punct, voice)
+                chunk_path.write_bytes(chunk_bytes)
+                seg = AudioSegment.from_mp3(str(chunk_path))
             audio += seg
             if i < len(texts) - 1:
                 audio += AudioSegment.silent(duration=300)  # 300ms静音间隔
@@ -236,7 +243,35 @@ def process_scene(scene_index: int, scene: dict, audio_prefix: str, fps: int, vo
         print(f"  saved {audio_path} ({len(audio_bytes)} bytes)")
         audio = AudioSegment.from_mp3(str(audio_path))
 
+    # 先追加尾部 padding，再用带 padding 的音频做 beats 检测，
+    # 这样 split_beats_by_silence 最后一个 beat 的 end 自然会延伸到音频末尾
+    TAIL_PADDING_FRAMES = 120
+    current_frames = int(len(audio) / 1000 * fps)
+    needed_frames = max(TAIL_PADDING_FRAMES, TAIL_PADDING_FRAMES)  # 至少120帧
+    needed_ms = math.ceil(needed_frames / fps * 1000)
+    audio = audio + AudioSegment.silent(duration=needed_ms)
+    audio.export(str(audio_path), format="mp3")
+    # reload 以确保 len(audio) 与文件一致
+    audio = AudioSegment.from_mp3(str(audio_path))
+    print(f"  audio total after +{needed_ms}ms padding: {len(audio)}ms")
+
     detected_beats = split_beats_by_silence(audio, texts, fps)
+    # 确保音频末尾有足够余量，防止 TTS 在视频末尾被截断
+    TAIL_PADDING_FRAMES = 120
+    last_end_frame = detected_beats[-1]["endFrame"] if detected_beats else 0
+    current_frames = int(len(audio) / 1000 * fps)
+    # 确保音频有效长度 >= 最后一个 beat 结束 + TAIL_PADDING_FRAMES
+    required_frames = last_end_frame + TAIL_PADDING_FRAMES
+    if current_frames < required_frames:
+        needed_frames = required_frames - current_frames
+        needed_ms = math.ceil(needed_frames / fps * 1000)
+        audio = audio + AudioSegment.silent(duration=needed_ms)
+        audio.export(str(audio_path), format="mp3")
+        # reload 以确保 len(audio) 与文件一致
+        audio = AudioSegment.from_mp3(str(audio_path))
+        print(f"  appended {needed_ms}ms silence tail to prevent truncation")
+    audio.export(str(audio_path), format="mp3")
+    print(f"  DEBUG FIX: audio_total={len(audio)}ms, last beat endFrame={detected_beats[-1]['endFrame']}")
 
     beats_path = out_dir / f"scene{scene_index}-beats.json"
     beats_path.write_text(json.dumps(detected_beats, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -247,9 +282,9 @@ def process_scene(scene_index: int, scene: dict, audio_prefix: str, fps: int, vo
     return char_count
 
 
-def _synthesize_chunk(text: str, voice: str) -> bytes:
-    """将长文本按句子分割后分别合成再拼接"""
-    import re
+def _synthesize_chunk(text: str, voice: str, out_path: Path) -> AudioSegment:
+    """将长文本按句子分割后分别合成再拼接，写入 out_path"""
+    import re, uuid, tempfile
     sentences = re.split(r'(?<=[。！？……])', text)
     sentences = [s.strip() for s in sentences if s.strip()]
     audio = AudioSegment.empty()
@@ -260,7 +295,8 @@ def _synthesize_chunk(text: str, voice: str) -> bytes:
         seg = AudioSegment.from_mp3(chunk_bytes)
         audio += seg
         audio += AudioSegment.silent(duration=150)
-    return audio.export(format="mp3")
+    audio.export(str(out_path), format="mp3")
+    return audio
 
 
 def log_cost(project_root: Path, word: str, total_chars: int, cost: float, scenes_count: int, beats_count: int):

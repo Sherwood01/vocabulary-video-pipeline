@@ -1,0 +1,234 @@
+{
+  "word": "light",
+  "title": "Light",
+  "theme": "midnight",
+  "fps": 30,
+  "audioPrefix": "light-audio-v1",
+  "scenes": [
+    {
+      "type": "origin-chain",
+      "props": {
+        "kicker": "词源",
+        "title": "光的起源：从古印欧语到现代英语的旅程",
+        "nodes": [
+          {
+            "label": "PIE *leuk-",
+            "note": "原始印欧语词根\n意为‘发光、照亮’",
+            "color": "#f59e0b"
+          },
+          {
+            "label": "古英语 lēoht",
+            "note": "继承自原始日耳曼语\n进入古英语表‘光、明亮’",
+            "color": "#10b981"
+          },
+          {
+            "label": "拉丁语 lux",
+            "note": "拉丁语中指‘光、光辉’\n对罗曼语族有深远影响",
+            "color": "#3b82f6"
+          },
+          {
+            "label": "现代英语 light",
+            "note": "在中古英语阶段定型\n沿用至今仍保留原意",
+            "color": "#ef4444"
+          }
+        ],
+        "arrowLabel": "从原始印欧语的发光词根到现代英语的 light，光的概念跨越千年仍闪耀。"
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "今天我们来聊聊“光”这个词，它的光芒其实可以追溯到远古的原始印欧语词根PIE *leuk-，意思是“发光、照亮”，这是人类最早对光最朴素的理解。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "那个时期，古英语 lēoht 继承了这一概念，进入古英语后依然表达“光、明亮”的含义，承载着日耳曼语系对光明最初的记忆。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "后来，拉丁语 lux 汲取了这个词根，指“光、光辉”，对整个罗曼语族产生了深远影响，许多欧洲语言中的“光”都源自于此。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "终于，经历了漫长的语言演变，在中古英语阶段定型为我们今天熟悉的现代英语 light，保留至今仍闪烁着最初的光芒。"
+        }
+      ]
+    },
+    {
+      "type": "hero-word",
+      "props": {
+        "kicker": "每日一词",
+        "title": "light",
+        "word": "light",
+        "subtitle": "光，是黎明的第一声呐喊，也是夜空的温柔慰藉，点亮每一次心灵的旅程。",
+        "tags": [
+          "光",
+          "希望",
+          "情感"
+        ]
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "今日每日一词light，提起它，你会想到什么。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "它不只是照亮黑暗的光，更是黎明第一声呐喊，是夜空温柔的慰藉，点亮每一次心灵的旅程。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "每当清晨第一缕光线洒进窗台，你会感受到新生的希望像细雨般渗透心田。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "让我们在生活的每个角落，都成为自己的光，照亮前行的路，也温暖他人的心。"
+        }
+      ]
+    },
+    {
+      "type": "meaning-compare",
+      "props": {
+        "kicker": "词义辨析",
+        "title": "“光”与“轻”——light的多面世界",
+        "items": [
+          {
+            "meaning": "光 (Illumination)",
+            "description": "指光源发出的可见辐射或亮度。",
+            "example": "The sunrise brings light to the valley."
+          },
+          {
+            "meaning": "轻 (Not heavy)",
+            "description": "形容重量小或强度低。",
+            "example": "This bag is light enough to carry."
+          },
+          {
+            "meaning": "点燃 (To ignite)",
+            "description": "动词，表示点燃或照亮。",
+            "example": "He lit the candle with a match."
+          },
+          {
+            "meaning": "淡 (Pale or faint)",
+            "description": "形容词，指颜色浅或味道淡。",
+            "example": "She prefers a light blue color for the walls."
+          },
+          {
+            "meaning": "轻松的 (Easygoing)",
+            "description": "形容词，表示轻松、愉快的心情。",
+            "example": "After a long day, I enjoy some light music."
+          }
+        ]
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "你有没有想过，同一个英语单词light，竟然能承载“光”“轻”“点燃”“淡”“轻松”这么多截然不同的含义？"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "今天让我们一起探索这个词的多面世界。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "首先，light可以指光源发出的可见辐射，比如\"The sunrise brings light to the valley.\"中的光，驱散黑暗照亮世界。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "其次，它也可以形容重量小或强度低，\"This bag is light enough to carry.\"用起来毫不费力。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "在动词用法中，\"He lit the candle with a match.\"展现了点燃的含义。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "而\"light blue\"中的light则表示颜色浅淡，甚至\"light music\"还能表达轻松愉快的心情。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "没想到吧？"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "一个看似简单的单词，竟能跨越名词、动词、形容词三大词性，涵盖如此丰富的语义层次。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "下次遇到light时，不妨多想想它在不同语境中的巧妙变化。"
+        }
+      ]
+    },
+    {
+      "type": "ending-summary",
+      "props": {
+        "kicker": "记住这个词",
+        "title": "光的奥秘",
+        "formula": "light = l + ight",
+        "points": [
+          {
+            "text": "光的亮度",
+            "color": "#FFD700"
+          },
+          {
+            "text": "轻便",
+            "color": "#00BFFF"
+          },
+          {
+            "text": "光速",
+            "color": "#FF69B4"
+          }
+        ],
+        "closing": "愿光的力量照亮你的每一天。",
+        "narration": "light = l + ight 这一拆解帮助我们理解词根与后缀的关系。光的亮度 是衡量光源强度的关键指标，常用于描述灯泡或阳光的强弱。轻便 是形容物体重量轻、携带方便的常用形容词，常见于描述行李或工具。光速 约为每秒三十万公里，是宇宙中最快的速度，常用于物理计算。愿光的力量照亮你的每一天。"
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "light = l + ight 这一拆解帮助我们理解词根与后缀的关系。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "光的亮度 是衡量光源强度的关键指标，常用于描述灯泡或阳光的强弱。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "轻便 是形容物体重量轻、携带方便的常用形容词，常见于描述行李或工具。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "光速 约为每秒三十万公里，是宇宙中最快的速度，常用于物理计算。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "愿光的力量照亮你的每一天。"
+        }
+      ]
+    }
+  ],
+  "_meta": {
+    "strategy": "compare-driven",
+    "generatedBy": "diagnose_word.py",
+    "contentGeneratedBy": "MiniMax LLM"
+  }
+}

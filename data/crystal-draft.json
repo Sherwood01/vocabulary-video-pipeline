@@ -1,0 +1,254 @@
+{
+  "word": "crystal",
+  "title": "Crystal",
+  "theme": "midnight",
+  "fps": 30,
+  "audioPrefix": "crystal-audio-v1",
+  "scenes": [
+    {
+      "type": "hero-word",
+      "props": {
+        "kicker": "每日一词",
+        "title": "crystal",
+        "word": "crystal",
+        "subtitle": "透明的光辉映照内在纯净与坚固，象征清晰与力量。",
+        "tags": [
+          "自然",
+          "美学",
+          "象征"
+        ],
+        "narration": "今天我们来聊聊 crystal，这个词语如同清晨的第一缕光。\n它的透明与坚硬让人们联想到纯净的心灵与坚定的意志。\n在艺术与科学中，crystal 代表了结构的完美与光彩的绽放。\n每一次凝视它，都能感受到内在的宁静与外在的璀璨。"
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "今天我们来聊聊 crystal，这个词语如同清晨的第一缕光。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "它的透明与坚硬让人们联想到纯净的心灵与坚定的意志。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "在艺术与科学中，crystal 代表了结构的完美与光彩的绽放。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "每一次凝视它，都能感受到内在的宁静与外在的璀璨。"
+        }
+      ]
+    },
+    {
+      "type": "origin-chain",
+      "props": {
+        "kicker": "词源",
+        "title": "透明之美：'Crystal' 的千年词源之旅",
+        "nodes": [
+          {
+            "label": "κρύσταλλος (krustallos)",
+            "note": "古希腊语，意为“冰”。\n后指透明的石英晶体。",
+            "color": "#f59e0b"
+          },
+          {
+            "label": "crystallus",
+            "note": "拉丁语直接采用希腊词根。\n用于描述如水晶般透明坚硬的物质。",
+            "color": "#3b82f6"
+          },
+          {
+            "label": "cristal",
+            "note": "古法语形式，保留“透明玻璃/水晶”之义。\n进入中世纪英语。",
+            "color": "#10b981"
+          },
+          {
+            "label": "crystal",
+            "note": "中古英语拼写固定。\n泛指所有透明、硬度高的结晶体。",
+            "color": "#8b5cf6"
+          }
+        ],
+        "arrowLabel": "从古希腊的冰到现代的透明晶体，'crystal' 一词跨越千年仍闪耀光辉。"
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "今天我们来聊聊，古希腊人用 'κρύσταλλος (krustallos)' 来形容冰块，后来才指透明的石英。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "随后，罗马人直接采用这个词，形成了 'crystallus'，用来形容坚硬而透明的矿物。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "进入法语后，它演变为 'cristal'，在中世纪传入英语，指代玻璃般清澈的材质。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "最终在中古英语中固定为 'crystal'，至今仍闪耀在科学与艺术的光辉里。"
+        }
+      ]
+    },
+    {
+      "type": "timeline-page",
+      "props": {
+        "kicker": "词义演变",
+        "title": "从冰晶到科技之魂：'crystal'的千年之旅",
+        "events": [
+          {
+            "year": "约公元前5世纪",
+            "content": "古希腊使用「krystallos」描述透明如冰的石英。"
+          },
+          {
+            "year": "公元1世纪",
+            "content": "拉丁语引入「crystallum」，指称透明矿物与石英。"
+          },
+          {
+            "year": "13世纪",
+            "content": "中古英语出现「crystal」，专指透明石英晶体。"
+          },
+          {
+            "year": "19世纪",
+            "content": "晶体结构研究奠定晶体学，「crystal」的意义扩展为晶体本身。"
+          },
+          {
+            "year": "20-21世纪",
+            "content": "「crystal」成为比喻清澈纯净的词，也用于水晶振子、手机屏幕等高科技产品。"
+          }
+        ],
+        "narration": [
+          "约公元前5世纪，古希腊使用「krystallos」描述透明如冰的石英。",
+          "公元1世纪，拉丁语引入「crystallum」，指称透明矿物与石英。",
+          "13世纪，中古英语出现「crystal」，专指透明石英晶体。",
+          "19世纪，晶体结构研究奠定晶体学，「crystal」的意义扩展为晶体本身。",
+          "20-21世纪，「crystal」成为比喻清澈纯净的词，也用于水晶振子、手机屏幕等高科技产品。"
+        ]
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "约公元前5世纪，古希腊使用「krystallos」描述透明如冰的石英。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "公元1世纪，拉丁语引入「crystallum」，指称透明矿物与石英。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "13世纪，中古英语出现「crystal」，专指透明石英晶体。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "19世纪，晶体结构研究奠定晶体学，「crystal」的意义扩展为晶体本身。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "20-21世纪，「crystal」成为比喻清澈纯净的词，也用于水晶振子、手机屏幕等高科技产品。"
+        }
+      ]
+    },
+    {
+      "type": "quote-page",
+      "props": {
+        "kicker": "Wise Words",
+        "quote": "A crystal-clear mind sees beyond the veil of illusion.",
+        "translation": "一颗晶莹剔透的心灵能够看透幻象的帷幕。",
+        "author": "佚名",
+        "narration": "提起 crystal，有句话说得真好。 A crystal-clear mind sees beyond the veil of illusion。 一颗晶莹剔透的心灵能够看透幻象的帷幕。 这句话送给正在了解 crystal 的你。"
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "提起 crystal，有句话说得真好。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "A crystal-clear mind sees beyond the veil of illusion。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "一颗晶莹剔透的心灵能够看透幻象的帷幕。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "这句话送给正在了解 crystal 的你。"
+        }
+      ]
+    },
+    {
+      "type": "ending-summary",
+      "props": {
+        "kicker": "记住这个词",
+        "title": "清澈如晶",
+        "formula": "cry + stal = crystal",
+        "points": [
+          {
+            "text": "清澈透明",
+            "color": "#4FC3F7"
+          },
+          {
+            "text": "坚固耐久",
+            "color": "#26A69A"
+          },
+          {
+            "text": "光影折射",
+            "color": "#AB47BC"
+          }
+        ],
+        "closing": "愿你的人生如 crystal 般晶莹剔透，闪耀不凡。",
+        "narration": "crystal 这个词可以拆解为 cry + stal = crystal，象征着泪水凝固成坚固的透明体。首先，crystal 代表清澈透明，如同清晨的露珠映照光辉。其次，crystal 拥有坚固耐久的特性，像高山岩石般不易破碎。再者，crystal 能产生光影折射，让光线在内部舞动出七彩光芒。愿你在生活中保持如 crystal 般的清澈与坚韧，迎接每一个闪光的瞬间。愿你如 crystal 般清澈透明，照亮自己的道路，也温暖他人的心。"
+      },
+      "beats": [
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "crystal 这个词可以拆解为 cry + stal = crystal，象征着泪水凝固成坚固的透明体。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "首先，crystal 代表清澈透明，如同清晨的露珠映照光辉。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "其次，crystal 拥有坚固耐久的特性，像高山岩石般不易破碎。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "再者，crystal 能产生光影折射，让光线在内部舞动出七彩光芒。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "愿你在生活中保持如 crystal 般的清澈与坚韧，迎接每一个闪光的瞬间。"
+        },
+        {
+          "startFrame": 0,
+          "endFrame": 0,
+          "text": "愿你如 crystal 般清澈透明，照亮自己的道路，也温暖他人的心。"
+        }
+      ]
+    }
+  ],
+  "_meta": {
+    "strategy": "evolution-driven",
+    "generatedBy": "diagnose_word.py",
+    "contentGeneratedBy": "MiniMax LLM"
+  }
+}
