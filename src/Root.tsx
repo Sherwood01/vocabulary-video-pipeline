@@ -12,16 +12,16 @@ import { BeautifulWordVideo } from "./BeautifulWordVideo";
 import { BreakfastWordVideo } from "./BreakfastWordVideo";
 import { LemonadeWordVideo } from "./LemonadeWordVideo";
 import { TariffWordVideo } from "./TariffWordVideo";
-import { HelloWordVideo } from "./HelloWordVideo";
 import { SpacewalkWordVideo } from "./SpacewalkWordVideo";
-import { GhosttakeoutWordVideo } from "./GhosttakeoutWordVideo";
 import type { WordConfig } from "./pipeline/types";
-import { CometWordVideo } from "./CometWordVideo";
 import { SerendipityWordVideo } from "./SerendipityWordVideo";
 import { EarthquakeWordVideo } from "./EarthquakeWordVideo";
 import { MysteryWordVideo } from "./MysteryWordVideo";
 import { WisdomWordVideo } from "./WisdomWordVideo";
 import { SolutionWordVideo } from "./SolutionWordVideo";
+import { DeepseekWordVideo } from "./DeepseekWordVideo";
+import { LightWordVideo } from "./LightWordVideo";
+import { GravityWordVideo } from "./GravityWordVideo";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -77,7 +77,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="BeautifulWordVideo"
         component={BeautifulWordVideo}
-        durationInFrames={3619}
+        durationInFrames={3180}
         fps={30}
         width={1920}
         height={1080}
@@ -85,7 +85,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="BreakfastWordVideo"
         component={BreakfastWordVideo}
-        durationInFrames={2092}
+        durationInFrames={3522}
         fps={30}
         width={1920}
         height={1080}
@@ -93,7 +93,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="LemonadeWordVideo"
         component={LemonadeWordVideo}
-        durationInFrames={1894}
+        durationInFrames={3911}
         fps={30}
         width={1920}
         height={1080}
@@ -129,15 +129,7 @@ export const RemotionRoot: React.FC = () => {
           scenes: [],
         }}
       />
-      <Composition
-        id="HelloWordVideo"
-        component={HelloWordVideo}
-        durationInFrames={3441}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
+<Composition
         id="SpacewalkWordVideo"
         component={SpacewalkWordVideo}
         durationInFrames={4346}
@@ -145,23 +137,7 @@ export const RemotionRoot: React.FC = () => {
         width={1920}
         height={1080}
       />
-      <Composition
-        id="GhosttakeoutWordVideo"
-        component={GhosttakeoutWordVideo}
-        durationInFrames={3149}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
-        id="CometWordVideo"
-        component={CometWordVideo}
-        durationInFrames={3889}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
+<Composition
         id="SerendipityWordVideo"
         component={SerendipityWordVideo}
         durationInFrames={3986}
@@ -197,6 +173,30 @@ export const RemotionRoot: React.FC = () => {
         id="SolutionWordVideo"
         component={SolutionWordVideo}
         durationInFrames={4050}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="DeepseekWordVideo"
+        component={DeepseekWordVideo}
+        durationInFrames={3569}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="LightWordVideo"
+        component={LightWordVideo}
+        durationInFrames={3810}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="GravityWordVideo"
+        component={GravityWordVideo}
+        durationInFrames={3593}
         fps={30}
         width={1920}
         height={1080}

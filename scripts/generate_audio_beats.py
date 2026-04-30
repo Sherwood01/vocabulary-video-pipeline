@@ -157,11 +157,7 @@ def split_beats_by_silence(audio: AudioSegment, beat_texts: list[str], fps: int 
     adjusted = []
     for i, (start, end) in enumerate(ranges):
         start = max(0, start - 50)
-        if i == len(ranges) - 1:
-            # 最后一个 beat：直接延伸到音频末尾，不依赖静音检测
-            end = total_ms
-        else:
-            end = min(total_ms, end + 300)  # 300ms 尾部余量，防止句末被截断
+        end = min(total_ms, end + 50)
         adjusted.append((start, end))
 
     beats = []
@@ -221,15 +217,12 @@ def process_scene(scene_index: int, scene: dict, audio_prefix: str, fps: int, vo
         audio = AudioSegment.empty()
         for i, text in enumerate(texts):
             text_with_punct = text if i == len(texts) - 1 else text + "。"
-            chunk_path = out_dir / f"scene{scene_index}_chunk{i}.mp3"
             if len(text_with_punct) > MAX_TTS_CHARS:
-                # 单句仍然过长，写入临时文件后加载
-                _synthesize_chunk(text_with_punct, voice, chunk_path)
-                seg = AudioSegment.from_mp3(str(chunk_path))
+                # 单句仍然过长，按字符数均分
+                chunk_audio = _synthesize_chunk(text_with_punct, voice)
             else:
-                chunk_bytes = synthesize_azure(text_with_punct, voice)
-                chunk_path.write_bytes(chunk_bytes)
-                seg = AudioSegment.from_mp3(str(chunk_path))
+                chunk_audio = synthesize_azure(text_with_punct, voice)
+            seg = AudioSegment.from_mp3(chunk_audio)
             audio += seg
             if i < len(texts) - 1:
                 audio += AudioSegment.silent(duration=300)  # 300ms静音间隔
@@ -243,35 +236,7 @@ def process_scene(scene_index: int, scene: dict, audio_prefix: str, fps: int, vo
         print(f"  saved {audio_path} ({len(audio_bytes)} bytes)")
         audio = AudioSegment.from_mp3(str(audio_path))
 
-    # 先追加尾部 padding，再用带 padding 的音频做 beats 检测，
-    # 这样 split_beats_by_silence 最后一个 beat 的 end 自然会延伸到音频末尾
-    TAIL_PADDING_FRAMES = 120
-    current_frames = int(len(audio) / 1000 * fps)
-    needed_frames = max(TAIL_PADDING_FRAMES, TAIL_PADDING_FRAMES)  # 至少120帧
-    needed_ms = math.ceil(needed_frames / fps * 1000)
-    audio = audio + AudioSegment.silent(duration=needed_ms)
-    audio.export(str(audio_path), format="mp3")
-    # reload 以确保 len(audio) 与文件一致
-    audio = AudioSegment.from_mp3(str(audio_path))
-    print(f"  audio total after +{needed_ms}ms padding: {len(audio)}ms")
-
     detected_beats = split_beats_by_silence(audio, texts, fps)
-    # 确保音频末尾有足够余量，防止 TTS 在视频末尾被截断
-    TAIL_PADDING_FRAMES = 120
-    last_end_frame = detected_beats[-1]["endFrame"] if detected_beats else 0
-    current_frames = int(len(audio) / 1000 * fps)
-    # 确保音频有效长度 >= 最后一个 beat 结束 + TAIL_PADDING_FRAMES
-    required_frames = last_end_frame + TAIL_PADDING_FRAMES
-    if current_frames < required_frames:
-        needed_frames = required_frames - current_frames
-        needed_ms = math.ceil(needed_frames / fps * 1000)
-        audio = audio + AudioSegment.silent(duration=needed_ms)
-        audio.export(str(audio_path), format="mp3")
-        # reload 以确保 len(audio) 与文件一致
-        audio = AudioSegment.from_mp3(str(audio_path))
-        print(f"  appended {needed_ms}ms silence tail to prevent truncation")
-    audio.export(str(audio_path), format="mp3")
-    print(f"  DEBUG FIX: audio_total={len(audio)}ms, last beat endFrame={detected_beats[-1]['endFrame']}")
 
     beats_path = out_dir / f"scene{scene_index}-beats.json"
     beats_path.write_text(json.dumps(detected_beats, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -282,9 +247,9 @@ def process_scene(scene_index: int, scene: dict, audio_prefix: str, fps: int, vo
     return char_count
 
 
-def _synthesize_chunk(text: str, voice: str, out_path: Path) -> AudioSegment:
-    """将长文本按句子分割后分别合成再拼接，写入 out_path"""
-    import re, uuid, tempfile
+def _synthesize_chunk(text: str, voice: str) -> bytes:
+    """将长文本按句子分割后分别合成再拼接"""
+    import re
     sentences = re.split(r'(?<=[。！？……])', text)
     sentences = [s.strip() for s in sentences if s.strip()]
     audio = AudioSegment.empty()
@@ -295,8 +260,7 @@ def _synthesize_chunk(text: str, voice: str, out_path: Path) -> AudioSegment:
         seg = AudioSegment.from_mp3(chunk_bytes)
         audio += seg
         audio += AudioSegment.silent(duration=150)
-    audio.export(str(out_path), format="mp3")
-    return audio
+    return audio.export(format="mp3")
 
 
 def log_cost(project_root: Path, word: str, total_chars: int, cost: float, scenes_count: int, beats_count: int):
@@ -317,19 +281,14 @@ def log_cost(project_root: Path, word: str, total_chars: int, cost: float, scene
 def calculate_total_frames(scenes: list[dict], default: int = 300) -> int:
     """Calculate total frames from scenes beats data.
 
-    Each scene's beats are relative to that scene's start (frame 0),
-    so we need to calculate scene duration (last.endFrame - first.start + gap)
-    and accumulate across all scenes.
+    Must match player.tsx scene duration formula: maxEndFrame + 25
     """
     total = 0
     for scene in scenes:
         beats = scene.get("beats", [])
         if beats:
-            first_start = beats[0].get("startFrame", 0)
-            last_end = beats[-1].get("endFrame", 0)
-            # Scene duration = last beat's end - first beat's start + gap
-            scene_duration = last_end - first_start + 60
-            total += max(scene_duration, 300)
+            max_end = max(b.get("endFrame", 0) for b in beats)
+            total += max_end + 25
     return max(default, total)
 
 
@@ -374,7 +333,7 @@ def register_composition_in_root(word: str, project_root: Path, total_frames: in
             changed = True
             print(f"  [Root] Added import: {import_line}")
 
-    if composition_id in content:
+    if f'id="{composition_id}"' in content:
         # Composition exists - update durationInFrames
         import re
         pattern = rf'(<Composition\s+id="{re.escape(composition_id)}"[^>]*durationInFrames={{)(\d+)(}}[^>]*>)'
@@ -385,6 +344,13 @@ def register_composition_in_root(word: str, project_root: Path, total_frames: in
                 content = re.sub(pattern, rf'\g<1>{total_frames}\g<3>', content)
                 changed = True
                 print(f"  [Root] Updated {composition_id} durationInFrames: {old_frames} -> {total_frames}")
+        if changed:
+            root_path.write_text(content, encoding="utf-8")
+            verify = root_path.read_text(encoding="utf-8")
+            if composition_id in verify:
+                print(f"  [Root] SUCCESS: {composition_id} is registered")
+            else:
+                print(f"  [Root] FAILURE: {composition_id} NOT found after write!")
         return
 
     new_composition = f'''      <Composition
@@ -435,6 +401,7 @@ def main():
     parser.add_argument("--public-dir", default="public", help="project public directory")
     parser.add_argument("--voice", choices=["female", "male"], default="female")
     parser.add_argument("--fps", type=int, default=DEFAULT_FPS)
+    parser.add_argument("--register-only", action="store_true", help="仅注册 Composition 到 Root.tsx，不生成 TTS")
     args = parser.parse_args()
 
     required_env = [
@@ -442,10 +409,11 @@ def main():
         "AZURE_SPEECH_REGION",
         "AZURE_SPEECH_VOICE",
     ]
-    missing = [k for k in required_env if not os.getenv(k)]
-    if missing:
-        print(f"Missing env vars: {', '.join(missing)}", file=sys.stderr)
-        sys.exit(1)
+    if not args.register_only:
+        missing = [k for k in required_env if not os.getenv(k)]
+        if missing:
+            print(f"Missing env vars: {', '.join(missing)}", file=sys.stderr)
+            sys.exit(1)
 
     config_path = Path(args.input)
     config = json.loads(config_path.read_text(encoding="utf-8"))
@@ -473,6 +441,10 @@ def main():
     total_chars = 0
     scene_details = []
     total_beats = 0
+
+    if args.register_only:
+        print("[Step 0] Registration complete (--register-only, skipping TTS)")
+        return
 
     for i, scene in enumerate(scenes, start=1):
         chars = process_scene(i, scene, audio_prefix, fps, args.voice, out_dir)

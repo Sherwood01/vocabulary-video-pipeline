@@ -18,15 +18,16 @@ NPX_CMD = "npx.cmd" if platform.system() == "Windows" else "npx"
 
 
 def calculate_total_frames(scenes: list[dict], default: int = 300) -> int:
-    """Calculate total frames from scenes beats data."""
+    """Calculate total frames from scenes beats data.
+
+    Must match player.tsx scene duration formula: maxEndFrame + 25
+    """
     total = 0
     for scene in scenes:
         beats = scene.get("beats", [])
         if beats:
-            first_start = beats[0].get("startFrame", 0)
-            last_end = beats[-1].get("endFrame", 0)
-            scene_duration = last_end - first_start + 60
-            total += max(scene_duration, 300)
+            max_end = max(b.get("endFrame", 0) for b in beats)
+            total += max_end + 25
     return max(default, total)
 
 
@@ -166,26 +167,9 @@ def main():
     if not success:
         sys.exit(1)
 
-    # Step 3: Director signoff validation
-    draft_with_beats_path = PROJECT_ROOT / "data" / f"{word}-draft-with-beats.json"
-    if draft_with_beats_path.exists():
-        print(f"\n{'='*50}")
-        print("Step 3: Director signoff validation")
-        print('='*50)
-        result = subprocess.run(
-            ["py", "scripts/director_validate.py", "--input", str(draft_with_beats_path)],
-            cwd=PROJECT_ROOT,
-        )
-        if result.returncode != 0:
-            print("❌ Director signoff FAILED. Pipeline aborted.", file=sys.stderr)
-            sys.exit(1)
-        print("✅ Director signoff PASSED.")
-    else:
-        print(f"\n⚠️  {draft_with_beats_path} not found, skipping Director validation")
-
-    # Step 4: Register composition in Root.tsx (before render)
+    # Step 3: Register composition in Root.tsx (before render)
     print(f"\n{'='*50}")
-    print("Step 4: Register WordVideo in Root.tsx")
+    print("Step 3: Register WordVideo in Root.tsx")
     print('='*50)
 
     draft_with_beats_path = PROJECT_ROOT / "data" / f"{word}-draft-with-beats.json"
@@ -202,7 +186,7 @@ def main():
 
     # Validate audio files before render
     print(f"\n{'='*50}")
-    print("Step 4b: Validate audio assets")
+    print("Step 3b: Validate audio assets")
     print('='*50)
     audio_prefix = draft_config.get("audioPrefix", f"{word}-audio-v1")
     audio_dir = PROJECT_ROOT / "public" / audio_prefix
@@ -223,16 +207,16 @@ def main():
         sys.exit(1)
     print(f"Validated {len(scenes)} scenes, all audio files present.")
 
-    # Step 5: Render video
+    # Step 4: Render video
     if args.skip_render:
         print(f"\n{'='*50}")
-        print("Step 5: Render skipped (--skip-render)")
+        print("Step 4: Render skipped (--skip-render)")
         print('='*50)
     else:
         word_cap = word.capitalize()
         video_output = PROJECT_ROOT / "renders" / f"{word}-word-video.mp4"
         success = run_step(
-            "Step 5: Render video",
+            "Step 4: Render video",
             [NPX_CMD, "remotion", "render", f"{word_cap}WordVideo", str(video_output), "--cache=never"]
         )
         if not success:

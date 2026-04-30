@@ -176,7 +176,7 @@ export const OriginChainPage: React.FC<{
     <SceneShell kicker={kicker} title={title} themeName={themeName}>
       <div className="h-full flex flex-col justify-center gap-12">
         <div className="flex items-stretch justify-between gap-4">
-          {nodes.map((node, i) => {
+          {(nodes || []).map((node, i) => {
             const s = b(i, 15 + i * 40);
             return (
               <React.Fragment key={node.label}>
@@ -196,7 +196,7 @@ export const OriginChainPage: React.FC<{
                     {node.note}
                   </div>
                 </Card>
-                {i < nodes.length - 1 && (
+                {i < (nodes || []).length - 1 && (
                   <div className="flex items-center text-2xl font-bold text-slate-500 px-2" style={{ opacity: reveal(frame, s + 10, 10) }}>
                     →
                   </div>
@@ -205,7 +205,7 @@ export const OriginChainPage: React.FC<{
             );
           })}
         </div>
-        <SyncReveal frame={frame} startFrame={b(nodes.length, (b(nodes.length - 1, 15) + 30)) + 15} className="text-center">
+        <SyncReveal frame={frame} startFrame={b((nodes || []).length, (b((nodes || []).length - 1, 15) + 30)) + 15} className="text-center">
           <Badge
             variant="outline"
             className="rounded-full border px-8 py-4 text-2xl font-bold"

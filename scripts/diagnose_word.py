@@ -3,6 +3,13 @@
 模板订单制诊断引擎 — 补完飞轮自动运转的最后一公里
 输入一个单词，自动推荐策略、模板组合，并生成可执行的 WordConfig JSON 草稿
 """
+import sys
+if sys.platform == "win32":
+    import os
+    os.environ.setdefault("PYTHONIOENCODING", "utf-8")
+    import io
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
 
 import argparse
 import json
@@ -39,6 +46,106 @@ BOLD = "\033[1m"
 # MiniMax API 配置
 MINIMAX_API_KEY = os.environ.get("ANTHROPIC_AUTH_TOKEN") or os.environ.get("MINIMAX_API_KEY", "")
 MINIMAX_BASE_URL = "https://api.minimaxi.com/anthropic"
+
+# Ollama 云端 API 配置
+OLLAMA_API_KEY = os.environ.get("OLLAMA_API_KEY", "")
+OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "minimax-m2.7:cloud")
+
+
+def calculate_total_frames(scenes: list[dict], default: int = 300) -> int:
+    """Calculate total frames from scenes beats data.
+
+    Must match player.tsx scene duration formula: maxEndFrame + 25
+    """
+    total = 0
+    for scene in scenes:
+        beats = scene.get("beats", [])
+        if beats:
+            max_end = max(b.get("endFrame", 0) for b in beats)
+            total += max_end + 25
+    return max(default, total)
+
+
+def create_word_video_entry(word: str, project_root: Path):
+    word_cap = word.capitalize()
+    entry_path = project_root / "src" / f"{word_cap}WordVideo.tsx"
+    if entry_path.exists():
+        print(f"Entry component already exists: {entry_path}")
+        return
+    template = f'''import React from "react";
+import {{ WordVideoPlayer }} from "./pipeline/player";
+import {word}Config from "../data/{word}-draft-with-beats.json";
+import type {{ WordConfig }} from "./pipeline/types";
+
+export const {word_cap}WordVideo: React.FC = () => {{
+  return <WordVideoPlayer config={{{word}Config as WordConfig}} />;
+}};
+'''
+    entry_path.write_text(template, encoding="utf-8")
+    print(f"Created entry component: {entry_path}")
+
+
+def register_composition_in_root(word: str, project_root: Path, total_frames: int):
+    word_cap = word.capitalize()
+    composition_id = f"{word_cap}WordVideo"
+    root_path = project_root / "src" / "Root.tsx"
+    content = root_path.read_text(encoding="utf-8")
+    changed = False
+
+    import_line = f'import {{ {word_cap}WordVideo }} from "./{word_cap}WordVideo";'
+    if import_line not in content:
+        import_lines = [line for line in content.split('\n')
+                        if (line.strip().startswith('import ') or line.strip().startswith('import type '))
+                        and 'from "./' in line]
+        if import_lines:
+            last_import = import_lines[-1]
+            content = content.replace(last_import, last_import + "\n" + import_line)
+            changed = True
+            print(f"  [Root] Added import: {import_line}")
+
+    if f'id="{composition_id}"' in content:
+        import re
+        pattern = rf'(<Composition\s+id="{re.escape(composition_id)}"[^>]*durationInFrames={{)(\d+)(}}[^>]*>)'
+        match = re.search(pattern, content)
+        if match:
+            old_frames = match.group(2)
+            if int(old_frames) != total_frames:
+                content = re.sub(pattern, rf'\g<1>{total_frames}\g<3>', content)
+                changed = True
+                print(f"  [Root] Updated {composition_id} durationInFrames: {old_frames} -> {total_frames}")
+        if changed:
+            root_path.write_text(content, encoding="utf-8")
+            verify = root_path.read_text(encoding="utf-8")
+            if composition_id in verify:
+                print(f"  [Root] SUCCESS: {composition_id} is registered")
+            else:
+                print(f"  [Root] FAILURE: {composition_id} NOT found after write!")
+        return
+
+    new_composition = f'''      <Composition
+        id="{composition_id}"
+        component={{{composition_id}}}
+        durationInFrames={{{total_frames}}}
+        fps={{30}}
+        width={{1920}}
+        height={{1080}}
+      />
+'''
+
+    if "    </>" in content:
+        content = content.replace("    </>", f"{new_composition}    </>")
+        changed = True
+        print(f"  [Root] Registered Composition: {composition_id} ({total_frames} frames)")
+    else:
+        print(f"  [Root] ERROR: Could not find insertion point in Root.tsx")
+
+    if changed:
+        root_path.write_text(content, encoding="utf-8")
+        verify = root_path.read_text(encoding="utf-8")
+        if composition_id in verify:
+            print(f"  [Root] SUCCESS: {composition_id} is registered")
+        else:
+            print(f"  [Root] FAILURE: {composition_id} NOT found after write!")
 
 
 def load_registry(project_root: Path) -> dict:
@@ -85,8 +192,8 @@ def llm_infer_strategy(word: str, registry: dict) -> tuple[str, str] | None:
     调用 LLM 分析词义，强制归类到已知策略之一，返回 (strategy_key, reason)。
     不依赖预定义规则，完全自动化。
     """
-    if not MINIMAX_API_KEY:
-        print(f"{YELLOW}⚠️  MINIMAX_API_KEY 未设置，LLM 策略推断跳过{RESET}")
+    if not OLLAMA_API_KEY:
+        print(f"{YELLOW}⚠️  OLLAMA_API_KEY 未设置，LLM 策略推断跳过{RESET}")
         return None
 
     strategies = registry.get("strategies", {})
@@ -154,56 +261,53 @@ def suggest_backlog_templates(scenes: list[str], registry: dict) -> list[dict]:
 
 
 def call_minimax_llm(prompt: str, retries: int = 2) -> str:
-    """调用 MiniMax API（Anthropic 兼容格式）"""
+    """调用 Ollama 云端 API"""
     import time
 
-    if not MINIMAX_API_KEY:
-        print(f"{YELLOW}⚠️  未设置 MINIMAX_API_KEY，跳过内容生成{RESET}")
+    if not OLLAMA_API_KEY:
+        print(f"{YELLOW}⚠️  未设置 OLLAMA_API_KEY，跳过内容生成{RESET}")
         return ""
 
     for attempt in range(retries):
         try:
             response = requests.post(
-                f"{MINIMAX_BASE_URL}/v1/messages",
+                "https://ollama.com/api/chat",
                 headers={
-                    "Authorization": f"Bearer {MINIMAX_API_KEY}",
+                    "Authorization": f"Bearer {OLLAMA_API_KEY}",
                     "Content-Type": "application/json",
                 },
                 json={
-                    "model": "MiniMax-M2.7",
-                    "max_tokens": 4096,
+                    "model": OLLAMA_MODEL,
                     "messages": [
-                        {"role": "user", "content": [{"type": "text", "text": prompt}]}
-                    ]
+                        {"role": "user", "content": prompt}
+                    ],
+                    "stream": False,
                 },
                 timeout=180,
-                verify=False
             )
 
             if response.status_code == 200:
                 result = response.json()
-                for block in result.get("content", []):
-                    if block.get("type") == "text":
-                        return block.get("text", "").strip()
-                return ""
+                content = result.get("message", {}).get("content", "")
+                return content.strip()
             elif response.status_code == 529:
                 wait = 2 ** attempt
-                print(f"{YELLOW}⚠️  MiniMax API 服务器过载 (529)，{wait}秒后重试... ({attempt+1}/{retries}){RESET}")
+                print(f"{YELLOW}⚠️  Ollama API 服务器过载 (529)，{wait}秒后重试... ({attempt+1}/{retries}){RESET}")
                 time.sleep(wait)
                 continue
             else:
-                print(f"{YELLOW}⚠️  MiniMax API 调用失败: {response.status_code} - {response.text[:200]}{RESET}")
+                print(f"{YELLOW}⚠️  Ollama API 调用失败: {response.status_code} - {response.text[:200]}{RESET}")
                 return ""
 
         except Exception as e:
-            print(f"{YELLOW}⚠️  MiniMax API 异常: {e}{RESET}")
+            print(f"{YELLOW}⚠️  Ollama API 异常: {e}{RESET}")
             if attempt < retries - 1:
                 wait = 2 ** attempt
                 time.sleep(wait)
                 continue
             return ""
 
-    print(f"{YELLOW}⚠️  MiniMax API 重试 {retries} 次后仍失败{RESET}")
+    print(f"{YELLOW}⚠️  Ollama API 重试 {retries} 次后仍失败{RESET}")
     return ""
 
 
@@ -256,11 +360,11 @@ def generate_scene_prompt(word: str, scene_type: str, scene_index: int, total_sc
   - body: 中文解释文字（30-60字）
   - color: 十六进制颜色码
 - narration: 旁白配音稿，必须恰好 4 句（cards.length + 1）：
-  第1句：引出问题，引人入胜
-  第2句：第1个卡片，**必须包含 cards[0]["headline"] 原文**
-  第3句：第2个卡片，**必须包含 cards[1]["headline"] 原文**
-  第4句：第3个卡片，**必须包含 cards[2]["headline"] 原文**
-  每句必须以句号「。」结尾。
+  第1句：引出问题，引人入胜（10-20字）
+  第2句：第1个卡片，**必须包含 cards[0]["headline"] 原文**（20-40字）
+  第3句：第2个卡片，**必须包含 cards[1]["headline"] 原文**（20-40字）
+  第4句：第3个卡片，**必须包含 cards[2]["headline"] 原文**（20-40字）
+  **每句必须以句号「。」结尾，禁止使用换行符，每句只有句尾一个「。」**
 
 请用中文生成内容，直接返回 JSON，不要有其他文字。"""
 
@@ -275,14 +379,13 @@ def generate_scene_prompt(word: str, scene_type: str, scene_index: int, total_sc
   - text: 要点文字（**这是关键词，必须出现在对应 beats 文本中**）
   - color: 十六进制颜色码
 - closing: 一句结束语，中文，温暖有力
-- narration: 讲解配音稿，**必须恰好 6 句**（= 3个points + 3）：
+- narration: 讲解配音稿，**必须恰好 5 句**（= 3个points + 2 closing）：
   第1句：介绍单词拆解公式，**必须包含完整的 formula 文本**
   第2句：第1个要点，**必须包含 points[0]["text"] 的原文**
   第3句：第2个要点，**必须包含 points[1]["text"] 的原文**
   第4句：第3个要点，**必须包含 points[2]["text"] 的原文**
-  第5句：结束语，温暖有力，呼应主题
-  第6句：升华语，传递情绪价值（如"愿你如 crystal 般清澈透明"）
-  **每句必须以句号「。」结尾，不得合并，不得省略**
+  第5句：结束语+升华（合并为一句，温暖有力，呼应主题，传递情绪价值）
+  **每句必须以句号「。」结尾，禁止在句中再次使用「。」拆分句子。中文逗号「，」可以正常使用，但一句只有一个「。」**
 
 请用中文生成内容，直接返回 JSON，不要有其他文字。"""
 
@@ -294,7 +397,8 @@ def generate_scene_prompt(word: str, scene_type: str, scene_index: int, total_sc
 - title: 一个诗意的中文标题
 - subtitle: 一句诗意的中文描述
 - emoji: 相关 emoji
-- beats: 讲解节奏数组
+- narration: **一段完整的旁白配音稿**，不要分段，不要分行，直接一段文字，
+  **必须恰好包含 1 个完整句子，以句号「。」结尾**，字数 60-150 字
 
 请用中文生成内容，直接返回 JSON，不要有其他文字。"""
 
@@ -401,20 +505,36 @@ def generate_beats_for_scene(word: str, scene_type: str, props: dict) -> list:
     keyword_instruction = ""
     if scene_type == "origin-chain":
         nodes = props.get("nodes", [])
-        if nodes:
-            # 去掉括号里的语言标注，只保留核心词形
+        # 过滤掉：①词缀（以-或*开头）②目标词本身 ③包含目标词词根的节点（如 beaute/beauty 包含 beautiful 的词根）
+        word_lower = word.lower()
+        # 提取目标词的词根（去掉常见后缀）
+        import re
+        word_root = re.sub(r'(ful|ty|ing|ed|er|est|ize|ise)$', '', word_lower, flags=re.IGNORECASE)
+        real_nodes = [
+            n for n in nodes
+            if n.get("label", "").strip()
+            and not n["label"].strip().startswith("-")
+            and not n["label"].strip().startswith("*")  # 过滤 PIE 词根
+            and word_lower not in n["label"].strip().lower()
+            and (len(word_root) < 4 or word_root not in n["label"].strip().lower())
+        ]
+        if real_nodes:
             clean_labels = []
-            for n in nodes:
+            for n in real_nodes:
                 label = n["label"]
-                # 去掉形如"xxx（古希腊语）""xxx（拉丁语）"的后缀
-                label_clean = re.sub(r'（[^）]+）$', '', label)
+                label_clean = re.sub(r'（[^）]+）$', '', label).strip()
                 clean_labels.append(label_clean)
             label_list = "、".join(f'"{l}"' for l in clean_labels)
             keyword_instruction = (
                 f'\n## 关键词约束（必须满足）\n'
-                f'每个 beats[i] 必须包含节点词形：{label_list}。\n'
-                f'生成恰好 {len(nodes)} 句，第 i 句必须包含第 i 个节点的词形。\n'
+                f'生成恰好 {len(real_nodes) + 1} 句：第 1 句为引人入胜的介绍（可提目标词），'
+                f'第 2~{len(real_nodes) + 1} 句每句必须包含对应节点的词形：{label_list}，禁止提及目标词"{word}"。\n'
+                f'每句以句号「。」结尾，禁止在句中再次使用「。」拆分句子。\n'
             )
+            # 同步更新 props["nodes"]，过滤掉词缀和目标词
+            props["nodes"] = real_nodes
+        else:
+            keyword_instruction = ""
 
     elif scene_type == "answer-cards":
         cards = props.get("cards", [])
@@ -443,7 +563,7 @@ def generate_beats_for_scene(word: str, scene_type: str, props: dict) -> list:
 {keyword_instruction}
 ## 强制要求
 - **每句话必须以句号「。」结尾**，不得省略
-- 全文 3-5 句话，总字数 80-200 字
+- 全文 3-5 句话（origin-chain 和 timeline-page 例外：句子数 = 节点/事件数量），总字数 100-400 字
 - 开头要有吸引力，**同一份草稿中「你有没有想过」最多只能出现一次**，其余开场请从以下列表中任选其一，避免重复：
   - "今天我们来聊聊..."
   - "提起...，你会想到什么？"
@@ -513,11 +633,31 @@ def generate_draft_json(word: str, strategy_key: str, scenes: list[str], out_pat
         beats = generate_beats_for_scene(word, scene_type, scene_content.get("props", {}))
 
         # 如果 beats 仍为空，检查 scene_content 外层的 beats（LLM 有时会把 narration 放这里）
+        # ending-summary 场景：始终优先使用 narration 字段，不依赖 LLM 直接返回的 beats
         if not beats and scene_content.get("beats"):
-            existing_beats = scene_content.get("beats", [])
-            if existing_beats and len(existing_beats) > 0:
-                print(f"{YELLOW}   WARNING: narration beats 为空，使用 scene_content 外层 beats{RESET}")
-                beats = existing_beats
+            if scene_type != "ending-summary":
+                existing_beats = scene_content.get("beats", [])
+                if existing_beats and len(existing_beats) > 0:
+                    print(f"{YELLOW}   WARNING: narration beats 为空，使用 scene_content 外层 beats{RESET}")
+                    beats = existing_beats
+                    # origin-chain 场景：过滤掉包含目标词的节点（如"现代英语 beautiful"）
+                    if scene_type == "origin-chain":
+                        all_nodes = scene_content.get("props", {}).get("nodes", [])
+                        word_lower = word.lower()
+                        word_root = re.sub(r'(ful|ty|ing|ed|er|est|ize|ise)$', '', word_lower, flags=re.IGNORECASE)
+                        filtered = [
+                            n for n in all_nodes
+                            if n.get("label", "").strip()
+                            and not n["label"].strip().startswith("-")
+                            and not n["label"].strip().startswith("*")
+                            and word_lower not in n["label"].strip().lower()
+                            and (len(word_root) < 4 or word_root not in n["label"].strip().lower())
+                        ]
+                        props["nodes"] = filtered
+                    # answer-cards 场景：从 props 中提取 cards
+                    elif scene_type == "answer-cards":
+                        props["cards"] = scene_content.get("props", {}).get("cards", [])
+            # ending-summary：强制要求 narration 存在，不使用 beats fallback
 
         # ending-summary 场景若 beats 仍为空，尝试用 closing 字段作为 fallback
         if not beats and scene_type == "ending-summary":
@@ -553,6 +693,13 @@ def generate_draft_json(word: str, strategy_key: str, scenes: list[str], out_pat
     }
 
     out_path.write_text(json.dumps(draft, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    # 注册 Composition 到 Root.tsx
+    project_root = out_path.parent.parent.resolve()
+    total_frames = calculate_total_frames(scene_configs)
+    print(f"\n[Step 0] Registering {word} in Root.tsx...")
+    create_word_video_entry(word, project_root)
+    register_composition_in_root(word, project_root, total_frames)
 
 
 def generate_draft_json_no_llm(word: str, strategy_key: str, scenes: list[str], out_path: Path) -> None:

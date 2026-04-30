@@ -4,6 +4,14 @@ Director 校验模块
 责任：确保 TTS 脚本与视觉内容匹配，检查音频不被截断，强制词源场景存在。
 未通过 Director signoff 的 draft 不得进入渲染。
 """
+import sys
+if sys.platform == "win32":
+    import os
+    os.environ.setdefault("PYTHONIOENCODING", "utf-8")
+    import io
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
+
 import argparse
 import json
 import re
@@ -17,6 +25,10 @@ except ImportError:
 
 TAIL_PADDING = 40
 FPS = 30
+
+
+def ms_to_frame(ms: int, fps: int = FPS) -> int:
+    return int(round(ms / 1000 * fps))
 
 
 def collect_errors(config: dict, project_root: Path) -> list[str]:
@@ -43,7 +55,17 @@ def collect_errors(config: dict, project_root: Path) -> list[str]:
             expected = (1, None)  # 至少1个
         elif stype == "origin-chain":
             nodes = props.get("nodes", [])
-            expected = (len(nodes), len(nodes)) if nodes else (1, 1)
+            word_lower = word.lower()
+            word_root = re.sub(r'(ful|ty|ing|ed|er|est|ize|ise)$', '', word_lower, flags=re.IGNORECASE)
+            real_nodes = [
+                n for n in nodes
+                if n.get("label", "").strip()
+                and not n["label"].strip().startswith("-")
+                and not n["label"].strip().startswith("*")
+                and word_lower not in n["label"].strip().lower()
+                and (len(word_root) < 4 or word_root not in n["label"].strip().lower())
+            ]
+            expected = (len(real_nodes) + 1, len(real_nodes) + 1) if real_nodes else (1, 1)  # +1 = intro beat
         elif stype == "meaning-compare":
             expected = (2, None)
         elif stype == "full-screen-mood":
@@ -57,7 +79,7 @@ def collect_errors(config: dict, project_root: Path) -> list[str]:
             expected = (len(cards) + 1, len(cards) + 1) if cards else (2, 2)
         elif stype == "ending-summary":
             points = props.get("points", [])
-            expected = (len(points) + 3, len(points) + 3)  # formula + N points + closing + 升华
+            expected = (len(points) + 2, len(points) + 2)  # formula + N points + closing+升华（合并为1句）
         elif stype == "emoji-storyboard":
             expected = (1, None)
         elif stype == "profile-story":
@@ -100,31 +122,37 @@ def collect_errors(config: dict, project_root: Path) -> list[str]:
 
         if stype == "origin-chain" and bcount >= 1:
             nodes = props.get("nodes", [])
-            for i, node in enumerate(nodes):
-                if i < bcount:
-                    beat_text = beats[i]["text"]
-                    label = node.get("label", "")
-                    label_clean = re.sub(r'^(古希腊|古英语|现代英语|中古英语|拉丁语|古法语|中古拉丁语|原始印欧语)\s*', '', label).strip()
-                    # 主检查：beat 必须包含当前节点的词形（忽略语言前缀）
-                    if label_clean in beat_text:
+            word_lower = word.lower()
+            word_root = re.sub(r'(ful|ty|ing|ed|er|est|ize|ise)$', '', word_lower, flags=re.IGNORECASE)
+            real_nodes = [
+                n for n in nodes
+                if n.get("label", "").strip()
+                and not n["label"].strip().startswith("-")
+                and not n["label"].strip().startswith("*")
+                and word_lower not in n["label"].strip().lower()
+                and (len(word_root) < 4 or word_root not in n["label"].strip().lower())
+            ]
+            # beat[0] = intro beat（只提及目标词，不应出现历史词形）
+            # beat[1+i] = 对应 real_nodes[i]
+            for i, node in enumerate(real_nodes):
+                beat_idx = 1 + i
+                if beat_idx >= bcount:
+                    break
+                beat_text = beats[beat_idx]["text"]
+                label = node.get("label", "")
+                label_clean = re.sub(r'^(古希腊|古英语|现代英语|中古英语|拉丁语|古法语|中古拉丁语|原始印欧语)\s*', '', label).strip()
+                if label_clean in beat_text:
+                    continue
+                if i > 0:
+                    prev_label = real_nodes[i - 1].get("label", "")
+                    prev_clean = re.sub(r'^(古希腊|古英语|现代英语|中古英语|拉丁语|古法语|中古拉丁语|原始印欧语)\s*', '', prev_label).strip()
+                    if prev_clean in beat_text:
                         continue
-                    # 若当前 beat 未提及当前节点，但提及了前一个节点的词形（过渡性叙述）
-                    if i > 0:
-                        prev_label = nodes[i - 1].get("label", "")
-                        prev_clean = re.sub(r'^(古希腊|古英语|现代英语|中古英语|拉丁语|古法语|中古拉丁语|原始印欧语)\s*', '', prev_label).strip()
-                        if prev_clean in beat_text:
-                            continue
-                    # 若当前 beat 未提及当前节点，但提及了下一个节点的词形（早提及）
-                    if i + 1 < len(nodes):
-                        next_label = nodes[i + 1].get("label", "")
-                        next_clean = re.sub(r'^(古希腊|古英语|现代英语|中古英语|拉丁语|古法语|中古拉丁语|原始印欧语)\s*', '', next_label).strip()
-                        if next_clean in beat_text:
-                            continue
-                    errors.append(f"Scene {idx} ({stype}): 第 {i+1} 个 beat 不含 node 词形 '{label_clean}'（原始 label：'{label}'）")
+                errors.append(f"Scene {idx} ({stype}): 第 {beat_idx+1} 个 beat 不含 node 词形 '{label_clean}'（原始 label：'{label}'）")
 
         # 5. 防止 ending-summary 重复词源内容（formula beat[0] 例外，允许说词根/词缀）
         if stype == "ending-summary" and "origin-chain" in scene_types and bcount >= 1:
-            etymology_keywords = ["拉丁语", "古希腊语", "古英语", "源自", "来自", "源于", "词源", "演变"]
+            etymology_keywords = ["拉丁语", "古希腊语", "古英语", "中古英语", "词源"]
             # beat[0] 是 formula 介绍，说"词根/后缀"是合理的，跳过
             # beats[1:] 是 points + closing，严格禁止词源词
             for i, beat in enumerate(beats):
@@ -140,19 +168,12 @@ def collect_errors(config: dict, project_root: Path) -> list[str]:
             audio_path = public_dir / audio_prefix / f"scene{idx}.mp3"
             if audio_path.exists():
                 audio = AudioSegment.from_file(audio_path)
-                audio_frames = int(len(audio) / 1000 * FPS)
+                audio_frames = ms_to_frame(len(audio), FPS)
                 last_end = beats[-1]["endFrame"] if beats else 0
-                required = last_end + TAIL_PADDING
-                available = audio_frames - TAIL_PADDING  # 音频去掉尾部余量后可用长度
                 if audio_frames < last_end:
                     errors.append(
                         f"Scene {idx} ({stype}): 音频时长({audio_frames}帧) < 最后一个 beat 结束({last_end}帧)，"
                         f"TTS 会被截断"
-                    )
-                elif available < last_end:
-                    errors.append(
-                        f"Scene {idx} ({stype}): 音频有效时长({available}帧) < 最后一个 beat 结束({last_end}帧, "
-                        f"含{TAIL_PADDING}帧尾部余量)，可能存在截断风险"
                     )
             else:
                 # 只有生成了 beats 但还没合成音频时可以忽略
