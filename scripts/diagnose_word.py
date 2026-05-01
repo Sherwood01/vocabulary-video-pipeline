@@ -47,9 +47,9 @@ BOLD = "\033[1m"
 MINIMAX_API_KEY = os.environ.get("ANTHROPIC_AUTH_TOKEN") or os.environ.get("MINIMAX_API_KEY", "")
 MINIMAX_BASE_URL = "https://api.minimaxi.com/anthropic"
 
-# Ollama 云端 API 配置
-OLLAMA_API_KEY = os.environ.get("OLLAMA_API_KEY", "")
+OLLAMA_BASE_URL = os.environ.get("OLLAMA_BASE_URL", "https://ollama.com/api/chat")
 OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "minimax-m2.7:cloud")
+OLLAMA_API_KEY = os.environ.get("OLLAMA_API_KEY", "")
 
 
 def calculate_total_frames(scenes: list[dict], default: int = 300) -> int:
@@ -271,7 +271,7 @@ def call_minimax_llm(prompt: str, retries: int = 2) -> str:
     for attempt in range(retries):
         try:
             response = requests.post(
-                "https://ollama.com/api/chat",
+                OLLAMA_BASE_URL,
                 headers={
                     "Authorization": f"Bearer {OLLAMA_API_KEY}",
                     "Content-Type": "application/json",
@@ -324,9 +324,7 @@ def generate_scene_prompt(word: str, scene_type: str, scene_index: int, total_sc
 - word: 单词原形
 - subtitle: 一句吸引人的中文副标题，介绍这个单词的特别之处（20-40字）
 - tags: 3个相关标签数组（如 ["生活", "情感", "仪式感"]）
-- narration: 旁白配音稿，**必须恰好 4 句**：
-  第1句：引入单词（如"今天我们来聊聊 {word}"）
-  第2-4句：围绕 subtitle 展开，自然流畅
+- narration: 旁白配音稿，**必须恰好 4 句**，第1句用于引入单词（可用"今天我们来聊聊 {word}"），第2-4句围绕 subtitle 展开，**全篇 narration 中"今天我们"限用一次**：
   **每句必须以中文句号「。」结尾，禁止使用英文句号**
   **禁止将本 prompt 内容或 JSON 结构混入 narration**
 
@@ -564,7 +562,7 @@ def generate_beats_for_scene(word: str, scene_type: str, props: dict) -> list:
 ## 强制要求
 - **每句话必须以句号「。」结尾**，不得省略
 - 全文 3-5 句话（origin-chain 和 timeline-page 例外：句子数 = 节点/事件数量），总字数 100-400 字
-- 开头要有吸引力，**同一份草稿中「你有没有想过」最多只能出现一次**，其余开场请从以下列表中任选其一，避免重复：
+- 开头要有吸引力，**同一份草稿中「你有没有想过」和「今天我们」各最多出现一次**，其余开场请从以下列表中任选其一，避免重复：
   - "今天我们来聊聊..."
   - "提起...，你会想到什么？"
   - "让我们一起探索..."
