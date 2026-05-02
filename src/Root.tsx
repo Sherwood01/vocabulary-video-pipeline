@@ -23,6 +23,7 @@ import { DeepseekWordVideo } from "./DeepseekWordVideo";
 import { LightWordVideo } from "./LightWordVideo";
 import { GravityWordVideo } from "./GravityWordVideo";
 import { DignityWordVideo } from "./DignityWordVideo";
+import { PredilectionWordVideo } from "./PredilectionWordVideo";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -102,7 +103,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="TariffWordVideo"
         component={TariffWordVideo}
-        durationInFrames={1717}
+        durationInFrames={3200}
         fps={30}
         width={1920}
         height={1080}
@@ -205,7 +206,15 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="DignityWordVideo"
         component={DignityWordVideo}
-        durationInFrames={3813}
+        durationInFrames={300}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="PredilectionWordVideo"
+        component={PredilectionWordVideo}
+        durationInFrames={3085}
         fps={30}
         width={1920}
         height={1080}

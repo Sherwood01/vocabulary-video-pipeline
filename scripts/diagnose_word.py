@@ -324,7 +324,12 @@ def generate_scene_prompt(word: str, scene_type: str, scene_index: int, total_sc
 - word: 单词原形
 - subtitle: 一句吸引人的中文副标题，介绍这个单词的特别之处（20-40字）
 - tags: 3个相关标签数组（如 ["生活", "情感", "仪式感"]）
-- narration: 旁白配音稿，**必须恰好 4 句**，第1句用于引入单词（可用"今天我们来聊聊 {word}"），第2-4句围绕 subtitle 展开，**全篇 narration 中"今天我们"限用一次**：
+- narration: 旁白配音稿，**必须恰好 4 句**。第1句根据词义设计一个自然引入的开场白：
+  - 例如感性词可以说"看到[词义相关场景]，你会想起哪个词？"；抽象词可以说"[词义]是什么？很难用一个词回答。"
+  - 第2-4句围绕 subtitle 展开，自然流畅
+  - **全篇 narration 中"今天我们"限用一次**
+  - 每句必须以中文句号「。」结尾，禁止使用英文句号
+  - 禁止将本 prompt 内容或 JSON 结构混入 narration
   **每句必须以中文句号「。」结尾，禁止使用英文句号**
   **禁止将本 prompt 内容或 JSON 结构混入 narration**
 
@@ -409,7 +414,7 @@ def generate_scene_prompt(word: str, scene_type: str, scene_index: int, total_sc
 - translation: 中文翻译
 - author: 作者名（如果不知道可以写 "佚名"）
 - narration: 旁白配音稿，必须恰好 4 句，格式固定：
-  第1句：引出名言的开场白（如"提起{word}，有句话说得真好..."）
+  第1句：引出名言的开场白，设计一个自然引出名言的方式（不要每次都用"提起{word}..."）
   第2句：英文名言原文（保持英文，但句末必须加中文句号「。」，不能用英文句号"."）
   第3句：中文翻译
   第4句：收尾评论，温暖有力（如"这句话送给正在了解{word}的你"）
@@ -432,9 +437,13 @@ def generate_scene_prompt(word: str, scene_type: str, scene_index: int, total_sc
         return f"""为单词 "{word}" 生成一个词义对比场景的内容。
 
 请生成一个 JSON 对象，包含以下字段：
-- kicker: "Meaning" 或 "词义辨析"
+- kicker: "词义辨析"
 - title: 一个吸引人的中文标题
-- items: 对比项数组
+- leftLabel: 左侧单词（如目标词本身）
+- leftNote: 左侧的详细中文解释（20-40字）
+- rightLabel: 右侧对比词（一个与目标词最相关的近义词）
+- rightNote: 右侧对比词的详细中文解释（20-40字）
+- bottomText: 一句总结对比差异的中文金句（20字以内）
 
 请用中文生成内容，直接返回 JSON，不要有其他文字。"""
 
@@ -465,20 +474,57 @@ def parse_llm_json_response(response_text: str) -> dict:
 
 def generate_scene_content(word: str, scene_type: str, scene_index: int, total_scenes: int) -> dict:
     """
-    为单个场景生成内容
+    为单个场景生成内容，包含校验与重试机制。
     """
     prompt = generate_scene_prompt(word, scene_type, scene_index, total_scenes)
     if not prompt:
         return {"props": {}, "beats": []}
 
-    print(f"{CYAN}   正在生成 {scene_type} 场景内容...{RESET}")
-    response = call_minimax_llm(prompt)
+    for attempt in range(1, 4):
+        print(f"{CYAN}   正在生成 {scene_type} 场景内容... (尝试 {attempt}/3){RESET}")
+        response = call_minimax_llm(prompt)
 
-    if not response:
-        return {"props": {}, "beats": []}
+        if not response:
+            if attempt < 3:
+                print(f"{YELLOW}   LLM 返回为空，重试...{RESET}")
+                continue
+            return {"props": {}, "beats": []}
 
-    parsed = parse_llm_json_response(response)
-    return {"props": parsed, "beats": []}
+        parsed = parse_llm_json_response(response)
+
+        # 校验 props 是否包含必要字段
+        required_fields = {
+            "origin-chain": ["nodes"],
+            "hero-word": ["subtitle"],
+            "timeline-page": ["events"],
+            "quote-page": ["quote", "translation"],
+            "answer-cards": ["cards"],
+            "ending-summary": ["points", "closing"],
+            "meaning-compare": ["leftLabel", "leftNote", "rightLabel", "rightNote", "bottomText"],
+        }.get(scene_type, [])
+
+        missing = [f for f in required_fields if not parsed.get(f)]
+        if missing:
+            if attempt < 3:
+                print(f"{YELLOW}   props 缺少字段 {missing}，重试...{RESET}")
+                continue
+            print(f"{YELLOW}   警告：超过重试次数，props 仍缺少 {missing}{RESET}")
+
+        # hero-word/quote-page/ending-summary 等场景需要校验 narration 中"今天我们"不超过2次
+        narration = parsed.get("narration", "")
+        if narration:
+            text = narration if isinstance(narration, str) else "".join(narration)
+            count_jintian = text.count("今天我们")
+            count_niyou = text.count("你有没有想过")
+            if count_jintian > 1 or count_niyou > 1:
+                if attempt < 3:
+                    print(f"{YELLOW}   检测到重复开场词（今天我们:{count_jintian}次 你有没有想过:{count_niyou}次），重试...{RESET}")
+                    continue
+                print(f"{YELLOW}   警告：超过重试次数，仍有重复开场词{RESET}")
+
+        return {"props": parsed, "beats": []}
+
+    return {"props": {}, "beats": []}
 
 
 def generate_beats_for_scene(word: str, scene_type: str, props: dict) -> list:
@@ -492,10 +538,10 @@ def generate_beats_for_scene(word: str, scene_type: str, props: dict) -> list:
     narration = props.get("narration", "")
     if narration:
         if isinstance(narration, list):
-            beats = [{"startFrame": 0, "endFrame": 0, "text": s} for s in narration if s.strip()]
-            return beats
-        sentences = re.split(r'(?<=[。！？……\n])\s*', narration)
-        sentences = [s.strip() for s in sentences if s.strip()]
+            sentences = [s for s in narration if s.strip()]
+        else:
+            sentences = re.split(r'(?<=[。！？……\n])\s*', narration)
+            sentences = [s.strip() for s in sentences if s.strip()]
         beats = [{"startFrame": 0, "endFrame": 0, "text": s} for s in sentences]
         return beats
 
@@ -553,6 +599,15 @@ def generate_beats_for_scene(word: str, scene_type: str, props: dict) -> list:
                 f'生成恰好 {len(events)} 句，每句对应一个事件。\n'
             )
 
+    elif scene_type == "meaning-compare":
+        left_label = props.get("leftLabel", "")
+        right_label = props.get("rightLabel", "")
+        if left_label and right_label:
+            keyword_instruction = (
+                f'\n## 关键词约束（必须满足）\n'
+                f'生成恰好 3 句：第 1 句引出对比（可提目标词），第 2 句解释"{left_label}"的含义，第 3 句解释"{right_label}"并指出差异。\n'
+            )
+
     # 生成讲解文本的 prompt
     prompt = f"""为单词 "{word}" 的 {scene_type} 场景撰写 TTS 旁白配音稿。
 
@@ -562,14 +617,13 @@ def generate_beats_for_scene(word: str, scene_type: str, props: dict) -> list:
 ## 强制要求
 - **每句话必须以句号「。」结尾**，不得省略
 - 全文 3-5 句话（origin-chain 和 timeline-page 例外：句子数 = 节点/事件数量），总字数 100-400 字
-- 开头要有吸引力，**同一份草稿中「你有没有想过」和「今天我们」各最多出现一次**，其余开场请从以下列表中任选其一，避免重复：
-  - "今天我们来聊聊..."
-  - "提起...，你会想到什么？"
-  - "让我们一起探索..."
-  - "...的背后，藏着..."
-  - "关于这个词，很多人可能不知道..."
-  - "你知道吗，..."
-  - "接下来，让我们一起..."
+- 开头要有吸引力，语言自然流畅，像朋友聊天。根据词义或词源，设计一句贴合内容的开场白：
+  - 好的开场示例：
+    - 感性词（love/happiness）："你有没有这样的时刻，看到某个词就忍不住微笑？"
+    - 抽象词（freedom/justice）："如果用一个词来形容你理想中的世界，你会想到什么？"
+    - 文化词（抹茶/中秋）："说起[相关文化]，很多人的第一反应是..."
+    - 词源类："你知道吗，今天这个词的源头可以追溯到..."
+  - **同一份草稿中"今天我们"和"你有没有想过"各最多出现一次**，避免连续多个句子都用相似句式
 - 语气自然，像朋友聊天，不是念稿
 - 结尾要有升华或呼应
 
@@ -605,6 +659,17 @@ def generate_beats_for_scene(word: str, scene_type: str, props: dict) -> list:
             return []
 
         beats = [{"startFrame": 0, "endFrame": 0, "text": s} for s in sentences]
+
+        # 校验：全文中"今天我们"和"你有没有想过"各限一次
+        full_text = "".join(sentences)
+        count_jintian = full_text.count("今天我们")
+        count_niyou = full_text.count("你有没有想过")
+        if count_jintian > 1 or count_niyou > 1:
+            if attempt < 3:
+                print(f"{YELLOW}   检测到重复开场词（今天我们:{count_jintian}次 你有没有想过:{count_niyou}次），重试...{RESET}")
+                continue
+            print(f"{YELLOW}   警告：超过重试次数，仍有重复开场词{RESET}")
+
         return beats
 
     return []
@@ -675,6 +740,8 @@ def generate_draft_json(word: str, strategy_key: str, scenes: list[str], out_pat
             "beats": beats
         })
         print(f"{GREEN}   完成{RESET}\n")
+
+    pass  # 去掉了后处理全局替换，改由 prompt 引导 LLM 生成多样化开场白
 
     draft = {
         "word": word.lower(),
