@@ -8,22 +8,7 @@ import { HYBRID_TOTAL_FRAMES, VocabularyHybridPrototype } from "./VocabularyHybr
 import { SERENDIPITY_V1_TOTAL_FRAMES, SerendipityHybridV1 } from "./SerendipityHybridV1";
 import { SILHOUETTE_V1_TOTAL_FRAMES, SilhouetteHybridV1 } from "./SilhouetteHybridV1";
 import { WordVideoPlayer } from "./pipeline/player";
-import { BeautifulWordVideo } from "./BeautifulWordVideo";
-import { BreakfastWordVideo } from "./BreakfastWordVideo";
-import { LemonadeWordVideo } from "./LemonadeWordVideo";
-import { TariffWordVideo } from "./TariffWordVideo";
-import { SpacewalkWordVideo } from "./SpacewalkWordVideo";
 import type { WordConfig } from "./pipeline/types";
-import { SerendipityWordVideo } from "./SerendipityWordVideo";
-import { EarthquakeWordVideo } from "./EarthquakeWordVideo";
-import { MysteryWordVideo } from "./MysteryWordVideo";
-import { WisdomWordVideo } from "./WisdomWordVideo";
-import { SolutionWordVideo } from "./SolutionWordVideo";
-import { DeepseekWordVideo } from "./DeepseekWordVideo";
-import { LightWordVideo } from "./LightWordVideo";
-import { GravityWordVideo } from "./GravityWordVideo";
-import { DignityWordVideo } from "./DignityWordVideo";
-import { PredilectionWordVideo } from "./PredilectionWordVideo";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -76,38 +61,7 @@ export const RemotionRoot: React.FC = () => {
         width={1920}
         height={1080}
       />
-      <Composition
-        id="BeautifulWordVideo"
-        component={BeautifulWordVideo}
-        durationInFrames={3180}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
-        id="BreakfastWordVideo"
-        component={BreakfastWordVideo}
-        durationInFrames={3522}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
-        id="LemonadeWordVideo"
-        component={LemonadeWordVideo}
-        durationInFrames={3911}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
-        id="TariffWordVideo"
-        component={TariffWordVideo}
-        durationInFrames={3200}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
+
       <Composition
         id="WordVideo"
         component={(props: WordConfig) => <WordVideoPlayer config={props} />}
@@ -130,94 +84,6 @@ export const RemotionRoot: React.FC = () => {
           audioPrefix: "cascade-audio-v1",
           scenes: [],
         }}
-      />
-<Composition
-        id="SpacewalkWordVideo"
-        component={SpacewalkWordVideo}
-        durationInFrames={4346}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-<Composition
-        id="SerendipityWordVideo"
-        component={SerendipityWordVideo}
-        durationInFrames={3986}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
-        id="EarthquakeWordVideo"
-        component={EarthquakeWordVideo}
-        durationInFrames={4260}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
-        id="MysteryWordVideo"
-        component={MysteryWordVideo}
-        durationInFrames={3614}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
-        id="WisdomWordVideo"
-        component={WisdomWordVideo}
-        durationInFrames={2894}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
-        id="SolutionWordVideo"
-        component={SolutionWordVideo}
-        durationInFrames={4050}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
-        id="DeepseekWordVideo"
-        component={DeepseekWordVideo}
-        durationInFrames={3569}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
-        id="LightWordVideo"
-        component={LightWordVideo}
-        durationInFrames={3810}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
-        id="GravityWordVideo"
-        component={GravityWordVideo}
-        durationInFrames={3593}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
-        id="DignityWordVideo"
-        component={DignityWordVideo}
-        durationInFrames={300}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      <Composition
-        id="PredilectionWordVideo"
-        component={PredilectionWordVideo}
-        durationInFrames={3085}
-        fps={30}
-        width={1920}
-        height={1080}
       />
     </>
   );

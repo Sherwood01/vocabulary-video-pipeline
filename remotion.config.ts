@@ -9,6 +9,7 @@ import { enableTailwind } from '@remotion/tailwind-v4';
 const srcDir = require("path").join(process.cwd(), "src");
 
 Config.setVideoImageFormat("jpeg");
+Config.setRendererPort(5500);
 Config.setOverwriteOutput(true);
 Config.overrideWebpackConfig((currentConfiguration) => {
   const withTailwind = enableTailwind(currentConfiguration);

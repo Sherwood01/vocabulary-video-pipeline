@@ -212,7 +212,7 @@ def llm_infer_strategy(word: str, registry: dict) -> tuple[str, str] | None:
 直接返回 JSON，不要有其他内容。"""
 
     try:
-        response = call_minimax_llm(prompt)
+        response = call_llm(prompt)
         if not response:
             return None
         import json, re
@@ -260,8 +260,8 @@ def suggest_backlog_templates(scenes: list[str], registry: dict) -> list[dict]:
     return suggestions
 
 
-def call_minimax_llm(prompt: str, retries: int = 2) -> str:
-    """调用 Ollama 云端 API"""
+def call_llm(prompt: str, retries: int = 2) -> str:
+    """调用 LLM API"""
     import time
 
     if not OLLAMA_API_KEY:
@@ -482,7 +482,7 @@ def generate_scene_content(word: str, scene_type: str, scene_index: int, total_s
 
     for attempt in range(1, 4):
         print(f"{CYAN}   正在生成 {scene_type} 场景内容... (尝试 {attempt}/3){RESET}")
-        response = call_minimax_llm(prompt)
+        response = call_llm(prompt)
 
         if not response:
             if attempt < 3:
@@ -632,7 +632,7 @@ def generate_beats_for_scene(word: str, scene_type: str, props: dict) -> list:
 
     for attempt in range(1, 4):
         print(f"{CYAN}   正在生成 beats 节奏... (尝试 {attempt}/3){RESET}")
-        response = call_minimax_llm(prompt)
+        response = call_llm(prompt)
 
         if not response:
             if attempt < 3:
