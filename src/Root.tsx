@@ -73,6 +73,8 @@ import { SublimeWordVideo } from "./SublimeWordVideo";
 import { SurrealWordVideo } from "./SurrealWordVideo";
 import { SymbolismWordVideo } from "./SymbolismWordVideo";
 import { VersificationWordVideo } from "./VersificationWordVideo";
+import { AccomplishedWordVideo } from "./AccomplishedWordVideo";
+import { AdmirationWordVideo } from "./AdmirationWordVideo";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -657,6 +659,22 @@ export const RemotionRoot: React.FC = () => {
         id="VersificationWordVideo"
         component={VersificationWordVideo}
         durationInFrames={4488}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="AccomplishedWordVideo"
+        component={AccomplishedWordVideo}
+        durationInFrames={4657}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="AdmirationWordVideo"
+        component={AdmirationWordVideo}
+        durationInFrames={4916}
         fps={30}
         width={1920}
         height={1080}

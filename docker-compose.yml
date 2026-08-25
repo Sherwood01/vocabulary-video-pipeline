@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  vocab-video-saas:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: vocab-video-pipeline
+    ports:
+      - "3980:3980"
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+      - ./renders:/app/renders
+      - ./downloads:/app/downloads
+    restart: unless-stopped

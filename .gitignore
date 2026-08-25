@@ -27,3 +27,4 @@ src/*WordVideo.tsx
 Claude.mp4
 
 *.log
+downloads/
