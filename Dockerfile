@@ -35,16 +35,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Set working directory
 WORKDIR /app
 
-# Copy package files and install Node dependencies
-COPY package*.json ./
-RUN npm ci
-RUN npm install -g @remotion/cli@4.0.448
+# Copy source code and scripts
+COPY . .
+
+# Clean install Node dependencies inside Linux container
+RUN rm -rf node_modules package-lock.json && npm install --registry=https://registry.npmmirror.com
 
 # Install Python dependencies
 RUN pip3 install --no-cache-dir pydub requests --break-system-packages || pip3 install --no-cache-dir pydub requests
-
-# Copy source code and scripts
-COPY . .
 
 # Create necessary runtime directories
 RUN mkdir -p data renders downloads public
