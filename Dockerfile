@@ -36,7 +36,7 @@ WORKDIR /app
 
 # Copy package files and install Node dependencies
 COPY package*.json ./
-RUN npm ci --only=production
+RUN npm ci
 
 # Install Python dependencies
 RUN pip3 install --no-cache-dir pydub requests --break-system-packages || pip3 install --no-cache-dir pydub requests

@@ -215,9 +215,16 @@ def main():
     else:
         word_cap = word.capitalize()
         video_output = PROJECT_ROOT / "renders" / f"{word}-word-video.mp4"
+
+        remotion_bin = PROJECT_ROOT / "node_modules" / ".bin" / ("remotion.cmd" if platform.system() == "Windows" else "remotion")
+        if remotion_bin.exists():
+            render_cmd = [str(remotion_bin), "render", f"{word_cap}WordVideo", str(video_output), "--cache=never"]
+        else:
+            render_cmd = [NPX_CMD, "remotion", "render", f"{word_cap}WordVideo", str(video_output), "--cache=never"]
+
         success = run_step(
             "Step 4: Render video",
-            [NPX_CMD, "remotion", "render", f"{word_cap}WordVideo", str(video_output), "--cache=never"]
+            render_cmd
         )
         if not success:
             sys.exit(1)
