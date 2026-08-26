@@ -37,6 +37,7 @@ WORKDIR /app
 # Copy package files and install Node dependencies
 COPY package*.json ./
 RUN npm ci
+RUN npm install -g @remotion/cli@4.0.448
 
 # Install Python dependencies
 RUN pip3 install --no-cache-dir pydub requests --break-system-packages || pip3 install --no-cache-dir pydub requests

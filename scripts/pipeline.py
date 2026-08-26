@@ -217,12 +217,13 @@ def main():
         word_cap = word.capitalize()
         video_output = PROJECT_ROOT / "renders" / f"{word}-word-video.mp4"
 
-        # Direct Node execution of @remotion/cli to avoid npx package lookup errors
-        remotion_cli_js = PROJECT_ROOT / "node_modules" / "@remotion" / "cli" / "remotion-cli.js"
-        if remotion_cli_js.exists():
-            cmd_prefix = ["node", str(remotion_cli_js)]
+        remotion_bin = PROJECT_ROOT / "node_modules" / ".bin" / ("remotion.cmd" if platform.system() == "Windows" else "remotion")
+        if remotion_bin.exists():
+            cmd_prefix = [str(remotion_bin)]
+        elif platform.system() != "Windows":
+            cmd_prefix = ["remotion"]
         else:
-            cmd_prefix = [NPX_CMD, "@remotion/cli"]
+            cmd_prefix = [NPX_CMD, "remotion"]
 
         render_cmd = cmd_prefix + ["render", f"{word_cap}WordVideo", str(video_output), "--cache=never", "--gl=swiftshader"]
 
