@@ -181,79 +181,97 @@ def main():
     if not success:
         sys.exit(1)
 
-    # Step 3: Register composition in Root.tsx (before render)
-    print(f"\n{'='*50}")
-    print("Step 3: Register WordVideo in Root.tsx")
-    print('='*50)
+    # Record initial Root.tsx content for clean teardown after render
+    root_path = PROJECT_ROOT / "src" / "Root.tsx"
+    initial_root_content = root_path.read_text(encoding="utf-8") if root_path.exists() else None
+    word_cap = word.capitalize()
+    temp_entry_path = PROJECT_ROOT / "src" / f"{word_cap}WordVideo.tsx"
+    created_temp_entry = not temp_entry_path.exists()
 
-    draft_with_beats_path = PROJECT_ROOT / "data" / f"{word}-draft-with-beats.json"
-    if draft_with_beats_path.exists():
-        draft_config = json.loads(draft_with_beats_path.read_text(encoding="utf-8"))
-    else:
-        draft_config = json.loads(draft_path.read_text(encoding="utf-8"))
-
-    total_frames = calculate_total_frames(draft_config.get("scenes", []))
-    registered = register_word_in_root(word, PROJECT_ROOT, total_frames)
-    if not registered:
-        print("ERROR: Failed to register composition in Root.tsx", file=sys.stderr)
-        sys.exit(1)
-
-    # Validate audio files before render
-    print(f"\n{'='*50}")
-    print("Step 3b: Validate audio assets")
-    print('='*50)
-    audio_prefix = draft_config.get("audioPrefix", f"{word}-audio-v1")
-    audio_dir = PROJECT_ROOT / "public" / audio_prefix
-    scenes = draft_config.get("scenes", [])
-    missing_files = []
-    for i in range(1, len(scenes) + 1):
-        mp3 = audio_dir / f"scene{i}.mp3"
-        beats = audio_dir / f"scene{i}-beats.json"
-        if not mp3.exists():
-            missing_files.append(str(mp3.relative_to(PROJECT_ROOT)))
-        if not beats.exists():
-            missing_files.append(str(beats.relative_to(PROJECT_ROOT)))
-    if missing_files:
-        print(f"ERROR: Missing {len(missing_files)} required asset file(s):", file=sys.stderr)
-        for f in missing_files:
-            print(f"  - {f}", file=sys.stderr)
-        print("Run 'py scripts/generate_audio_beats.py --input data/" + word + "-draft.json' to regenerate.", file=sys.stderr)
-        sys.exit(1)
-    print(f"Validated {len(scenes)} scenes, all audio files present.")
-
-    # Step 4: Render video
-    if args.skip_render:
+    try:
+        # Step 3: Register composition in Root.tsx (before render)
         print(f"\n{'='*50}")
-        print("Step 4: Render skipped (--skip-render)")
+        print("Step 3: Register WordVideo in Root.tsx")
         print('='*50)
-    else:
-        word_cap = word.capitalize()
-        video_output = PROJECT_ROOT / "renders" / f"{word}-word-video.mp4"
 
-        remotion_bin = PROJECT_ROOT / "node_modules" / ".bin" / ("remotion.cmd" if platform.system() == "Windows" else "remotion")
-        if remotion_bin.exists():
-            cmd_prefix = [str(remotion_bin)]
-        elif platform.system() != "Windows":
-            cmd_prefix = ["remotion"]
+        draft_with_beats_path = PROJECT_ROOT / "data" / f"{word}-draft-with-beats.json"
+        if draft_with_beats_path.exists():
+            draft_config = json.loads(draft_with_beats_path.read_text(encoding="utf-8"))
         else:
-            cmd_prefix = [NPX_CMD, "remotion"]
+            draft_config = json.loads(draft_path.read_text(encoding="utf-8"))
 
-        render_cmd = cmd_prefix + ["render", f"{word_cap}WordVideo", str(video_output), "--cache=never", "--gl=swiftshader"]
-
-        if platform.system() != "Windows" and os.path.exists("/usr/bin/chromium"):
-            render_cmd.append("--browser-executable=/usr/bin/chromium")
-
-        success = run_step(
-            "Step 4: Render video",
-            render_cmd
-        )
-        if not success:
+        total_frames = calculate_total_frames(draft_config.get("scenes", []))
+        registered = register_word_in_root(word, PROJECT_ROOT, total_frames)
+        if not registered:
+            print("ERROR: Failed to register composition in Root.tsx", file=sys.stderr)
             sys.exit(1)
 
-    print(f"\n{'#'*60}")
-    print(f"# Pipeline completed for: {word}")
-    print(f"{'#'*60}")
-    print(f"\nVideo saved to: renders/{word}-word-video.mp4")
+        # Validate audio files before render
+        print(f"\n{'='*50}")
+        print("Step 3b: Validate audio assets")
+        print('='*50)
+        audio_prefix = draft_config.get("audioPrefix", f"{word}-audio-v1")
+        audio_dir = PROJECT_ROOT / "public" / audio_prefix
+        scenes = draft_config.get("scenes", [])
+        missing_files = []
+        for i in range(1, len(scenes) + 1):
+            mp3 = audio_dir / f"scene{i}.mp3"
+            beats = audio_dir / f"scene{i}-beats.json"
+            if not mp3.exists():
+                missing_files.append(str(mp3.relative_to(PROJECT_ROOT)))
+            if not beats.exists():
+                missing_files.append(str(beats.relative_to(PROJECT_ROOT)))
+        if missing_files:
+            print(f"ERROR: Missing {len(missing_files)} required asset file(s):", file=sys.stderr)
+            for f in missing_files:
+                print(f"  - {f}", file=sys.stderr)
+            print("Run 'py scripts/generate_audio_beats.py --input data/" + word + "-draft.json' to regenerate.", file=sys.stderr)
+            sys.exit(1)
+        print(f"Validated {len(scenes)} scenes, all audio files present.")
+
+        # Step 4: Render video
+        if args.skip_render:
+            print(f"\n{'='*50}")
+            print("Step 4: Render skipped (--skip-render)")
+            print('='*50)
+        else:
+            video_output = PROJECT_ROOT / "renders" / f"{word}-word-video.mp4"
+
+            remotion_bin = PROJECT_ROOT / "node_modules" / ".bin" / ("remotion.cmd" if platform.system() == "Windows" else "remotion")
+            if remotion_bin.exists():
+                cmd_prefix = [str(remotion_bin)]
+            elif platform.system() != "Windows":
+                cmd_prefix = ["remotion"]
+            else:
+                cmd_prefix = [NPX_CMD, "remotion"]
+
+            render_cmd = cmd_prefix + ["render", f"{word_cap}WordVideo", str(video_output), "--cache=never", "--gl=swiftshader"]
+
+            if platform.system() != "Windows" and os.path.exists("/usr/bin/chromium"):
+                render_cmd.append("--browser-executable=/usr/bin/chromium")
+
+            success = run_step(
+                "Step 4: Render video",
+                render_cmd
+            )
+            if not success:
+                sys.exit(1)
+
+        print(f"\n{'#'*60}")
+        print(f"# Pipeline completed for: {word}")
+        print(f"{'#'*60}")
+        print(f"\nVideo saved to: renders/{word}-word-video.mp4")
+    finally:
+        # Teardown: restore Root.tsx and clean temporary component
+        if initial_root_content is not None and root_path.exists():
+            root_path.write_text(initial_root_content, encoding="utf-8")
+            print("  [Teardown] Restored Root.tsx to original clean state.")
+        if created_temp_entry and temp_entry_path.exists():
+            try:
+                temp_entry_path.unlink()
+                print(f"  [Teardown] Cleaned up temporary component: {temp_entry_path.name}")
+            except Exception as e:
+                print(f"  [Teardown] Warning cleaning up {temp_entry_path.name}: {e}")
 
 
 if __name__ == "__main__":
