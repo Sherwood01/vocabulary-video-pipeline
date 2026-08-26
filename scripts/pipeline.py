@@ -7,6 +7,7 @@ import argparse
 import subprocess
 import sys
 import platform
+import os
 import json
 import re
 from pathlib import Path
@@ -217,10 +218,12 @@ def main():
         video_output = PROJECT_ROOT / "renders" / f"{word}-word-video.mp4"
 
         remotion_bin = PROJECT_ROOT / "node_modules" / ".bin" / ("remotion.cmd" if platform.system() == "Windows" else "remotion")
-        if remotion_bin.exists():
-            render_cmd = [str(remotion_bin), "render", f"{word_cap}WordVideo", str(video_output), "--cache=never"]
-        else:
-            render_cmd = [NPX_CMD, "remotion", "render", f"{word_cap}WordVideo", str(video_output), "--cache=never"]
+        
+        cmd_prefix = [str(remotion_bin)] if remotion_bin.exists() else [NPX_CMD, "remotion"]
+        render_cmd = cmd_prefix + ["render", f"{word_cap}WordVideo", str(video_output), "--cache=never", "--gl=swiftshader"]
+
+        if platform.system() != "Windows" and os.path.exists("/usr/bin/chromium"):
+            render_cmd.append("--browser-executable=/usr/bin/chromium")
 
         success = run_step(
             "Step 4: Render video",
