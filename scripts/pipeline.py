@@ -119,12 +119,20 @@ def run_step(name: str, cmd: list[str], cwd: Path = PROJECT_ROOT):
     print(f"Step: {name}")
     print(f"Command: {' '.join(cmd)}")
     print('='*50)
+
+    env = os.environ.copy()
+    node_path = str(cwd / "node_modules")
+    if "NODE_PATH" in env and env["NODE_PATH"]:
+        env["NODE_PATH"] = f"{node_path}{os.pathsep}{env['NODE_PATH']}"
+    else:
+        env["NODE_PATH"] = node_path
+
     # On Windows, convert to string and use shell=True for proper command resolution
     if platform.system() == "Windows":
         cmd_str = subprocess.list2cmdline(cmd)
-        result = subprocess.run(cmd_str, cwd=cwd, shell=True)
+        result = subprocess.run(cmd_str, cwd=cwd, shell=True, env=env)
     else:
-        result = subprocess.run(cmd, cwd=cwd)
+        result = subprocess.run(cmd, cwd=cwd, env=env)
     if result.returncode != 0:
         print(f"ERROR: {name} failed with code {result.returncode}", file=sys.stderr)
         return False
