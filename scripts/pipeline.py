@@ -149,7 +149,7 @@ def main():
     # Step 1: Generate draft with diagnose_word.py
     success = run_step(
         "Step 1: Diagnose word & generate draft",
-        ["py", "scripts/diagnose_word.py", "--word", word]
+        [sys.executable, "scripts/diagnose_word.py", "--word", word]
     )
     if not success:
         sys.exit(1)
@@ -162,7 +162,7 @@ def main():
     # Step 2: Generate audio and beats
     success = run_step(
         "Step 2: Generate TTS audio & beats",
-        ["py", "scripts/generate_audio_beats.py", "--input", str(draft_path)]
+        [sys.executable, "scripts/generate_audio_beats.py", "--input", str(draft_path)]
     )
     if not success:
         sys.exit(1)
