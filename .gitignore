@@ -19,7 +19,7 @@ data/*-draft-with-beats.json
 data/tts-cost-log.jsonl
 
 # Generated WordVideo components (pipeline registered)
-src/*WordVideo.tsx
+# src/*WordVideo.tsx
 # Keep the reference example
 !src/HelloWorldWordVideo.tsx
 
