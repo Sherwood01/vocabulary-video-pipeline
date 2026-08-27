@@ -36,11 +36,17 @@ function cleanupTaskFiles(task) {
       appendLog(task, `[CLEANUP] Deleted video: ${path.basename(task.videoPath)}`);
     }
 
-    // 2. Remove Draft JSON files
+    // 2. Remove Draft JSON files and temporary component TSX files
     const draft1 = path.join(DATA_DIR, `${task.word}-draft.json`);
     const draft2 = path.join(DATA_DIR, `${task.word}-draft-with-beats.json`);
     if (fs.existsSync(draft1)) { fs.unlinkSync(draft1); appendLog(task, `[CLEANUP] Deleted ${task.word}-draft.json`); }
     if (fs.existsSync(draft2)) { fs.unlinkSync(draft2); appendLog(task, `[CLEANUP] Deleted ${task.word}-draft-with-beats.json`); }
+
+    const wordCap = task.word.charAt(0).toUpperCase() + task.word.slice(1);
+    const tsx1 = path.join(__dirname, "src", `${wordCap}WordVideo.tsx`);
+    const tsx2 = path.join(__dirname, "src", `${task.word}WordVideo.tsx`);
+    if (fs.existsSync(tsx1)) { fs.unlinkSync(tsx1); appendLog(task, `[CLEANUP] Deleted ${wordCap}WordVideo.tsx`); }
+    if (fs.existsSync(tsx2)) { fs.unlinkSync(tsx2); appendLog(task, `[CLEANUP] Deleted ${task.word}WordVideo.tsx`); }
 
     // 3. Remove TTS Audio directory in public/ if created
     const publicItems = fs.readdirSync(PUBLIC_DIR);
