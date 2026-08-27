@@ -9,7 +9,6 @@ import { SERENDIPITY_V1_TOTAL_FRAMES, SerendipityHybridV1 } from "./SerendipityH
 import { SILHOUETTE_V1_TOTAL_FRAMES, SilhouetteHybridV1 } from "./SilhouetteHybridV1";
 import { WordVideoPlayer } from "./pipeline/player";
 import type { WordConfig } from "./pipeline/types";
-import { HelloWorldWordVideo } from "./HelloWorldWordVideo";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -84,14 +83,6 @@ export const RemotionRoot: React.FC = () => {
           audioPrefix: "cascade-audio-v1",
           scenes: [],
         }}
-      />
-      <Composition
-        id="HelloWorldWordVideo"
-        component={HelloWorldWordVideo}
-        durationInFrames={300}
-        fps={30}
-        width={1920}
-        height={1080}
       />
     </>
   );
