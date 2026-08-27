@@ -66,19 +66,39 @@ function cleanupTaskFiles(task) {
   }
 }
 
-// Expired tasks timer: Clean up files for tasks older than 30 minutes
-setInterval(() => {
-  const now = Date.now();
-  for (const task of tasks.values()) {
-    if (!task.cleaned && task.completedAt) {
-      const ageMs = now - new Date(task.completedAt).getTime();
-      if (ageMs > 30 * 60 * 1000) { // 30 minutes expired
-        appendLog(task, `[AUTO-CLEANUP] Task expired (30m+). Cleaning files automatically.`);
-        cleanupTaskFiles(task);
+/**
+ * Helper to cleanup task files by word
+ */
+function cleanupTaskFilesByWord(word) {
+  if (!word) return;
+  const cleanWord = word.trim().toLowerCase();
+  try {
+    const draft1 = path.join(DATA_DIR, `${cleanWord}-draft.json`);
+    const draft2 = path.join(DATA_DIR, `${cleanWord}-draft-with-beats.json`);
+    if (fs.existsSync(draft1)) fs.unlinkSync(draft1);
+    if (fs.existsSync(draft2)) fs.unlinkSync(draft2);
+
+    const wordCap = cleanWord.charAt(0).toUpperCase() + cleanWord.slice(1);
+    const tsx1 = path.join(__dirname, "src", `${wordCap}WordVideo.tsx`);
+    const tsx2 = path.join(__dirname, "src", `${cleanWord}WordVideo.tsx`);
+    if (fs.existsSync(tsx1)) fs.unlinkSync(tsx1);
+    if (fs.existsSync(tsx2)) fs.unlinkSync(tsx2);
+
+    const publicItems = fs.readdirSync(PUBLIC_DIR);
+    for (const item of publicItems) {
+      if (item.toLowerCase().includes(cleanWord) && item.includes("audio")) {
+        const fullPath = path.join(PUBLIC_DIR, item);
+        if (fs.statSync(fullPath).isDirectory()) {
+          fs.rmSync(fullPath, { recursive: true, force: true });
+        }
       }
     }
+  } catch (err) {
+    console.error(`[CLEANUP ERROR] ${err.message}`);
   }
-}, 5 * 60 * 1000); // Check every 5 minutes
+}
+
+// Expired tasks timer removed: All deletions are strictly controlled by user manually!
 
 // Task Queue Processor
 async function processQueue() {
@@ -133,7 +153,8 @@ async function processQueue() {
 
       if (finalVideoName) {
         task.videoPath = path.join(RENDERS_DIR, finalVideoName);
-        task.downloadUrl = `/api/download/${task.id}`;
+        task.downloadUrl = `/api/download-file/${encodeURIComponent(finalVideoName)}`;
+        task.playUrl = `/renders/${encodeURIComponent(finalVideoName)}`;
         task.status = "completed";
         task.stage = "Video Ready for Download";
         task.progress = 100;
@@ -267,7 +288,67 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // API: Direct Video Download & Auto Cleanup
+  // API: List Available Videos in Library
+  if (req.method === "GET" && pathname === "/api/videos") {
+    const files = fs.existsSync(RENDERS_DIR) ? fs.readdirSync(RENDERS_DIR) : [];
+    const videos = files
+      .filter((f) => f.endsWith(".mp4"))
+      .map((fileName) => {
+        const fullPath = path.join(RENDERS_DIR, fileName);
+        const stat = fs.statSync(fullPath);
+        const word = fileName.replace(/-word-video\.mp4$/i, "").replace(/\.mp4$/i, "");
+        return {
+          fileName,
+          word,
+          sizeBytes: stat.size,
+          sizeMb: (stat.size / (1024 * 1024)).toFixed(2),
+          createdAt: stat.birthtime || stat.mtime,
+          playUrl: `/renders/${encodeURIComponent(fileName)}`,
+          downloadUrl: `/api/download-file/${encodeURIComponent(fileName)}`,
+        };
+      })
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    return sendJson(videos);
+  }
+
+  // API: Delete Video File & Associated Temp Files (Manual Action)
+  if (req.method === "DELETE" && pathname.startsWith("/api/videos/")) {
+    const fileName = decodeURIComponent(pathname.replace("/api/videos/", ""));
+    const fullPath = path.join(RENDERS_DIR, fileName);
+    if (fs.existsSync(fullPath)) {
+      try {
+        fs.unlinkSync(fullPath);
+        const word = fileName.replace(/-word-video\.mp4$/i, "").replace(/\.mp4$/i, "");
+        cleanupTaskFilesByWord(word);
+        return sendJson({ success: true, message: `Video ${fileName} deleted successfully.` });
+      } catch (err) {
+        return sendJson({ error: `Failed to delete file: ${err.message}` }, 500);
+      }
+    } else {
+      return sendJson({ error: "Video file not found." }, 404);
+    }
+  }
+
+  // API: Direct Video Download by FileName (Permanent, no auto-cleanup)
+  if (req.method === "GET" && pathname.startsWith("/api/download-file/")) {
+    const fileName = decodeURIComponent(pathname.replace("/api/download-file/", ""));
+    const fullPath = path.join(RENDERS_DIR, fileName);
+    if (!fs.existsSync(fullPath)) {
+      return sendJson({ error: "Video file not found." }, 404);
+    }
+
+    const stat = fs.statSync(fullPath);
+    res.writeHead(200, {
+      "Content-Type": "video/mp4",
+      "Content-Length": stat.size,
+      "Content-Disposition": `attachment; filename="${fileName}"`,
+    });
+
+    fs.createReadStream(fullPath).pipe(res);
+    return;
+  }
+
+  // API: Download by Task ID (Backward compatible)
   if (req.method === "GET" && pathname.startsWith("/api/download/")) {
     const taskId = pathname.replace("/api/download/", "");
     const task = tasks.get(taskId);
@@ -276,11 +357,11 @@ const server = http.createServer((req, res) => {
     }
 
     if (!fs.existsSync(task.videoPath)) {
-      return sendJson({ error: "Video file has already been cleaned up from server." }, 404);
+      return sendJson({ error: "Video file not found." }, 404);
     }
 
     const stat = fs.statSync(task.videoPath);
-    const fileName = `${task.word}-word-video.mp4`;
+    const fileName = path.basename(task.videoPath);
 
     res.writeHead(200, {
       "Content-Type": "video/mp4",
@@ -288,16 +369,41 @@ const server = http.createServer((req, res) => {
       "Content-Disposition": `attachment; filename="${fileName}"`,
     });
 
-    const stream = fs.createReadStream(task.videoPath);
-    stream.pipe(res);
-
-    res.on("finish", () => {
-      appendLog(task, `[SYSTEM] Video file downloaded by client.`);
-      setTimeout(() => {
-        cleanupTaskFiles(task);
-      }, 3000); // Trigger file deletion 3 seconds after successful download
-    });
+    fs.createReadStream(task.videoPath).pipe(res);
     return;
+  }
+
+  // Serve Rendered MP4 Files (For Online Video Preview)
+  if (req.method === "GET" && pathname.startsWith("/renders/")) {
+    const fileName = decodeURIComponent(pathname.replace("/renders/", ""));
+    const fullPath = path.join(RENDERS_DIR, fileName);
+    if (fs.existsSync(fullPath) && fs.statSync(fullPath).isFile()) {
+      const stat = fs.statSync(fullPath);
+      const range = req.headers.range;
+
+      if (range) {
+        const parts = range.replace(/bytes=/, "").split("-");
+        const start = parseInt(parts[0], 10);
+        const end = parts[1] ? parseInt(parts[1], 10) : stat.size - 1;
+        const chunksize = end - start + 1;
+        const file = fs.createReadStream(fullPath, { start, end });
+
+        res.writeHead(206, {
+          "Content-Range": `bytes ${start}-${end}/${stat.size}`,
+          "Accept-Ranges": "bytes",
+          "Content-Length": chunksize,
+          "Content-Type": "video/mp4",
+        });
+        file.pipe(res);
+      } else {
+        res.writeHead(200, {
+          "Content-Length": stat.size,
+          "Content-Type": "video/mp4",
+        });
+        fs.createReadStream(fullPath).pipe(res);
+      }
+      return;
+    }
   }
 
   // API: Check Task Status

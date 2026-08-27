@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vocabulary Video Pipeline Generator</title>
-  <!-- Google Fonts & Lucide Icons -->
+  <!-- Google Fonts & Modern Aesthetics -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -16,6 +16,7 @@
       --accent-purple: #8b5cf6;
       --accent-indigo: #6366f1;
       --accent-cyan: #06b6d4;
+      --accent-red: #ef4444;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
     }
@@ -37,10 +38,13 @@
       padding: 2rem 1rem;
     }
 
-    .header {
-      text-align: center;
-      margin-bottom: 2.5rem;
-      max-width: 650px;
+    .top-nav {
+      width: 100%;
+      max-width: 850px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
     }
 
     .badge {
@@ -54,7 +58,41 @@
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      margin-bottom: 1rem;
+    }
+
+    .btn-library {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #f1f5f9;
+      padding: 0.5rem 1.25rem;
+      border-radius: 9999px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-library:hover {
+      background: rgba(139, 92, 246, 0.2);
+      border-color: var(--accent-purple);
+      transform: translateY(-1px);
+    }
+
+    .library-count {
+      background: var(--accent-purple);
+      color: #fff;
+      font-size: 0.75rem;
+      padding: 0.1rem 0.5rem;
+      border-radius: 9999px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      max-width: 650px;
     }
 
     h1 {
@@ -74,7 +112,7 @@
 
     .container {
       width: 100%;
-      max-width: 800px;
+      max-width: 850px;
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
@@ -207,11 +245,6 @@
       word-break: break-all;
     }
 
-    .terminal-box .log-error { color: #f87171; }
-    .terminal-box .log-system { color: #c084fc; font-weight: 600; }
-    .terminal-box .log-zip { color: #4ade80; }
-
-    /* Download Area */
     .download-area {
       display: none;
       margin-top: 1rem;
@@ -222,24 +255,183 @@
       text-align: center;
     }
 
-    .btn-download {
+    .action-btn-group {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-action {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      background: #22c55e;
-      color: #052e16;
-      font-weight: 700;
-      padding: 0.875rem 2rem;
+      padding: 0.75rem 1.5rem;
       border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
       text-decoration: none;
+      border: none;
+      cursor: pointer;
       transition: all 0.2s ease;
-      margin-top: 0.75rem;
     }
 
-    .btn-download:hover {
+    .btn-download-main {
+      background: #22c55e;
+      color: #052e16;
+    }
+
+    .btn-download-main:hover {
       background: #16a34a;
       transform: translateY(-2px);
-      box-shadow: 0 10px 20px -5px rgba(34, 197, 94, 0.4);
+    }
+
+    .btn-preview-main {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-preview-main:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    /* Modal Overlay & Card List */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 1rem;
+    }
+
+    .modal-card {
+      background: #1e293b;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 750px;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .btn-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.25rem;
+      line-height: 1;
+    }
+
+    .btn-close:hover { color: #fff; }
+
+    .modal-body {
+      padding: 1.5rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .video-item-card {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .video-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .video-word {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #f8fafc;
+      text-transform: capitalize;
+    }
+
+    .video-meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .item-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-sm {
+      padding: 0.4rem 0.85rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-sm-preview { background: rgba(139, 92, 246, 0.2); color: #c084fc; border: 1px solid rgba(139, 92, 246, 0.3); }
+    .btn-sm-preview:hover { background: rgba(139, 92, 246, 0.4); }
+
+    .btn-sm-download { background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
+    .btn-sm-download:hover { background: rgba(34, 197, 94, 0.4); }
+
+    .btn-sm-delete { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .btn-sm-delete:hover { background: rgba(239, 68, 68, 0.35); }
+
+    /* Video Player Modal */
+    .player-container {
+      width: 100%;
+      background: #000;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+    }
+
+    video {
+      width: 100%;
+      max-height: 60vh;
+      outline: none;
     }
 
     footer {
@@ -253,10 +445,17 @@
 </head>
 <body>
 
-  <div class="header">
+  <div class="top-nav">
     <div class="badge">SaaS Cloud Generation</div>
+    <button class="btn-library" id="openLibraryBtn">
+      <span>🎬 Video Library</span>
+      <span class="library-count" id="libraryCount">0</span>
+    </button>
+  </div>
+
+  <div class="header">
     <h1>Vocabulary Video Pipeline</h1>
-    <p class="subtitle">Enter an English word below. Our cloud pipeline will automatically generate educational video, TTS voice, beats synchronization, and export a ready-to-download MP4 package.</p>
+    <p class="subtitle">Enter an English word below. Our cloud pipeline automatically renders video, generates voice, syncs beats, and saves your ready-to-preview MP4 package.</p>
   </div>
 
   <div class="container">
@@ -288,16 +487,48 @@
       <!-- Real-time Terminal Log Window -->
       <div class="terminal-box" id="terminalLog"></div>
 
-      <!-- Download Output Box -->
+      <!-- Output Actions Area -->
       <div class="download-area" id="downloadArea">
-        <h3 style="color: #4ade80; margin-bottom: 0.25rem;">🎉 Video Ready for Download!</h3>
-        <p style="color: #94a3b8; font-size: 0.9rem;">Click below to download your MP4 video directly. Temporary files and video will be cleaned up automatically after download.</p>
-        <a href="#" id="downloadBtn" class="btn-download">
-          🎥 Download Video (.mp4)
-        </a>
+        <h3 style="color: #4ade80; margin-bottom: 0.25rem;">🎉 Video Generated Successfully!</h3>
+        <p style="color: #94a3b8; font-size: 0.9rem;">You can preview the video directly online or download the MP4 package.</p>
+        
+        <div class="action-btn-group">
+          <button id="mainPreviewBtn" class="btn-action btn-preview-main">
+            ▶️ Preview Online
+          </button>
+          <a href="#" id="downloadBtn" class="btn-action btn-download-main">
+            🎥 Download Video (.mp4)
+          </a>
+        </div>
       </div>
+    </div>
+  </div>
 
+  <!-- Video Library Modal -->
+  <div class="modal-overlay" id="libraryModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">🎬 Video Library (Server Renders)</div>
+        <button class="btn-close" id="closeLibraryBtn">&times;</button>
+      </div>
+      <div class="modal-body" id="libraryList">
+        <!-- Dynamic Video Item Cards -->
+      </div>
+    </div>
+  </div>
 
+  <!-- Player Preview Modal -->
+  <div class="modal-overlay" id="playerModal">
+    <div class="modal-card" style="max-width: 600px;">
+      <div class="modal-header">
+        <div class="modal-title" id="playerTitle">Video Preview</div>
+        <button class="btn-close" id="closePlayerBtn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="player-container">
+          <video id="videoPlayer" controls autoplay></video>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -318,9 +549,25 @@
     const terminalLog = document.getElementById('terminalLog');
     const downloadArea = document.getElementById('downloadArea');
     const downloadBtn = document.getElementById('downloadBtn');
+    const mainPreviewBtn = document.getElementById('mainPreviewBtn');
+
+    const openLibraryBtn = document.getElementById('openLibraryBtn');
+    const closeLibraryBtn = document.getElementById('closeLibraryBtn');
+    const libraryModal = document.getElementById('libraryModal');
+    const libraryList = document.getElementById('libraryList');
+    const libraryCount = document.getElementById('libraryCount');
+
+    const playerModal = document.getElementById('playerModal');
+    const closePlayerBtn = document.getElementById('closePlayerBtn');
+    const videoPlayer = document.getElementById('videoPlayer');
+    const playerTitle = document.getElementById('playerTitle');
 
     let currentTaskId = null;
     let pollTimer = null;
+    let currentTaskPlayUrl = null;
+
+    // Load initial Library Count
+    fetchVideos();
 
     genForm.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -374,6 +621,7 @@
             clearInterval(pollTimer);
             submitBtn.disabled = false;
             submitBtn.innerHTML = '<span>Generate Video</span>';
+            fetchVideos(); // Refresh library count on finish
           }
         } catch (err) {
           console.error(err);
@@ -382,25 +630,107 @@
     }
 
     function updateUI(task) {
-      // Badge Status
       statusBadge.textContent = task.status.toUpperCase();
       statusBadge.className = `status-badge ${task.status}`;
 
-      // Progress Bar & Stage Text
       progressBar.style.width = `${task.progress}%`;
       stageText.textContent = task.stage || 'Processing...';
 
-      // Update Terminal Logs
       if (task.logs && task.logs.length > 0) {
         terminalLog.textContent = task.logs.join('\n');
-        terminalLog.scrollTop = terminalLog.scrollHeight; // Auto-scroll to bottom
+        terminalLog.scrollTop = terminalLog.scrollHeight;
       }
 
-      // Download link if completed
       if (task.status === 'completed' && task.downloadUrl) {
         downloadArea.style.display = 'block';
         downloadBtn.href = task.downloadUrl;
         downloadBtn.setAttribute('download', `${task.word}-word-video.mp4`);
+        currentTaskPlayUrl = task.playUrl;
+      }
+    }
+
+    // Main Preview Action
+    mainPreviewBtn.addEventListener('click', () => {
+      if (currentTaskPlayUrl) {
+        openPlayer('Current Video Preview', currentTaskPlayUrl);
+      }
+    });
+
+    // Library Modal Logic
+    openLibraryBtn.addEventListener('click', () => {
+      fetchVideos(true);
+      libraryModal.style.display = 'flex';
+    });
+
+    closeLibraryBtn.addEventListener('click', () => {
+      libraryModal.style.display = 'none';
+    });
+
+    // Player Modal Logic
+    function openPlayer(title, playUrl) {
+      playerTitle.textContent = title;
+      videoPlayer.src = playUrl;
+      playerModal.style.display = 'flex';
+      videoPlayer.play();
+    }
+
+    closePlayerBtn.addEventListener('click', () => {
+      videoPlayer.pause();
+      videoPlayer.src = '';
+      playerModal.style.display = 'none';
+    });
+
+    // Fetch and render videos
+    async function fetchVideos(renderList = false) {
+      try {
+        const res = await fetch('/api/videos');
+        if (!res.ok) return;
+        const videos = await res.json();
+
+        libraryCount.textContent = videos.length;
+
+        if (renderList) {
+          if (videos.length === 0) {
+            libraryList.innerHTML = '<p style="text-align:center; color: var(--text-muted); padding: 2rem;">No videos rendered yet.</p>';
+            return;
+          }
+
+          libraryList.innerHTML = videos.map(v => {
+            const dateStr = new Date(v.createdAt).toLocaleString();
+            return `
+              <div class="video-item-card">
+                <div class="video-info">
+                  <span class="video-word">📖 ${v.word}</span>
+                  <span class="video-meta">${v.sizeMb} MB &bull; Created: ${dateStr}</span>
+                </div>
+                <div class="item-actions">
+                  <button class="btn-sm btn-sm-preview" onclick="openPlayer('${v.word}', '${v.playUrl}')">▶ Preview</button>
+                  <a href="${v.downloadUrl}" download="${v.fileName}" class="btn-sm btn-sm-download">⬇ Download</a>
+                  <button class="btn-sm btn-sm-delete" onclick="deleteVideo('${v.fileName}')">🗑 Delete</button>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // Delete Video File Action
+    async function deleteVideo(fileName) {
+      if (!confirm(`Are you sure you want to delete "${fileName}"? This will permanently remove it from server.`)) return;
+
+      try {
+        const res = await fetch(`/api/videos/${encodeURIComponent(fileName)}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (res.ok) {
+          fetchVideos(true);
+        } else {
+          alert(data.error || 'Failed to delete video');
+        }
+      } catch (err) {
+        alert('Delete error: ' + err.message);
       }
     }
   </script>
