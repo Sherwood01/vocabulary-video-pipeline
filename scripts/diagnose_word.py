@@ -43,13 +43,30 @@ RED = "\033[31m"
 RESET = "\033[0m"
 BOLD = "\033[1m"
 
-# MiniMax API 配置
-MINIMAX_API_KEY = os.environ.get("ANTHROPIC_AUTH_TOKEN") or os.environ.get("MINIMAX_API_KEY", "")
-MINIMAX_BASE_URL = "https://api.minimaxi.com/anthropic"
+# 多供应商 LLM 配置解析 (支持 LMSTUDIO / OLLAMA / OPENAI / DEEPSEEK)
+LLM_PROVIDER = os.environ.get("LLM", "LMSTUDIO").upper()
 
-OLLAMA_BASE_URL = os.environ.get("OLLAMA_BASE_URL", "https://ollama.com/api/chat")
-OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "minimax-m2.7:cloud")
-OLLAMA_API_KEY = os.environ.get("OLLAMA_API_KEY", "")
+if LLM_PROVIDER == "LMSTUDIO":
+    LLM_BASE_URL = os.environ.get("LMSTUDIO_BASE_URL", "http://localhost:1234/v1")
+    LLM_API_KEY = os.environ.get("LMSTUDIO_API_KEY", "lm-studio")
+    LLM_MODEL = os.environ.get("LMSTUDIO_MODEL", "qwen3.5-9b-claude-4.6-opus-reasoning-distilled-v2")
+elif LLM_PROVIDER == "OLLAMA":
+    LLM_BASE_URL = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434/v1")
+    LLM_API_KEY = os.environ.get("OLLAMA_API_KEY", "ollama")
+    LLM_MODEL = os.environ.get("OLLAMA_MODEL", "llama3")
+elif LLM_PROVIDER == "OPENAI":
+    LLM_BASE_URL = os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1")
+    LLM_API_KEY = os.environ.get("OPENAI_API_KEY", "")
+    LLM_MODEL = os.environ.get("OPENAI_MODEL", "gpt-4o-mini")
+elif LLM_PROVIDER == "DEEPSEEK":
+    LLM_BASE_URL = os.environ.get("DEEPSEEK_BASE_URL", "https://api.deepseek.com/v1")
+    LLM_API_KEY = os.environ.get("DEEPSEEK_API_KEY", "")
+    LLM_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-chat")
+else:
+    # 默认兜底：优先匹配 LMSTUDIO
+    LLM_BASE_URL = os.environ.get("LMSTUDIO_BASE_URL") or os.environ.get("OLLAMA_BASE_URL", "http://localhost:1234/v1")
+    LLM_API_KEY = os.environ.get("LMSTUDIO_API_KEY") or os.environ.get("OLLAMA_API_KEY", "lm-studio")
+    LLM_MODEL = os.environ.get("LMSTUDIO_MODEL") or os.environ.get("OLLAMA_MODEL", "default-model")
 
 
 def calculate_total_frames(scenes: list[dict], default: int = 300) -> int:
@@ -192,10 +209,6 @@ def llm_infer_strategy(word: str, registry: dict) -> tuple[str, str] | None:
     调用 LLM 分析词义，强制归类到已知策略之一，返回 (strategy_key, reason)。
     不依赖预定义规则，完全自动化。
     """
-    if not OLLAMA_API_KEY:
-        print(f"{YELLOW}⚠️  OLLAMA_API_KEY 未设置，LLM 策略推断跳过{RESET}")
-        return None
-
     strategies = registry.get("strategies", {})
 
     prompt = f"""分析单词 "{word}" 的语义特征，从以下四个策略中选择最合适的一个，并返回 JSON：
@@ -233,10 +246,7 @@ def llm_infer_strategy(word: str, registry: dict) -> tuple[str, str] | None:
 def resolve_scenes(strategy_key: str, registry: dict) -> list[str]:
     strategy = registry.get("strategies", {}).get(strategy_key, {})
     scenes = list(strategy.get("defaultScenes", []))
-    # Director 强制要求 origin-chain 必须存在
     if "origin-chain" not in scenes:
-        # 插入到 hero-word 之后（如果存在），作为第一个内容深挖场景
-        # 叙事顺序：引入(hero) → 词源(origin-chain) → 内容 → 结尾
         if "hero-word" in scenes:
             hero_idx = scenes.index("hero-word")
             scenes.insert(hero_idx + 1, "origin-chain")
@@ -260,54 +270,73 @@ def suggest_backlog_templates(scenes: list[str], registry: dict) -> list[dict]:
     return suggestions
 
 
-def call_llm(prompt: str, retries: int = 2) -> str:
-    """调用 LLM API"""
+def get_chat_endpoint(base_url: str) -> str:
+    url = base_url.rstrip("/")
+    if url.endswith("/chat/completions"):
+        return url
+    return f"{url}/chat/completions"
+
+
+def call_llm(prompt: str, retries: int = 3) -> str:
+    """通用 LLM API 调用方法 (支持 LMStudio / Ollama / OpenAI / DeepSeek)"""
     import time
 
-    if not OLLAMA_API_KEY:
-        print(f"{YELLOW}⚠️  未设置 OLLAMA_API_KEY，跳过内容生成{RESET}")
-        return ""
+    endpoint = get_chat_endpoint(LLM_BASE_URL)
+    headers = {
+        "Content-Type": "application/json",
+    }
+    if LLM_API_KEY:
+        headers["Authorization"] = f"Bearer {LLM_API_KEY}"
+
+    payload = {
+        "model": LLM_MODEL,
+        "messages": [
+            {"role": "user", "content": prompt}
+        ],
+        "temperature": 0.7,
+        "stream": False
+    }
 
     for attempt in range(retries):
         try:
             response = requests.post(
-                OLLAMA_BASE_URL,
-                headers={
-                    "Authorization": f"Bearer {OLLAMA_API_KEY}",
-                    "Content-Type": "application/json",
-                },
-                json={
-                    "model": OLLAMA_MODEL,
-                    "messages": [
-                        {"role": "user", "content": prompt}
-                    ],
-                    "stream": False,
-                },
+                endpoint,
+                headers=headers,
+                json=payload,
                 timeout=180,
+                verify=False
             )
 
             if response.status_code == 200:
                 result = response.json()
-                content = result.get("message", {}).get("content", "")
-                return content.strip()
+                content = ""
+                # 兼容标准 OpenAI/LMStudio API 格式
+                if "choices" in result and len(result["choices"]) > 0:
+                    choice = result["choices"][0]
+                    content = choice.get("message", {}).get("content", "")
+                # 兼容原生的 Ollama 响应格式
+                elif "message" in result:
+                    content = result.get("message", {}).get("content", "")
+                elif "response" in result:
+                    content = result.get("response", "")
+                
+                if content:
+                    return content.strip()
+
+                print(f"{YELLOW}⚠️  LLM ({LLM_PROVIDER}) 返回数据结构未知: {result}{RESET}")
+                return ""
             elif response.status_code == 529:
                 wait = 2 ** attempt
-                print(f"{YELLOW}⚠️  Ollama API 服务器过载 (529)，{wait}秒后重试... ({attempt+1}/{retries}){RESET}")
+                print(f"{YELLOW}⚠️  LLM API 服务器过载 (529)，{wait}秒后重试... ({attempt+1}/{retries}){RESET}")
                 time.sleep(wait)
                 continue
             else:
-                print(f"{YELLOW}⚠️  Ollama API 调用失败: {response.status_code} - {response.text[:200]}{RESET}")
-                return ""
-
+                print(f"{YELLOW}⚠️  LLM ({LLM_PROVIDER}) API 调用失败: {response.status_code} - {response.text[:250]}{RESET}")
+                time.sleep(1)
         except Exception as e:
-            print(f"{YELLOW}⚠️  Ollama API 异常: {e}{RESET}")
-            if attempt < retries - 1:
-                wait = 2 ** attempt
-                time.sleep(wait)
-                continue
-            return ""
+            print(f"{YELLOW}⚠️  LLM ({LLM_PROVIDER}) 请求出现异常: {e}，正在重试 ({attempt+1}/{retries})...{RESET}")
+            time.sleep(1)
 
-    print(f"{YELLOW}⚠️  Ollama API 重试 {retries} 次后仍失败{RESET}")
     return ""
 
 
@@ -753,7 +782,7 @@ def generate_draft_json(word: str, strategy_key: str, scenes: list[str], out_pat
         "_meta": {
             "strategy": strategy_key,
             "generatedBy": "diagnose_word.py",
-            "contentGeneratedBy": "MiniMax LLM" if MINIMAX_API_KEY else "manual"
+            "contentGeneratedBy": f"{LLM_PROVIDER} LLM" if LLM_API_KEY else "manual"
         }
     }
 
