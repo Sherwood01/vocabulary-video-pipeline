@@ -36,8 +36,8 @@ export const AnswerCardsPage: React.FC<{
       }}
     >
       <div className="shrink-0">
-        <div className="text-lg tracking-[0.2em] text-slate-400 font-bold">{kicker}</div>
-        <div className="mt-3 text-5xl font-extrabold leading-tight text-white">{title}</div>
+        <div className="text-[27px] tracking-[0.2em] text-slate-400 font-bold">{kicker}</div>
+        <div className="mt-3 text-[72px] font-extrabold leading-tight text-white">{title}</div>
       </div>
 
       <div className="flex-1 flex flex-col justify-center gap-10 mt-6">
@@ -48,7 +48,7 @@ export const AnswerCardsPage: React.FC<{
           className="text-center"
         >
           <div
-            className="inline-block rounded-2xl border px-10 py-5 text-[32px] font-black"
+            className="inline-block rounded-2xl border px-10 py-5 text-[48px] font-black"
             style={{ background: theme.panel, color: theme.gold, borderColor: theme.gold }}
           >
             {question}
@@ -74,15 +74,15 @@ export const AnswerCardsPage: React.FC<{
                 style={{ background: theme.panel, borderColor: color }}
               >
                 <div className="flex items-center justify-between">
-                  <div className="text-4xl font-black" style={{ color }}>
+                  <div className="text-[54px] font-black" style={{ color }}>
                     {card.number}
                   </div>
                   <div className="rounded-xl p-3" style={{ background: `${color}20` }}>
-                    <Icon size={28} color={color} />
+                    <Icon size={36} color={color} />
                   </div>
                 </div>
-                <div className="mt-5 text-2xl font-bold text-white leading-snug">{card.headline}</div>
-                <div className="mt-3 text-lg leading-relaxed" style={{ color: theme.muted }}>
+                <div className="mt-5 text-[36px] font-bold text-white leading-snug">{card.headline}</div>
+                <div className="mt-3 text-[27px] leading-relaxed" style={{ color: theme.muted }}>
                   {card.body}
                 </div>
               </motion.div>

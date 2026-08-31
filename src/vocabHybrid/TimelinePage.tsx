@@ -24,8 +24,8 @@ export const TimelinePage: React.FC<{
       }}
     >
       <div className="shrink-0">
-        <div className="text-lg tracking-[0.2em] text-slate-400 font-bold">{kicker}</div>
-        <div className="mt-3 text-5xl font-extrabold leading-tight text-white">{title}</div>
+        <div className="text-[27px] tracking-[0.2em] text-slate-400 font-bold">{kicker}</div>
+        <div className="mt-3 text-[72px] font-extrabold leading-tight text-white">{title}</div>
       </div>
 
       <div className="flex-1 flex flex-col justify-center relative mt-8">
@@ -43,7 +43,7 @@ export const TimelinePage: React.FC<{
                 className="flex items-center gap-10"
               >
                 <div
-                  className="relative z-10 w-[120px] text-right text-2xl font-black"
+                  className="relative z-10 w-[140px] text-right text-[36px] font-black"
                   style={{ color: theme.gold }}
                 >
                   {ev.year}
@@ -56,8 +56,8 @@ export const TimelinePage: React.FC<{
                   className="flex-1 rounded-2xl border p-6"
                   style={{ background: theme.panel, borderColor: theme.border }}
                 >
-                  <div className="text-2xl font-bold text-white">{ev.label}</div>
-                  <div className="mt-2 text-lg leading-relaxed" style={{ color: theme.muted }}>
+                  <div className="text-[36px] font-bold text-white">{ev.label}</div>
+                  <div className="mt-2 text-[27px] leading-relaxed" style={{ color: theme.muted }}>
                     {ev.desc}
                   </div>
                 </div>

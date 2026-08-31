@@ -331,7 +331,7 @@ export const StoryIllustrationPage: React.FC<{
                 }}
               >
                 <div className="text-[64px]">{panel.emoji}</div>
-                <div className="mt-3 text-xl font-bold text-center" style={{ color: panel.emojiColor }}>
+                <div className="mt-3 text-[30px] font-bold text-center" style={{ color: panel.emojiColor }}>
                   {panel.emojiLabel}
                 </div>
               </Card>
@@ -369,13 +369,13 @@ export const EndingSummaryPage: React.FC<{
       <div className="h-full flex flex-col justify-center gap-10">
         <SyncReveal frame={frame} startFrame={bFormula} className="text-center">
           <div
-            className="inline-block rounded-3xl border px-12 py-8 text-[52px] font-black"
+            className="inline-block rounded-3xl border px-12 py-8 text-[78px] font-black"
             style={{ background: theme.panel, color: theme.pink, borderColor: theme.pink }}
           >
             {formula}
           </div>
           {formulaNote && (
-            <div className="mt-4 text-[28px] font-bold" style={{ color: theme.muted }}>
+            <div className="mt-4 text-[42px] font-bold" style={{ color: theme.muted }}>
               {formulaNote}
             </div>
           )}
@@ -395,7 +395,7 @@ export const EndingSummaryPage: React.FC<{
                   transform: `translateY(${rise(frame, s, 10, 16)}px)`,
                 }}
               >
-                <div className="text-[32px] font-black text-center" style={{ color: pt.color }}>
+                <div className="text-[48px] font-black text-center" style={{ color: pt.color }}>
                   {pt.text}
                 </div>
               </Card>
@@ -404,7 +404,7 @@ export const EndingSummaryPage: React.FC<{
         </div>
 
         <SyncReveal frame={frame} startFrame={bClosing} className="text-center">
-          <div className="text-[36px] font-bold text-white">{closing}</div>
+          <div className="text-[48px] font-bold text-white">{closing}</div>
         </SyncReveal>
       </div>
     </SceneShell>
@@ -454,12 +454,12 @@ export const ProfileStoryPage: React.FC<{
             const s = b(1 + i, 15 + i * 30);
             return (
               <SyncReveal key={i} frame={frame} startFrame={s}>
-                <div className="text-[30px] font-bold leading-snug text-white">{line}</div>
+                <div className="text-[45px] font-bold leading-snug text-white">{line}</div>
               </SyncReveal>
             );
           })}
           <SyncReveal frame={frame} startFrame={b(1 + storyLines.length, (b(storyLines.length, 15) + 20))}>
-            <div className="mt-3 text-[36px] font-black" style={{ color: theme.gold }}>
+            <div className="mt-3 text-[54px] font-black" style={{ color: theme.gold }}>
               {highlight}
             </div>
           </SyncReveal>
@@ -506,8 +506,8 @@ export const FullScreenMoodPage: React.FC<{
       }}
     >
       <div className="shrink-0">
-        <div className="text-lg tracking-[0.2em] text-slate-300 font-bold">{kicker}</div>
-        <div className="mt-3 text-5xl font-extrabold leading-tight text-white">{title}</div>
+        <div className="text-[27px] tracking-[0.2em] text-slate-300 font-bold">{kicker}</div>
+        <div className="mt-3 text-[72px] font-extrabold leading-tight text-white">{title}</div>
       </div>
 
       <div className="flex-1 flex flex-col items-center justify-center gap-8 relative">
@@ -516,7 +516,7 @@ export const FullScreenMoodPage: React.FC<{
             const s = b(i, 15 + i * 30);
             return (
               <SyncReveal key={i} frame={frame} startFrame={s}>
-                <div className="text-[36px] font-bold leading-snug text-white/95">{line}</div>
+                <div className="text-[54px] font-bold leading-snug text-white/95">{line}</div>
               </SyncReveal>
             );
           })}
@@ -524,7 +524,7 @@ export const FullScreenMoodPage: React.FC<{
 
         <SyncReveal frame={frame} startFrame={bCenter} className="mt-4">
           <div
-            className="text-[140px]"
+            className="text-[180px]"
             style={{
               filter: "drop-shadow(0 20px 60px rgba(0,0,0,0.6))",
               opacity: reveal(frame, bCenter, 16),
@@ -539,7 +539,7 @@ export const FullScreenMoodPage: React.FC<{
       {bottomQuote && (
         <SyncReveal frame={frame} startFrame={bQuote} className="text-center pb-4">
           <div
-            className="inline-block rounded-2xl border px-10 py-5 text-[44px] font-black"
+            className="inline-block rounded-2xl border px-10 py-5 text-[66px] font-black"
             style={{
               color: theme.gold,
               borderColor: theme.gold,
