@@ -36,11 +36,11 @@ export const AnswerCardsPage: React.FC<{
       }}
     >
       <div className="shrink-0">
-        <div className="text-[27px] tracking-[0.2em] text-slate-400 font-bold">{kicker}</div>
-        <div className="mt-3 text-[72px] font-extrabold leading-tight text-white">{title}</div>
+        <div className="text-[28px] tracking-[0.2em] text-slate-400 font-bold">{kicker}</div>
+        <div className="mt-2 text-[84px] font-extrabold leading-[1.15] text-white">{title}</div>
       </div>
 
-      <div className="flex-1 flex flex-col justify-center gap-10 mt-6">
+      <div className="flex-1 flex flex-col justify-center gap-6 mt-3">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: frame >= bQuestion ? 1 : 0, y: frame >= bQuestion ? 0 : 20 }}
@@ -48,14 +48,14 @@ export const AnswerCardsPage: React.FC<{
           className="text-center"
         >
           <div
-            className="inline-block rounded-2xl border px-10 py-5 text-[48px] font-black"
+            className="inline-block rounded-2xl border px-10 py-4 text-[54px] font-black leading-[1.15]"
             style={{ background: theme.panel, color: theme.gold, borderColor: theme.gold }}
           >
             {question}
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-3 gap-6 items-stretch">
+        <div className="grid grid-cols-3 gap-5 items-stretch">
           {cards.map((card, i) => {
             const s = cardStarts[i];
             const Icon = (Icons as unknown as Record<string, LucideIcon>)[card.icon] || Icons.Circle;
@@ -70,19 +70,19 @@ export const AnswerCardsPage: React.FC<{
                   scale: frame >= s ? 1 : 0.95,
                 }}
                 transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0 }}
-                className="rounded-3xl border p-6 flex flex-col"
+                className="rounded-3xl border px-6 py-5 flex flex-col justify-between"
                 style={{ background: theme.panel, borderColor: color }}
               >
                 <div className="flex items-center justify-between">
-                  <div className="text-[54px] font-black" style={{ color }}>
+                  <div className="text-[60px] font-black" style={{ color }}>
                     {card.number}
                   </div>
                   <div className="rounded-xl p-3" style={{ background: `${color}20` }}>
                     <Icon size={36} color={color} />
                   </div>
                 </div>
-                <div className="mt-5 text-[36px] font-bold text-white leading-snug">{card.headline}</div>
-                <div className="mt-3 text-[27px] leading-relaxed" style={{ color: theme.muted }}>
+                <div className="mt-3 text-[42px] font-bold text-white leading-[1.2]">{card.headline}</div>
+                <div className="mt-2 text-[36px] leading-[1.3]" style={{ color: theme.muted }}>
                   {card.body}
                 </div>
               </motion.div>

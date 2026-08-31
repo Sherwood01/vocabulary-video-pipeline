@@ -9,6 +9,11 @@ import { SERENDIPITY_V1_TOTAL_FRAMES, SerendipityHybridV1 } from "./SerendipityH
 import { SILHOUETTE_V1_TOTAL_FRAMES, SilhouetteHybridV1 } from "./SilhouetteHybridV1";
 import { WordVideoPlayer } from "./pipeline/player";
 import type { WordConfig } from "./pipeline/types";
+import { ConnoisseurWordVideo } from "./ConnoisseurWordVideo";
+import { EclecticWordVideo } from "./EclecticWordVideo";
+import { EnthrallingWordVideo } from "./EnthrallingWordVideo";
+import { EruditeWordVideo } from "./EruditeWordVideo";
+import { LucrativeWordVideo } from "./LucrativeWordVideo";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -83,6 +88,46 @@ export const RemotionRoot: React.FC = () => {
           audioPrefix: "cascade-audio-v1",
           scenes: [],
         }}
+      />
+      <Composition
+        id="ConnoisseurWordVideo"
+        component={ConnoisseurWordVideo}
+        durationInFrames={300}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="EclecticWordVideo"
+        component={EclecticWordVideo}
+        durationInFrames={300}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="EnthrallingWordVideo"
+        component={EnthrallingWordVideo}
+        durationInFrames={300}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="EruditeWordVideo"
+        component={EruditeWordVideo}
+        durationInFrames={300}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="LucrativeWordVideo"
+        component={LucrativeWordVideo}
+        durationInFrames={300}
+        fps={30}
+        width={1920}
+        height={1080}
       />
     </>
   );

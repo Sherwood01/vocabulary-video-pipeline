@@ -14,7 +14,7 @@ export const VH_COLORS = {
 } as const;
 
 export const shellPadding = {
-  x: 96,
-  top: 80,
-  bottom: 64,
+  x: 48,
+  top: 40,
+  bottom: 32,
 } as const;

@@ -93,10 +93,10 @@ export const SceneShell: React.FC<{ kicker: string; title: string; themeName?: s
       }}
     >
       <div className="shrink-0">
-        <div className="text-[27px] tracking-[0.2em] text-slate-400 font-bold">{kicker}</div>
-        <div className="mt-3 text-[72px] font-extrabold leading-tight text-white">{title}</div>
+        <div className="text-[28px] tracking-[0.2em] text-slate-400 font-bold">{kicker}</div>
+        <div className="mt-2 text-[84px] font-extrabold leading-[1.15] text-white">{title}</div>
       </div>
-      <div className="flex-1 min-h-0 mt-8 relative">{children}</div>
+      <div className="flex-1 min-h-0 mt-4 relative">{children}</div>
     </AbsoluteFill>
   );
 };
@@ -122,23 +122,23 @@ export const HeroWordPage: React.FC<{
 
   return (
     <SceneShell kicker={kicker} title={title} themeName={themeName}>
-      <div className="h-full flex flex-col items-center justify-center gap-8">
+      <div className="h-full flex flex-col items-center justify-center gap-6">
         <SyncReveal frame={frame} startFrame={bWord}>
-          <div className="text-[180px] font-black tracking-tight" style={{ color: theme.pink }}>
+          <div className="text-[240px] font-black tracking-tight leading-none" style={{ color: theme.pink }}>
             {word}
           </div>
         </SyncReveal>
         <SyncReveal frame={frame} startFrame={bSub}>
-          <div className="text-[66px] font-bold text-white">{subtitle}</div>
+          <div className="text-[64px] font-bold leading-tight text-white max-w-[1600px] text-center">{subtitle}</div>
         </SyncReveal>
-        <div className="flex gap-4 mt-4">
+        <div className="flex gap-4 mt-2">
           {tags.map((tag, i) => {
             const s = tagStarts[i];
             return (
               <Badge
                 key={tag}
                 variant="outline"
-                className="rounded-full border px-8 py-4 text-[30px] font-bold"
+                className="rounded-full border px-9 py-4 text-[32px] font-bold"
                 style={{
                   background: theme.panel,
                   color: i === 0 ? theme.blue : i === 1 ? theme.green : theme.gold,
@@ -174,14 +174,14 @@ export const OriginChainPage: React.FC<{
 
   return (
     <SceneShell kicker={kicker} title={title} themeName={themeName}>
-      <div className="h-full flex flex-col justify-center gap-12">
+      <div className="h-full flex flex-col justify-center gap-6">
         <div className="flex items-stretch justify-between gap-4">
           {(nodes || []).map((node, i) => {
             const s = b(i, 15 + i * 40);
             return (
               <React.Fragment key={node.label}>
                 <Card
-                  className="flex-1 rounded-2xl border p-6 flex flex-col items-center justify-center min-h-[220px]"
+                  className="flex-1 rounded-2xl border px-7 py-5 flex flex-col items-center justify-center h-auto"
                   style={{
                     background: theme.panel,
                     borderColor: node.color,
@@ -189,15 +189,15 @@ export const OriginChainPage: React.FC<{
                     transform: `translateY(${rise(frame, s, 12, 16)}px) scale(${scaleIn(frame, s, 12)})`,
                   }}
                 >
-                  <div className="text-[45px] font-black text-center" style={{ color: node.color }}>
+                  <div className="text-[54px] font-black text-center leading-tight" style={{ color: node.color }}>
                     {node.label}
                   </div>
-                  <div className="mt-3 text-[30px] text-slate-200 text-center leading-relaxed font-semibold">
+                  <div className="mt-3 text-[42px] text-slate-200 text-center leading-[1.3] font-medium">
                     {node.note}
                   </div>
                 </Card>
                 {i < (nodes || []).length - 1 && (
-                  <div className="flex items-center text-[36px] font-bold text-slate-500 px-2" style={{ opacity: reveal(frame, s + 10, 10) }}>
+                  <div className="flex items-center text-[44px] font-bold text-slate-500 px-2" style={{ opacity: reveal(frame, s + 10, 10) }}>
                     →
                   </div>
                 )}
@@ -208,7 +208,7 @@ export const OriginChainPage: React.FC<{
         <SyncReveal frame={frame} startFrame={b((nodes || []).length, (b((nodes || []).length - 1, 15) + 30)) + 15} className="text-center">
           <Badge
             variant="outline"
-            className="rounded-full border px-10 py-5 text-[36px] font-bold"
+            className="rounded-full border px-10 py-4 text-[40px] font-bold leading-normal"
             style={{ background: theme.panel, color: theme.gold, borderColor: theme.gold }}
           >
             {arrowLabel}
@@ -243,12 +243,12 @@ export const MeaningClusterPage: React.FC<{
 
   return (
     <SceneShell kicker={kicker} title={title} themeName={themeName}>
-      <div className="h-full flex flex-col justify-center gap-10">
-        <div className="grid grid-cols-[1fr_0.5fr_1.2fr] gap-6 items-stretch">
+      <div className="h-full flex flex-col justify-center gap-6">
+        <div className="grid grid-cols-[1fr_0.35fr_1.2fr] gap-5 items-stretch">
           <SyncReveal frame={frame} startFrame={bLeft} className="h-full">
-            <Card className="h-full rounded-2xl border p-8 flex flex-col justify-center" style={{ background: theme.panelSoft, borderColor: theme.border }}>
+            <Card className="h-full rounded-2xl border p-6 flex flex-col justify-center" style={{ background: theme.panelSoft, borderColor: theme.border }}>
               <div className="text-[36px] text-slate-400 font-bold">{leftLabel}</div>
-              <div className="mt-4 text-[48px] font-extrabold text-slate-100">{leftNote}</div>
+              <div className="mt-3 text-[52px] font-extrabold text-slate-100 leading-[1.25]">{leftNote}</div>
             </Card>
           </SyncReveal>
 
@@ -262,9 +262,9 @@ export const MeaningClusterPage: React.FC<{
           </div>
 
           <SyncReveal frame={frame} startFrame={bRight} className="h-full">
-            <Card className="h-full rounded-2xl border p-8 flex flex-col justify-center" style={{ background: theme.panel, borderColor: theme.pink }}>
+            <Card className="h-full rounded-2xl border p-6 flex flex-col justify-center" style={{ background: theme.panel, borderColor: theme.pink }}>
               <div className="text-[36px] text-slate-400 font-bold">{rightLabel}</div>
-              <div className="mt-4 text-[60px] font-black" style={{ color: theme.pink }}>
+              <div className="mt-3 text-[64px] font-black leading-[1.2]" style={{ color: theme.pink }}>
                 {rightNote}
               </div>
             </Card>
@@ -272,7 +272,7 @@ export const MeaningClusterPage: React.FC<{
         </div>
 
         <SyncReveal frame={frame} startFrame={bBottom} className="text-center">
-          <div className="inline-block rounded-2xl border px-12 py-6 text-[54px] font-black" style={{ background: theme.panel, color: theme.gold, borderColor: theme.gold }}>
+          <div className="inline-block rounded-2xl border px-12 py-5 text-[56px] font-black leading-snug" style={{ background: theme.panel, color: theme.gold, borderColor: theme.gold }}>
             {bottomText}
           </div>
         </SyncReveal>
@@ -305,12 +305,12 @@ export const StoryIllustrationPage: React.FC<{
             const s = b(i, 15 + i * 30);
             return (
               <SyncReveal key={i} frame={frame} startFrame={s}>
-                <div className="text-[30px] font-bold leading-snug text-white">{item.text}</div>
+                <div className="text-[44px] font-bold leading-snug text-white">{item.text}</div>
               </SyncReveal>
             );
           })}
           <SyncReveal frame={frame} startFrame={bHighlight + 6}>
-            <div className="mt-2 text-[36px] font-black" style={{ color: theme.green }}>
+            <div className="mt-2 text-[54px] font-black" style={{ color: theme.green }}>
               {highlight}
             </div>
           </SyncReveal>
@@ -330,8 +330,8 @@ export const StoryIllustrationPage: React.FC<{
                   transform: `translateY(${rise(frame, s, 12, 16)}px) scale(${scaleIn(frame, s, 12)})`,
                 }}
               >
-                <div className="text-[64px]">{panel.emoji}</div>
-                <div className="mt-3 text-[30px] font-bold text-center" style={{ color: panel.emojiColor }}>
+                <div className="text-[80px]">{panel.emoji}</div>
+                <div className="mt-3 text-[38px] font-bold text-center" style={{ color: panel.emojiColor }}>
                   {panel.emojiLabel}
                 </div>
               </Card>
@@ -366,28 +366,28 @@ export const EndingSummaryPage: React.FC<{
 
   return (
     <SceneShell kicker={kicker} title={title} themeName={themeName}>
-      <div className="h-full flex flex-col justify-center gap-10">
+      <div className="h-full flex flex-col justify-center gap-8">
         <SyncReveal frame={frame} startFrame={bFormula} className="text-center">
           <div
-            className="inline-block rounded-3xl border px-12 py-8 text-[78px] font-black"
+            className="inline-block rounded-3xl border px-12 py-6 text-[88px] font-black leading-tight"
             style={{ background: theme.panel, color: theme.pink, borderColor: theme.pink }}
           >
             {formula}
           </div>
           {formulaNote && (
-            <div className="mt-4 text-[42px] font-bold" style={{ color: theme.muted }}>
+            <div className="mt-3 text-[44px] font-bold leading-normal" style={{ color: theme.muted }}>
               {formulaNote}
             </div>
           )}
         </SyncReveal>
 
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-3 gap-5">
           {safePoints.map((pt, i) => {
             const s = pointStarts[i];
             return (
               <Card
                 key={i}
-                className="rounded-2xl border p-6 flex flex-col items-center justify-center min-h-[140px]"
+                className="rounded-2xl border px-6 py-5 flex flex-col items-center justify-center h-auto"
                 style={{
                   background: theme.panel,
                   borderColor: pt.color,
@@ -395,7 +395,7 @@ export const EndingSummaryPage: React.FC<{
                   transform: `translateY(${rise(frame, s, 10, 16)}px)`,
                 }}
               >
-                <div className="text-[48px] font-black text-center" style={{ color: pt.color }}>
+                <div className="text-[52px] font-black text-center leading-snug" style={{ color: pt.color }}>
                   {pt.text}
                 </div>
               </Card>
@@ -404,7 +404,7 @@ export const EndingSummaryPage: React.FC<{
         </div>
 
         <SyncReveal frame={frame} startFrame={bClosing} className="text-center">
-          <div className="text-[48px] font-bold text-white">{closing}</div>
+          <div className="text-[52px] font-bold text-white leading-snug">{closing}</div>
         </SyncReveal>
       </div>
     </SceneShell>
@@ -428,7 +428,7 @@ export const ProfileStoryPage: React.FC<{
 
   return (
     <SceneShell kicker={kicker} title={title} themeName={themeName}>
-      <div className="h-full grid grid-cols-[0.9fr_1.1fr] gap-12 items-center">
+      <div className="h-full grid grid-cols-[0.9fr_1.1fr] gap-10 items-center">
         <SyncReveal frame={frame} startFrame={b(0, 15)} className="flex justify-center">
           <div
             className="relative w-[380px] h-[380px] rounded-full flex items-center justify-center"
@@ -449,17 +449,17 @@ export const ProfileStoryPage: React.FC<{
           </div>
         </SyncReveal>
 
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-4">
           {storyLines.map((line, i) => {
             const s = b(1 + i, 15 + i * 30);
             return (
               <SyncReveal key={i} frame={frame} startFrame={s}>
-                <div className="text-[45px] font-bold leading-snug text-white">{line}</div>
+                <div className="text-[48px] font-bold leading-snug text-white">{line}</div>
               </SyncReveal>
             );
           })}
           <SyncReveal frame={frame} startFrame={b(1 + storyLines.length, (b(storyLines.length, 15) + 20))}>
-            <div className="mt-3 text-[54px] font-black" style={{ color: theme.gold }}>
+            <div className="mt-2 text-[60px] font-black" style={{ color: theme.gold }}>
               {highlight}
             </div>
           </SyncReveal>
@@ -506,25 +506,25 @@ export const FullScreenMoodPage: React.FC<{
       }}
     >
       <div className="shrink-0">
-        <div className="text-[27px] tracking-[0.2em] text-slate-300 font-bold">{kicker}</div>
-        <div className="mt-3 text-[72px] font-extrabold leading-tight text-white">{title}</div>
+        <div className="text-[28px] tracking-[0.2em] text-slate-300 font-bold">{kicker}</div>
+        <div className="mt-2 text-[84px] font-extrabold leading-[1.15] text-white">{title}</div>
       </div>
 
-      <div className="flex-1 flex flex-col items-center justify-center gap-8 relative">
-        <div className="flex flex-col gap-4 text-center max-w-[1100px]">
+      <div className="flex-1 flex flex-col items-center justify-center gap-6 relative">
+        <div className="flex flex-col gap-3 text-center max-w-[1300px]">
           {resolvedLines.map((line, i) => {
             const s = b(i, 15 + i * 30);
             return (
               <SyncReveal key={i} frame={frame} startFrame={s}>
-                <div className="text-[54px] font-bold leading-snug text-white/95">{line}</div>
+                <div className="text-[56px] font-bold leading-snug text-white/95">{line}</div>
               </SyncReveal>
             );
           })}
         </div>
 
-        <SyncReveal frame={frame} startFrame={bCenter} className="mt-4">
+        <SyncReveal frame={frame} startFrame={bCenter} className="mt-2">
           <div
-            className="text-[180px]"
+            className="text-[200px]"
             style={{
               filter: "drop-shadow(0 20px 60px rgba(0,0,0,0.6))",
               opacity: reveal(frame, bCenter, 16),
@@ -537,7 +537,7 @@ export const FullScreenMoodPage: React.FC<{
       </div>
 
       {bottomQuote && (
-        <SyncReveal frame={frame} startFrame={bQuote} className="text-center pb-4">
+        <SyncReveal frame={frame} startFrame={bQuote} className="text-center pb-2">
           <div
             className="inline-block rounded-2xl border px-10 py-5 text-[66px] font-black"
             style={{
