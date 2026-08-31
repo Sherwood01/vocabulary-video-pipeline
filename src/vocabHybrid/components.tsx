@@ -93,8 +93,8 @@ export const SceneShell: React.FC<{ kicker: string; title: string; themeName?: s
       }}
     >
       <div className="shrink-0">
-        <div className="text-2xl tracking-[0.2em] text-slate-400 font-bold">{kicker}</div>
-        <div className="mt-3 text-5xl font-extrabold leading-tight text-white">{title}</div>
+        <div className="text-[27px] tracking-[0.2em] text-slate-400 font-bold">{kicker}</div>
+        <div className="mt-3 text-[72px] font-extrabold leading-tight text-white">{title}</div>
       </div>
       <div className="flex-1 min-h-0 mt-8 relative">{children}</div>
     </AbsoluteFill>
@@ -124,12 +124,12 @@ export const HeroWordPage: React.FC<{
     <SceneShell kicker={kicker} title={title} themeName={themeName}>
       <div className="h-full flex flex-col items-center justify-center gap-8">
         <SyncReveal frame={frame} startFrame={bWord}>
-          <div className="text-[120px] font-black tracking-tight" style={{ color: theme.pink }}>
+          <div className="text-[180px] font-black tracking-tight" style={{ color: theme.pink }}>
             {word}
           </div>
         </SyncReveal>
         <SyncReveal frame={frame} startFrame={bSub}>
-          <div className="text-[44px] font-bold text-white">{subtitle}</div>
+          <div className="text-[66px] font-bold text-white">{subtitle}</div>
         </SyncReveal>
         <div className="flex gap-4 mt-4">
           {tags.map((tag, i) => {
@@ -138,7 +138,7 @@ export const HeroWordPage: React.FC<{
               <Badge
                 key={tag}
                 variant="outline"
-                className="rounded-full border px-6 py-3 text-2xl font-bold"
+                className="rounded-full border px-8 py-4 text-[30px] font-bold"
                 style={{
                   background: theme.panel,
                   color: i === 0 ? theme.blue : i === 1 ? theme.green : theme.gold,
@@ -189,15 +189,15 @@ export const OriginChainPage: React.FC<{
                     transform: `translateY(${rise(frame, s, 12, 16)}px) scale(${scaleIn(frame, s, 12)})`,
                   }}
                 >
-                  <div className="text-3xl font-black text-center" style={{ color: node.color }}>
+                  <div className="text-[45px] font-black text-center" style={{ color: node.color }}>
                     {node.label}
                   </div>
-                  <div className="mt-3 text-2xl text-slate-300 text-center leading-relaxed font-medium">
+                  <div className="mt-3 text-[30px] text-slate-200 text-center leading-relaxed font-semibold">
                     {node.note}
                   </div>
                 </Card>
                 {i < (nodes || []).length - 1 && (
-                  <div className="flex items-center text-2xl font-bold text-slate-500 px-2" style={{ opacity: reveal(frame, s + 10, 10) }}>
+                  <div className="flex items-center text-[36px] font-bold text-slate-500 px-2" style={{ opacity: reveal(frame, s + 10, 10) }}>
                     →
                   </div>
                 )}
@@ -208,7 +208,7 @@ export const OriginChainPage: React.FC<{
         <SyncReveal frame={frame} startFrame={b((nodes || []).length, (b((nodes || []).length - 1, 15) + 30)) + 15} className="text-center">
           <Badge
             variant="outline"
-            className="rounded-full border px-8 py-4 text-2xl font-bold"
+            className="rounded-full border px-10 py-5 text-[36px] font-bold"
             style={{ background: theme.panel, color: theme.gold, borderColor: theme.gold }}
           >
             {arrowLabel}
@@ -247,14 +247,14 @@ export const MeaningClusterPage: React.FC<{
         <div className="grid grid-cols-[1fr_0.5fr_1.2fr] gap-6 items-stretch">
           <SyncReveal frame={frame} startFrame={bLeft} className="h-full">
             <Card className="h-full rounded-2xl border p-8 flex flex-col justify-center" style={{ background: theme.panelSoft, borderColor: theme.border }}>
-              <div className="text-2xl text-slate-400 font-bold">{leftLabel}</div>
-              <div className="mt-4 text-[32px] font-extrabold text-slate-200">{leftNote}</div>
+              <div className="text-[36px] text-slate-400 font-bold">{leftLabel}</div>
+              <div className="mt-4 text-[48px] font-extrabold text-slate-100">{leftNote}</div>
             </Card>
           </SyncReveal>
 
           <div className="flex items-center justify-center">
             <div
-              className="text-5xl font-bold"
+              className="text-7xl font-bold"
               style={{ color: theme.muted, opacity: reveal(frame, bNot, 10), transform: `translateX(${rise(frame, bNot, 10, 20)}px)` }}
             >
               ≠
@@ -263,8 +263,8 @@ export const MeaningClusterPage: React.FC<{
 
           <SyncReveal frame={frame} startFrame={bRight} className="h-full">
             <Card className="h-full rounded-2xl border p-8 flex flex-col justify-center" style={{ background: theme.panel, borderColor: theme.pink }}>
-              <div className="text-2xl text-slate-400 font-bold">{rightLabel}</div>
-              <div className="mt-4 text-[40px] font-black" style={{ color: theme.pink }}>
+              <div className="text-[36px] text-slate-400 font-bold">{rightLabel}</div>
+              <div className="mt-4 text-[60px] font-black" style={{ color: theme.pink }}>
                 {rightNote}
               </div>
             </Card>
@@ -272,7 +272,7 @@ export const MeaningClusterPage: React.FC<{
         </div>
 
         <SyncReveal frame={frame} startFrame={bBottom} className="text-center">
-          <div className="inline-block rounded-2xl border px-10 py-5 text-[36px] font-black" style={{ background: theme.panel, color: theme.gold, borderColor: theme.gold }}>
+          <div className="inline-block rounded-2xl border px-12 py-6 text-[54px] font-black" style={{ background: theme.panel, color: theme.gold, borderColor: theme.gold }}>
             {bottomText}
           </div>
         </SyncReveal>

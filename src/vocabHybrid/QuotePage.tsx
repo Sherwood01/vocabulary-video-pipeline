@@ -32,8 +32,8 @@ export const QuotePage: React.FC<{
       }}
     >
       <div className="shrink-0">
-        <div className="text-2xl tracking-[0.2em] text-slate-400 font-bold">{kicker}</div>
-        <div className="mt-3 text-5xl font-extrabold leading-tight text-white">{title}</div>
+        <div className="text-[27px] tracking-[0.2em] text-slate-400 font-bold">{kicker}</div>
+        <div className="mt-3 text-[72px] font-extrabold leading-tight text-white">{title}</div>
       </div>
 
       <div className="flex-1 flex flex-col justify-center gap-8 relative">
@@ -44,14 +44,14 @@ export const QuotePage: React.FC<{
           className="self-start rounded-2xl p-5"
           style={{ background: theme.panel, border: `1px solid ${theme.border}` }}
         >
-          <Quote size={48} style={{ color: theme.gold }} />
+          <Quote size={56} style={{ color: theme.gold }} />
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: frame >= bQuote + 8 ? 1 : 0, y: frame >= bQuote + 8 ? 0 : 30 }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="text-[48px] font-black leading-tight max-w-[1400px]"
+          className="text-[72px] font-black leading-tight max-w-[1500px]"
           style={{ color: theme.gold }}
         >
           "{quote}"
@@ -62,7 +62,7 @@ export const QuotePage: React.FC<{
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: frame >= bTranslation ? 1 : 0, y: frame >= bTranslation ? 0 : 20 }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="text-[42px] font-bold leading-relaxed max-w-[1200px]"
+            className="text-[54px] font-bold leading-relaxed max-w-[1300px]"
             style={{ color: theme.text }}
           >
             {translation}
@@ -73,7 +73,7 @@ export const QuotePage: React.FC<{
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: frame >= bAuthor ? 1 : 0, x: frame >= bAuthor ? 0 : -20 }}
           transition={{ duration: 0.4 }}
-          className="text-[28px] font-bold"
+          className="text-[36px] font-bold"
           style={{ color: theme.pink }}
         >
           — {author}
@@ -83,7 +83,7 @@ export const QuotePage: React.FC<{
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: frame >= bContext ? 1 : 0, y: frame >= bContext ? 0 : 16 }}
           transition={{ duration: 0.4 }}
-          className="text-[28px] leading-relaxed max-w-[1200px]"
+          className="text-[36px] leading-relaxed max-w-[1300px]"
           style={{ color: theme.muted }}
         >
           {context}
