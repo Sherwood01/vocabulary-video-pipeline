@@ -272,7 +272,7 @@ def suggest_backlog_templates(scenes: list[str], registry: dict) -> list[dict]:
 
 def get_chat_endpoint(base_url: str) -> str:
     url = base_url.rstrip("/")
-    if url.endswith("/chat/completions"):
+    if url.endswith("/chat/completions") or url.endswith("/api/chat") or url.endswith("/chat"):
         return url
     return f"{url}/chat/completions"
 
