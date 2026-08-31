@@ -30,7 +30,7 @@ export const MotionHeroDemo: React.FC<{
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: frame >= 10 ? 1 : 0, y: frame >= 10 ? 0 : 24 }}
         transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-        className="text-[120px] font-black tracking-tight"
+        className="text-[180px] font-black tracking-tight"
         style={{ color: theme.pink }}
       >
         {word}
@@ -40,7 +40,7 @@ export const MotionHeroDemo: React.FC<{
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: frame >= 45 ? 1 : 0, y: frame >= 45 ? 0 : 20 }}
         transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-        className="text-[44px] font-bold text-white"
+        className="text-[66px] font-bold text-white"
       >
         {subtitle}
       </motion.div>
@@ -49,10 +49,10 @@ export const MotionHeroDemo: React.FC<{
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: frame >= 80 ? 1 : 0, scale: frame >= 80 ? 1 : 0.9 }}
         transition={{ duration: 0.3 }}
-        className="mt-4 flex items-center gap-3 rounded-full border px-6 py-3 text-xl font-bold"
+        className="mt-4 flex items-center gap-3 rounded-full border px-8 py-4 text-[30px] font-bold"
         style={{ borderColor: theme.gold, color: theme.gold, background: theme.panel }}
       >
-        <Sparkles size={22} />
+        <Sparkles size={30} />
         <span>这是 Lucide 图标</span>
       </motion.div>
     </div>
