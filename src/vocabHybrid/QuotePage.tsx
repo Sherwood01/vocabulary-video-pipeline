@@ -32,7 +32,7 @@ export const QuotePage: React.FC<{
       }}
     >
       <div className="shrink-0">
-        <div className="text-lg tracking-[0.2em] text-slate-400 font-bold">{kicker}</div>
+        <div className="text-2xl tracking-[0.2em] text-slate-400 font-bold">{kicker}</div>
         <div className="mt-3 text-5xl font-extrabold leading-tight text-white">{title}</div>
       </div>
 
@@ -62,7 +62,7 @@ export const QuotePage: React.FC<{
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: frame >= bTranslation ? 1 : 0, y: frame >= bTranslation ? 0 : 20 }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="text-[36px] font-bold leading-relaxed max-w-[1200px]"
+            className="text-[42px] font-bold leading-relaxed max-w-[1200px]"
             style={{ color: theme.text }}
           >
             {translation}
@@ -73,7 +73,7 @@ export const QuotePage: React.FC<{
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: frame >= bAuthor ? 1 : 0, x: frame >= bAuthor ? 0 : -20 }}
           transition={{ duration: 0.4 }}
-          className="text-2xl font-bold"
+          className="text-[28px] font-bold"
           style={{ color: theme.pink }}
         >
           — {author}
@@ -83,7 +83,7 @@ export const QuotePage: React.FC<{
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: frame >= bContext ? 1 : 0, y: frame >= bContext ? 0 : 16 }}
           transition={{ duration: 0.4 }}
-          className="text-2xl leading-relaxed max-w-[1200px]"
+          className="text-[28px] leading-relaxed max-w-[1200px]"
           style={{ color: theme.muted }}
         >
           {context}

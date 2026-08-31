@@ -93,7 +93,7 @@ export const SceneShell: React.FC<{ kicker: string; title: string; themeName?: s
       }}
     >
       <div className="shrink-0">
-        <div className="text-lg tracking-[0.2em] text-slate-400 font-bold">{kicker}</div>
+        <div className="text-2xl tracking-[0.2em] text-slate-400 font-bold">{kicker}</div>
         <div className="mt-3 text-5xl font-extrabold leading-tight text-white">{title}</div>
       </div>
       <div className="flex-1 min-h-0 mt-8 relative">{children}</div>
@@ -138,7 +138,7 @@ export const HeroWordPage: React.FC<{
               <Badge
                 key={tag}
                 variant="outline"
-                className="rounded-full border px-6 py-3 text-xl font-bold"
+                className="rounded-full border px-6 py-3 text-2xl font-bold"
                 style={{
                   background: theme.panel,
                   color: i === 0 ? theme.blue : i === 1 ? theme.green : theme.gold,
@@ -192,7 +192,7 @@ export const OriginChainPage: React.FC<{
                   <div className="text-3xl font-black text-center" style={{ color: node.color }}>
                     {node.label}
                   </div>
-                  <div className="mt-3 text-lg text-slate-400 text-center leading-relaxed">
+                  <div className="mt-3 text-2xl text-slate-300 text-center leading-relaxed font-medium">
                     {node.note}
                   </div>
                 </Card>
