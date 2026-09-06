@@ -9,6 +9,8 @@ services:
     ports:
       - "3980:3990"
       - "3990:3990"
+    environment:
+      - PORT=3990
     env_file:
       - .env
     volumes:

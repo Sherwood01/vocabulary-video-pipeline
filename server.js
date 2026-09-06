@@ -470,7 +470,7 @@ const server = http.createServer((req, res) => {
   }
 });
 
-server.listen(PORT, () => {
+server.listen(PORT, "0.0.0.0", () => {
   console.log(`==================================================`);
   console.log(` Vocabulary Video Pipeline Server Running!`);
   console.log(` Web UI: http://localhost:${PORT}`);
