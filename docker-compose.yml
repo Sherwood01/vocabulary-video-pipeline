@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: vocab-video-pipeline
     ports:
-      - "3980:3980"
+      - "3990:3990"
     env_file:
       - .env
     volumes:

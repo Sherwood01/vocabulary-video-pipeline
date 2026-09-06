@@ -3,7 +3,7 @@ const path = require("path");
 const fs = require("fs");
 const { spawn } = require("child_process");
 
-const PORT = process.env.PORT || 3980;
+const PORT = process.env.PORT || 3990;
 
 // Ensure directories exist
 const DOWNLOADS_DIR = path.join(__dirname, "downloads");
@@ -234,6 +234,17 @@ const MIME_TYPES = {
 
 // HTTP Server
 const server = http.createServer((req, res) => {
+  // CORS Headers for WeChat Mini Program & Web Cross-Origin Requests
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, DELETE");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+  if (req.method === "OPTIONS") {
+    res.writeHead(204);
+    res.end();
+    return;
+  }
+
   const parsedUrl = new URL(req.url, `http://${req.headers.host || "localhost"}`);
   const pathname = parsedUrl.pathname;
 
@@ -257,6 +268,27 @@ const server = http.createServer((req, res) => {
         const cleanWord = word.trim().toLowerCase().replace(/[^a-z0-9_-]/gi, "");
         if (!cleanWord) {
           return sendJson({ error: "Invalid word provided." }, 400);
+        }
+
+        // Check if video file is already generated and shared in renders/
+        const existingFiles = fs.existsSync(RENDERS_DIR) ? fs.readdirSync(RENDERS_DIR) : [];
+        const cachedVideo = existingFiles.find((f) => f.toLowerCase().startsWith(cleanWord) && f.endsWith(".mp4"));
+        if (cachedVideo) {
+          const cachedTask = {
+            id: `cached_${cleanWord}`,
+            word: cleanWord,
+            status: "completed",
+            stage: "Video Ready (Cached)",
+            progress: 100,
+            cached: true,
+            videoPath: path.join(RENDERS_DIR, cachedVideo),
+            playUrl: `/renders/${encodeURIComponent(cachedVideo)}`,
+            downloadUrl: `/api/download-file/${encodeURIComponent(cachedVideo)}`,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          };
+          tasks.set(cachedTask.id, cachedTask);
+          return sendJson({ taskId: cachedTask.id, message: "Cached video available instantly.", task: cachedTask });
         }
 
         const taskId = `task_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;

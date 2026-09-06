@@ -48,7 +48,7 @@ RUN pip3 install --no-cache-dir pydub requests --break-system-packages || pip3 i
 RUN mkdir -p data renders downloads public
 
 # Expose Web Server port
-EXPOSE 3980
+EXPOSE 3990
 
 # Start Express server
 CMD ["node", "server.js"]
