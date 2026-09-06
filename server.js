@@ -453,7 +453,10 @@ const server = http.createServer((req, res) => {
   }
 
   // Serve Public Static Files
-  const reqPath = pathname === "/" ? "/index.html" : pathname;
+  let reqPath = pathname === "/" ? "/index.html" : pathname;
+  if (reqPath.startsWith("/public/")) {
+    reqPath = reqPath.replace("/public/", "/");
+  }
   const filePath = path.join(PUBLIC_DIR, reqPath);
 
   if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
