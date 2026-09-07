@@ -650,7 +650,6 @@
 
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<span>Submitting...</span>';
-      cancelFormBtn.style.display = 'inline-block';
       downloadArea.style.display = 'none';
 
       try {
@@ -702,7 +701,6 @@
             clearInterval(pollTimer);
             localStorage.removeItem('pendingWebTask');
             submitBtn.disabled = false;
-            cancelFormBtn.style.display = 'none';
             submitBtn.innerHTML = '<span>Generate Video</span>';
             fetchVideos(); // Refresh library count on finish
           }
