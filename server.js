@@ -350,19 +350,18 @@ const server = http.createServer((req, res) => {
           queue.splice(qIndex, 1);
         }
 
-        // If running, kill child process
-        if (task.child) {
-          try {
-            if (process.platform === "win32") {
-              spawn("taskkill", ["/pid", task.child.pid, "/f", "/t"]);
-            } else {
-              task.child.kill("SIGKILL");
-            }
-          } catch (killErr) {
-            console.error(`[CANCEL] Failed to kill child process: ${killErr.message}`);
+        // If running or queued, kill child process tree reliably
+        try {
+          if (process.platform === "win32") {
+            if (task.child) spawn("taskkill", ["/pid", task.child.pid, "/f", "/t"]);
+          } else {
+            // Linux / Docker: Kill Python, Remotion, and Chromium processes for this word
+            spawn("sh", ["-c", `pkill -9 -f "${task.word}" 2>/dev/null || (test -n "${task.child ? task.child.pid : ''}" && kill -9 ${task.child ? task.child.pid : ''}) 2>/dev/null || true`]);
           }
-          task.child = null;
+        } catch (killErr) {
+          console.error(`[CANCEL] Failed to kill child process: ${killErr.message}`);
         }
+        task.child = null;
 
         task.status = "cancelled";
         task.stage = "Cancelled by User";
