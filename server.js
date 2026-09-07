@@ -127,6 +127,8 @@ async function processQueue() {
     env: { ...process.env, PYTHONIOENCODING: "utf-8" },
   });
 
+  task.child = child;
+
   child.stdout.on("data", (data) => {
     parseLogsAndProgress(task, data.toString("utf-8"));
   });
@@ -136,6 +138,11 @@ async function processQueue() {
   });
 
   child.on("close", async (code) => {
+    if (task.status === "cancelled") {
+      task.child = null;
+      return;
+    }
+    task.child = null;
     if (code === 0) {
       task.progress = 95;
       appendLog(task, `[SYSTEM] Pipeline finished successfully. Locating MP4 video...`);
@@ -313,6 +320,63 @@ const server = http.createServer((req, res) => {
         processQueue();
 
         sendJson({ taskId, message: "Task successfully queued.", task: newTask });
+      } catch (e) {
+        sendJson({ error: "Invalid JSON body" }, 400);
+      }
+    });
+    return;
+  }
+
+  // API: Cancel Running or Queued Task
+  if (req.method === "POST" && pathname === "/api/cancel") {
+    let body = "";
+    req.on("data", (chunk) => (body += chunk));
+    req.on("end", () => {
+      try {
+        const payload = JSON.parse(body || "{}");
+        const taskId = payload.taskId;
+        if (!taskId || !tasks.has(taskId)) {
+          return sendJson({ error: "Task not found." }, 400);
+        }
+
+        const task = tasks.get(taskId);
+        if (task.status === "completed" || task.status === "failed" || task.status === "cancelled") {
+          return sendJson({ message: `Task already in ${task.status} state.`, task });
+        }
+
+        // If in queue, remove from queue
+        const qIndex = queue.indexOf(taskId);
+        if (qIndex !== -1) {
+          queue.splice(qIndex, 1);
+        }
+
+        // If running, kill child process
+        if (task.child) {
+          try {
+            if (process.platform === "win32") {
+              spawn("taskkill", ["/pid", task.child.pid, "/f", "/t"]);
+            } else {
+              task.child.kill("SIGKILL");
+            }
+          } catch (killErr) {
+            console.error(`[CANCEL] Failed to kill child process: ${killErr.message}`);
+          }
+          task.child = null;
+        }
+
+        task.status = "cancelled";
+        task.stage = "Cancelled by User";
+        task.error = "Task was cancelled by user.";
+        task.updatedAt = new Date().toISOString();
+
+        cleanupTaskFiles(task);
+
+        if (isProcessing) {
+          isProcessing = false;
+          processQueue();
+        }
+
+        sendJson({ success: true, message: "Task successfully cancelled.", task });
       } catch (e) {
         sendJson({ error: "Invalid JSON body" }, 400);
       }

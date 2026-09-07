@@ -487,6 +487,13 @@
       <!-- Real-time Terminal Log Window -->
       <div class="terminal-box" id="terminalLog"></div>
 
+      <!-- Cancel Task Button -->
+      <div style="margin-top: 0.75rem; display: flex; justify-content: flex-end;" id="cancelBtnWrapper">
+        <button id="cancelTaskBtn" style="background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); padding: 0.4rem 1rem; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.85rem; transition: all 0.2s ease;">
+          🛑 Cancel Task
+        </button>
+      </div>
+
       <!-- Output Actions Area -->
       <div class="download-area" id="downloadArea">
         <h3 style="color: #4ade80; margin-bottom: 0.25rem;">🎉 Video Generated Successfully!</h3>
@@ -551,6 +558,9 @@
     const downloadBtn = document.getElementById('downloadBtn');
     const mainPreviewBtn = document.getElementById('mainPreviewBtn');
 
+    const cancelTaskBtn = document.getElementById('cancelTaskBtn');
+    const cancelBtnWrapper = document.getElementById('cancelBtnWrapper');
+
     const openLibraryBtn = document.getElementById('openLibraryBtn');
     const closeLibraryBtn = document.getElementById('closeLibraryBtn');
     const libraryModal = document.getElementById('libraryModal');
@@ -565,6 +575,33 @@
     let currentTaskId = null;
     let pollTimer = null;
     let currentTaskPlayUrl = null;
+
+    cancelTaskBtn.addEventListener('click', async () => {
+      if (!currentTaskId) return;
+      if (!confirm('Are you sure you want to cancel the current video generation task?')) return;
+
+      try {
+        cancelTaskBtn.disabled = true;
+        cancelTaskBtn.textContent = 'Cancelling...';
+        await fetch('/api/cancel', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ taskId: currentTaskId })
+        });
+      } catch (e) {
+        console.error('Cancel error:', e);
+      } finally {
+        if (pollTimer) clearInterval(pollTimer);
+        localStorage.removeItem('pendingWebTask');
+        currentTaskId = null;
+        statusPanel.style.display = 'none';
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span>Generate Video</span>';
+        cancelTaskBtn.disabled = false;
+        cancelTaskBtn.textContent = '🛑 Cancel Task';
+        alert('Task has been cancelled.');
+      }
+    });
 
     // Load initial Library Count and check pending tasks
     fetchVideos();
