@@ -566,8 +566,45 @@
     let pollTimer = null;
     let currentTaskPlayUrl = null;
 
-    // Load initial Library Count
+    // Load initial Library Count and check pending tasks
     fetchVideos();
+    checkPendingWebTask();
+
+    async function checkPendingWebTask() {
+      try {
+        const saved = localStorage.getItem('pendingWebTask');
+        if (!saved) return;
+        const pending = JSON.parse(saved);
+        if (!pending || !pending.taskId) return;
+
+        const res = await fetch(`/api/status/${pending.taskId}`);
+        if (!res.ok) {
+          localStorage.removeItem('pendingWebTask');
+          return;
+        }
+
+        const task = await res.json();
+        if (task.status === 'queued' || task.status === 'running') {
+          currentTaskId = pending.taskId;
+          targetWordTitle.textContent = `Word: "${pending.word || task.word}" (Resumed Task)`;
+          statusPanel.style.display = 'flex';
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = '<span>Rendering in background...</span>';
+          updateUI(task);
+          startPolling(pending.taskId);
+        } else if (task.status === 'completed') {
+          localStorage.removeItem('pendingWebTask');
+          currentTaskId = pending.taskId;
+          targetWordTitle.textContent = `Word: "${pending.word || task.word}"`;
+          statusPanel.style.display = 'flex';
+          updateUI(task);
+        } else {
+          localStorage.removeItem('pendingWebTask');
+        }
+      } catch (err) {
+        console.error('Check Pending Web Task Error:', err);
+      }
+    }
 
     genForm.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -598,6 +635,12 @@
         statusPanel.style.display = 'flex';
         terminalLog.textContent = '';
 
+        if (data.task && data.task.status === 'completed') {
+          localStorage.removeItem('pendingWebTask');
+        } else {
+          localStorage.setItem('pendingWebTask', JSON.stringify({ taskId: currentTaskId, word: word }));
+        }
+
         startPolling(currentTaskId);
       } catch (err) {
         alert('Network error: ' + err.message);
@@ -619,6 +662,7 @@
 
           if (task.status === 'completed' || task.status === 'failed') {
             clearInterval(pollTimer);
+            localStorage.removeItem('pendingWebTask');
             submitBtn.disabled = false;
             submitBtn.innerHTML = '<span>Generate Video</span>';
             fetchVideos(); // Refresh library count on finish
