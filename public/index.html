@@ -467,9 +467,6 @@
           <button type="submit" id="submitBtn" class="btn-primary">
             <span>Generate Video</span>
           </button>
-          <button type="button" id="cancelFormBtn" style="display:none; background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 12px; padding: 0 1.25rem; font-size: 0.95rem; font-weight: 600; cursor: pointer; white-space: nowrap;">
-            🛑 Cancel
-          </button>
         </div>
       </form>
     </div>
@@ -562,7 +559,6 @@
     const mainPreviewBtn = document.getElementById('mainPreviewBtn');
 
     const cancelTaskBtn = document.getElementById('cancelTaskBtn');
-    const cancelFormBtn = document.getElementById('cancelFormBtn');
     const cancelBtnWrapper = document.getElementById('cancelBtnWrapper');
 
     const openLibraryBtn = document.getElementById('openLibraryBtn');
@@ -580,15 +576,13 @@
     let pollTimer = null;
     let currentTaskPlayUrl = null;
 
-    async function handleCancelTask() {
+    cancelTaskBtn.addEventListener('click', async () => {
       if (!currentTaskId) return;
       if (!confirm('Are you sure you want to cancel the current video generation task?')) return;
 
       try {
         cancelTaskBtn.disabled = true;
-        cancelFormBtn.disabled = true;
         cancelTaskBtn.textContent = 'Cancelling...';
-        cancelFormBtn.textContent = 'Cancelling...';
         await fetch('/api/cancel', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -601,19 +595,13 @@
         localStorage.removeItem('pendingWebTask');
         currentTaskId = null;
         statusPanel.style.display = 'none';
-        cancelFormBtn.style.display = 'none';
         submitBtn.disabled = false;
         submitBtn.innerHTML = '<span>Generate Video</span>';
         cancelTaskBtn.disabled = false;
-        cancelFormBtn.disabled = false;
         cancelTaskBtn.textContent = '🛑 Cancel Task';
-        cancelFormBtn.textContent = '🛑 Cancel';
         alert('Task has been cancelled.');
       }
-    }
-
-    cancelTaskBtn.addEventListener('click', handleCancelTask);
-    cancelFormBtn.addEventListener('click', handleCancelTask);
+    });
 
     // Load initial Library Count and check pending tasks
     fetchVideos();
@@ -637,7 +625,6 @@
           currentTaskId = pending.taskId;
           targetWordTitle.textContent = `Word: "${pending.word || task.word}" (Resumed Task)`;
           statusPanel.style.display = 'flex';
-          cancelFormBtn.style.display = 'inline-block';
           submitBtn.disabled = true;
           submitBtn.innerHTML = '<span>Rendering in background...</span>';
           updateUI(task);
@@ -647,7 +634,6 @@
           currentTaskId = pending.taskId;
           targetWordTitle.textContent = `Word: "${pending.word || task.word}"`;
           statusPanel.style.display = 'flex';
-          cancelFormBtn.style.display = 'none';
           updateUI(task);
         } else {
           localStorage.removeItem('pendingWebTask');
