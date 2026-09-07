@@ -328,7 +328,7 @@ const server = http.createServer((req, res) => {
   }
 
   // API: Cancel Running or Queued Task
-  if (req.method === "POST" && pathname === "/api/cancel") {
+  if (req.method === "POST" && (pathname === "/api/cancel" || pathname === "/api/cancel/")) {
     let body = "";
     req.on("data", (chunk) => (body += chunk));
     req.on("end", () => {
