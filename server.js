@@ -1,7 +1,7 @@
 const http = require("http");
 const path = require("path");
 const fs = require("fs");
-const { spawn } = require("child_process");
+const { spawn, exec } = require("child_process");
 
 const PORT = process.env.PORT || 3990;
 
@@ -335,48 +335,56 @@ const server = http.createServer((req, res) => {
       try {
         const payload = JSON.parse(body || "{}");
         const taskId = payload.taskId;
-        if (!taskId || !tasks.has(taskId)) {
-          return sendJson({ error: "Task not found." }, 400);
+        const rawWord = payload.word;
+        console.log(`[CANCEL API] Received cancel request for taskId: "${taskId}", word: "${rawWord}"`);
+
+        // Find task by taskId or by word
+        let task = taskId ? tasks.get(taskId) : null;
+        if (!task && rawWord) {
+          const cleanWord = rawWord.trim().toLowerCase();
+          task = Array.from(tasks.values()).find(t => t.word === cleanWord && (t.status === 'running' || t.status === 'queued'));
         }
 
-        const task = tasks.get(taskId);
-        if (task.status === "completed" || task.status === "failed" || task.status === "cancelled") {
-          return sendJson({ message: `Task already in ${task.status} state.`, task });
+        const targetWord = task ? task.word : (rawWord ? rawWord.trim().toLowerCase() : "");
+        const targetTaskId = task ? task.id : taskId;
+
+        if (task) {
+          task.status = "cancelled";
+          task.stage = "Cancelled by User";
+          task.error = "Task was cancelled by user.";
+          task.updatedAt = new Date().toISOString();
+          cleanupTaskFiles(task);
         }
 
-        // If in queue, remove from queue
-        const qIndex = queue.indexOf(taskId);
-        if (qIndex !== -1) {
-          queue.splice(qIndex, 1);
+        if (targetTaskId) {
+          const qIndex = queue.indexOf(targetTaskId);
+          if (qIndex !== -1) queue.splice(qIndex, 1);
         }
 
-        // If running or queued, kill child process tree reliably
-        try {
-          if (process.platform === "win32") {
-            if (task.child) spawn("taskkill", ["/pid", task.child.pid, "/f", "/t"]);
-          } else {
-            // Linux / Docker: Kill Python, Remotion, and Chromium processes for this word
-            spawn("sh", ["-c", `pkill -9 -f "${task.word}" 2>/dev/null || (test -n "${task.child ? task.child.pid : ''}" && kill -9 ${task.child ? task.child.pid : ''}) 2>/dev/null || true`]);
+        // Always execute kill command on OS for targetWord or active pipeline script
+        if (process.platform === "win32") {
+          if (task && task.child) {
+            spawn("taskkill", ["/pid", task.child.pid, "/f", "/t"]);
           }
-        } catch (killErr) {
-          console.error(`[CANCEL] Failed to kill child process: ${killErr.message}`);
+        } else {
+          const killCmd = targetWord
+            ? `pkill -9 -f "${targetWord}" 2>/dev/null || pkill -9 -f "pipeline.py" 2>/dev/null || true`
+            : `pkill -9 -f "pipeline.py" 2>/dev/null || true`;
+
+          console.log(`[CANCEL API] Executing kill command: ${killCmd}`);
+          exec(killCmd, (err, stdout, stderr) => {
+            console.log(`[CANCEL API] Kill command finished. stdout: "${stdout.trim()}", stderr: "${stderr.trim()}"`);
+          });
         }
-        task.child = null;
-
-        task.status = "cancelled";
-        task.stage = "Cancelled by User";
-        task.error = "Task was cancelled by user.";
-        task.updatedAt = new Date().toISOString();
-
-        cleanupTaskFiles(task);
 
         if (isProcessing) {
           isProcessing = false;
           processQueue();
         }
 
-        sendJson({ success: true, message: "Task successfully cancelled.", task });
+        sendJson({ success: true, message: "Task successfully cancelled.", taskId: targetTaskId, word: targetWord });
       } catch (e) {
+        console.error("[CANCEL API ERROR]", e);
         sendJson({ error: "Invalid JSON body" }, 400);
       }
     });

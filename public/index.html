@@ -586,7 +586,7 @@
         await fetch('/api/cancel', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ taskId: currentTaskId })
+          body: JSON.stringify({ taskId: currentTaskId, word: (wordInput.value || '').trim() })
         });
       } catch (e) {
         console.error('Cancel error:', e);
