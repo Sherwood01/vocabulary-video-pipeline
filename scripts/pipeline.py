@@ -13,9 +13,9 @@ import re
 from pathlib import Path
 
 if hasattr(sys.stdout, 'reconfigure'):
-    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stdout.reconfigure(encoding='utf-8', line_buffering=True)
 if hasattr(sys.stderr, 'reconfigure'):
-    sys.stderr.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8', line_buffering=True)
 
 PROJECT_ROOT = Path(__file__).parent.parent.resolve()
 
@@ -126,6 +126,8 @@ def run_step(name: str, cmd: list[str], cwd: Path = PROJECT_ROOT):
     print('='*50)
 
     env = os.environ.copy()
+    env["PYTHONUNBUFFERED"] = "1"
+    env["PYTHONIOENCODING"] = "utf-8"
     node_path = str(cwd / "node_modules")
     if "NODE_PATH" in env and env["NODE_PATH"]:
         env["NODE_PATH"] = f"{node_path}{os.pathsep}{env['NODE_PATH']}"
@@ -163,7 +165,7 @@ def main():
     # Step 1: Generate draft with diagnose_word.py
     success = run_step(
         "Step 1: Diagnose word & generate draft",
-        [sys.executable, "scripts/diagnose_word.py", "--word", word]
+        [sys.executable, "-u", "scripts/diagnose_word.py", "--word", word]
     )
     if not success:
         sys.exit(1)
@@ -176,7 +178,7 @@ def main():
     # Step 2: Generate audio and beats
     success = run_step(
         "Step 2: Generate TTS audio & beats",
-        [sys.executable, "scripts/generate_audio_beats.py", "--input", str(draft_path)]
+        [sys.executable, "-u", "scripts/generate_audio_beats.py", "--input", str(draft_path)]
     )
     if not success:
         sys.exit(1)

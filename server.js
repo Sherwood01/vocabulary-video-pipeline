@@ -124,7 +124,7 @@ async function processQueue() {
   const child = spawn(pythonCmd, [pipelineScript, "--word", `"${task.word}"`], {
     cwd: __dirname,
     shell: true,
-    env: { ...process.env, PYTHONIOENCODING: "utf-8" },
+    env: { ...process.env, PYTHONIOENCODING: "utf-8", PYTHONUNBUFFERED: "1" },
   });
 
   task.child = child;
@@ -166,6 +166,20 @@ async function processQueue() {
         task.stage = "Video Ready for Download";
         task.progress = 100;
         task.completedAt = new Date().toISOString();
+
+        // 注入精准草稿数据，供客户端生成精确章节打点
+        const beatsJsonPath = path.join(DATA_DIR, `${task.word}-draft-with-beats.json`);
+        const fallbackDraftPath = path.join(DATA_DIR, `${task.word}-draft.json`);
+        const targetDraft = fs.existsSync(beatsJsonPath) ? beatsJsonPath : (fs.existsSync(fallbackDraftPath) ? fallbackDraftPath : null);
+        if (targetDraft) {
+          try {
+            task.draft = JSON.parse(fs.readFileSync(targetDraft, "utf-8"));
+            task.draftUrl = `/api/download-file/${encodeURIComponent(path.basename(targetDraft))}`;
+          } catch (e) {
+            console.error("Failed to parse draft JSON:", e);
+          }
+        }
+
         appendLog(task, `[SYSTEM] MP4 Video ready: ${finalVideoName}. Direct download available.`);
       } else {
         task.status = "failed";
@@ -205,26 +219,97 @@ function appendLog(task, message) {
 }
 
 function parseLogsAndProgress(task, text) {
-  appendLog(task, text);
+  const lines = text.split("\n");
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (!line) continue;
 
-  if (text.includes("Step 1") || text.includes("diagnose_word")) {
-    task.stage = "Step 1: Diagnosing Word & Draft";
-    task.progress = Math.max(task.progress, 15);
-  } else if (text.includes("Step 2") || text.includes("generate_audio_beats")) {
-    task.stage = "Step 2: Generating TTS Audio & Beats";
-    task.progress = Math.max(task.progress, 40);
-  } else if (text.includes("Step 3") || text.includes("remotion render")) {
-    task.stage = "Step 3: Rendering Remotion Video";
-    task.progress = Math.max(task.progress, 65);
-  }
+    // 1. 逐帧渲染进度统计与节流
+    const frameMatch = line.match(/Rendered (\d+)\/(\d+)/i) || line.match(/Frame (\d+)\/(\d+)/i);
+    if (frameMatch) {
+      const current = parseInt(frameMatch[1], 10);
+      const total = parseInt(frameMatch[2], 10);
+      if (total > 0) {
+        const percent = Math.floor((current / total) * 100);
+        const renderProgress = Math.floor((current / total) * 25);
+        task.progress = Math.min(95, 65 + renderProgress);
 
-  const frameMatch = text.match(/Rendered (\d+)\/(\d+)/i) || text.match(/Frame (\d+)\/(\d+)/i);
-  if (frameMatch) {
-    const current = parseInt(frameMatch[1], 10);
-    const total = parseInt(frameMatch[2], 10);
-    if (total > 0) {
-      const renderProgress = Math.floor((current / total) * 25);
-      task.progress = Math.min(95, 65 + renderProgress);
+        task._lastLoggedPercent = task._lastLoggedPercent || 0;
+        if (percent >= task._lastLoggedPercent + 20 || current === total) {
+          task._lastLoggedPercent = percent;
+          appendLog(task, `[RENDER] Progress: ${percent}% (${current}/${total} frames)`);
+        }
+      }
+      continue;
+    }
+
+    // 2. 拦截并精简 Copying public dir（上百行逐 MB 输出）
+    const copyMatch = line.match(/Copying public dir\s+([\d.]+\s*MB)/i);
+    if (copyMatch) {
+      task._lastCopiedSize = copyMatch[1];
+      continue;
+    } else if (task._lastCopiedSize) {
+      appendLog(task, `[BUNDLE] Copied public assets: ${task._lastCopiedSize}`);
+      task._lastCopiedSize = null;
+    }
+
+    // 3. 拦截 Bundling X% 逐百分比刷屏，仅在 100% 时通知
+    const bundleMatch = line.match(/Bundling\s+(\d+)%/i);
+    if (bundleMatch) {
+      if (bundleMatch[1] === "100" && !task._bundledNotified) {
+        task._bundledNotified = true;
+        appendLog(task, `[BUNDLE] Assets bundled successfully (100%)`);
+      }
+      continue;
+    }
+
+    // 4. 过滤 Remotion 内部的小版本不一致与 npm 升级警告（40+ 行垃圾噪音）
+    if (
+      line.includes("Version mismatch:") ||
+      line.includes("Extra packages with wrong versions:") ||
+      line.includes("See: https://www.remotion.dev") ||
+      line.includes("To resolve:") ||
+      line.includes("Make sure your package.json") ||
+      line.includes("Remove the `^`") ||
+      line.includes("Run `npx remotion") ||
+      line.startsWith("- @remotion/") ||
+      line.startsWith("- zod:") ||
+      line.startsWith("npm notice") ||
+      line.startsWith("-------------")
+    ) {
+      continue;
+    }
+
+    // 5. 精炼 Remotion 耗时结算清单（Rendered frames ━━━━━ 106483ms 等）
+    const renderedFramesMs = line.match(/Rendered frames\s+[━-]+\s*(\d+)ms/i);
+    if (renderedFramesMs) {
+      task._renderedMs = renderedFramesMs[1];
+      continue;
+    }
+    const encodedVideoMs = line.match(/Encoded video\s+[━-]+\s*(\d+)ms/i);
+    if (encodedVideoMs) {
+      const renderSec = task._renderedMs ? (parseInt(task._renderedMs, 10) / 1000).toFixed(1) : "?";
+      const encodeSec = (parseInt(encodedVideoMs[1], 10) / 1000).toFixed(1);
+      appendLog(task, `[RENDER] Video encoding complete (Render: ${renderSec}s, Encode: ${encodeSec}s)`);
+      task._renderedMs = null;
+      continue;
+    }
+    if (line.includes("Downloaded assets") && line.includes("━")) {
+      continue;
+    }
+
+    // 6. 正常业务步骤、文案生成、TTS 及错误信息原样即时记录
+    appendLog(task, line);
+
+    if (line.includes("Step 1") || line.includes("diagnose_word")) {
+      task.stage = "Step 1: Diagnosing Word & Draft";
+      task.progress = Math.max(task.progress, 15);
+    } else if (line.includes("Step 2") || line.includes("generate_audio_beats")) {
+      task.stage = "Step 2: Generating TTS Audio & Beats";
+      task.progress = Math.max(task.progress, 40);
+    } else if (line.includes("Step 3") || line.includes("remotion render")) {
+      task.stage = "Step 3: Rendering Remotion Video";
+      task.progress = Math.max(task.progress, 65);
     }
   }
 }
@@ -294,6 +379,19 @@ const server = http.createServer((req, res) => {
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
           };
+
+          const beatsJsonPath = path.join(DATA_DIR, `${cleanWord}-draft-with-beats.json`);
+          const fallbackDraftPath = path.join(DATA_DIR, `${cleanWord}-draft.json`);
+          const targetDraft = fs.existsSync(beatsJsonPath) ? beatsJsonPath : (fs.existsSync(fallbackDraftPath) ? fallbackDraftPath : null);
+          if (targetDraft) {
+            try {
+              cachedTask.draft = JSON.parse(fs.readFileSync(targetDraft, "utf-8"));
+              cachedTask.draftUrl = `/api/download-file/${encodeURIComponent(path.basename(targetDraft))}`;
+            } catch (e) {
+              console.error("Failed to parse draft JSON for cached task:", e);
+            }
+          }
+
           tasks.set(cachedTask.id, cachedTask);
           return sendJson({ taskId: cachedTask.id, message: "Cached video available instantly.", task: cachedTask });
         }
@@ -432,17 +530,20 @@ const server = http.createServer((req, res) => {
     }
   }
 
-  // API: Direct Video Download by FileName (Permanent, no auto-cleanup)
+  // API: Direct File Download by FileName (mp4 from renders, json from data)
   if (req.method === "GET" && pathname.startsWith("/api/download-file/")) {
     const fileName = decodeURIComponent(pathname.replace("/api/download-file/", ""));
-    const fullPath = path.join(RENDERS_DIR, fileName);
+    const isJson = fileName.toLowerCase().endsWith(".json");
+    const targetDir = isJson ? DATA_DIR : RENDERS_DIR;
+    const fullPath = path.join(targetDir, fileName);
     if (!fs.existsSync(fullPath)) {
-      return sendJson({ error: "Video file not found." }, 404);
+      return sendJson({ error: `File ${fileName} not found.` }, 404);
     }
 
     const stat = fs.statSync(fullPath);
+    const contentType = isJson ? "application/json; charset=utf-8" : "video/mp4";
     res.writeHead(200, {
-      "Content-Type": "video/mp4",
+      "Content-Type": contentType,
       "Content-Length": stat.size,
       "Content-Disposition": `attachment; filename="${fileName}"`,
     });

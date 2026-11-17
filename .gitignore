@@ -28,3 +28,11 @@ Claude.mp4
 
 *.log
 downloads/
+
+# Python cache & temp
+__pycache__/
+*.pyc
+
+# Local Database
+data/saas_db.json
+

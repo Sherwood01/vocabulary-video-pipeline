@@ -8,20 +8,30 @@ if sys.platform == "win32":
     import os
     os.environ.setdefault("PYTHONIOENCODING", "utf-8")
     import io
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
-    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace", line_buffering=True)
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace", line_buffering=True)
+else:
+    if hasattr(sys.stdout, 'reconfigure'):
+        sys.stdout.reconfigure(line_buffering=True)
+    if hasattr(sys.stderr, 'reconfigure'):
+        sys.stderr.reconfigure(line_buffering=True)
 
 import argparse
 import json
 import os
 import sys
 import urllib3
+import urllib3.util.connection as urllib3_cn
+import socket
 from pathlib import Path
 
 import requests
 
 # 禁用 SSL 警告
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+# 强制 urllib3 使用 IPv4，避免 Linux Docker 容器内 IPv6 路由黑洞导致 SSL 握手挂起
+urllib3_cn.allowed_gai_family = lambda: socket.AF_INET
 
 # 加载 .env 文件
 def load_env():
@@ -43,10 +53,18 @@ RED = "\033[31m"
 RESET = "\033[0m"
 BOLD = "\033[1m"
 
-# 多供应商 LLM 配置解析 (支持 LMSTUDIO / OLLAMA / OPENAI / DEEPSEEK)
+# 多供应商 LLM 配置解析 (支持 GLM / GEMINI / LMSTUDIO / OLLAMA / OPENAI / DEEPSEEK)
 LLM_PROVIDER = os.environ.get("LLM", "LMSTUDIO").upper()
 
-if LLM_PROVIDER == "LMSTUDIO":
+if LLM_PROVIDER in ["GLM", "ZHIPU"]:
+    LLM_BASE_URL = os.environ.get("GLM_BASE_URL", "https://open.bigmodel.cn/api/paas/v4/chat/completions")
+    LLM_API_KEY = os.environ.get("GLM_API_KEY", "")
+    LLM_MODEL = os.environ.get("GLM_MODEL", "glm-5.3-flash")
+elif LLM_PROVIDER == "GEMINI":
+    LLM_BASE_URL = os.environ.get("GEMINI_BASE_URL", "https://generativelanguage.googleapis.com/v1beta/openai")
+    LLM_API_KEY = os.environ.get("GEMINI_API_KEY", "")
+    LLM_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.1-flash-lite")
+elif LLM_PROVIDER == "LMSTUDIO":
     LLM_BASE_URL = os.environ.get("LMSTUDIO_BASE_URL", "http://localhost:1234/v1")
     LLM_API_KEY = os.environ.get("LMSTUDIO_API_KEY", "lm-studio")
     LLM_MODEL = os.environ.get("LMSTUDIO_MODEL", "qwen3.5-9b-claude-4.6-opus-reasoning-distilled-v2")
@@ -278,7 +296,7 @@ def get_chat_endpoint(base_url: str) -> str:
 
 
 def call_llm(prompt: str, retries: int = 3) -> str:
-    """通用 LLM API 调用方法 (支持 LMStudio / Ollama / OpenAI / DeepSeek)"""
+    """通用 LLM API 调用方法 (支持 Gemini / LMStudio / Ollama / OpenAI / DeepSeek)"""
     import time
 
     endpoint = get_chat_endpoint(LLM_BASE_URL)
@@ -287,6 +305,8 @@ def call_llm(prompt: str, retries: int = 3) -> str:
     }
     if LLM_API_KEY:
         headers["Authorization"] = f"Bearer {LLM_API_KEY}"
+        if LLM_PROVIDER == "GEMINI":
+            headers["x-goog-api-key"] = LLM_API_KEY
 
     payload = {
         "model": LLM_MODEL,
@@ -297,23 +317,35 @@ def call_llm(prompt: str, retries: int = 3) -> str:
         "stream": False
     }
 
+    # 模型推理思考等级配置（必须控制在 low/minimal，避免深度思考耗时过长及截断输出）
+    if LLM_PROVIDER == "GEMINI":
+        payload["reasoning_effort"] = os.environ.get("GEMINI_REASONING_EFFORT", "minimal")
+    elif LLM_PROVIDER in ["GLM", "ZHIPU"]:
+        payload["reasoning_effort"] = os.environ.get("GLM_REASONING_EFFORT", "low")
+
     for attempt in range(retries):
         try:
             response = requests.post(
                 endpoint,
                 headers=headers,
                 json=payload,
-                timeout=180,
+                timeout=60,
                 verify=False
             )
 
             if response.status_code == 200:
                 result = response.json()
                 content = ""
-                # 兼容标准 OpenAI/LMStudio API 格式
+                # 兼容标准 OpenAI/Gemini/LMStudio API 格式
                 if "choices" in result and len(result["choices"]) > 0:
                     choice = result["choices"][0]
                     content = choice.get("message", {}).get("content", "")
+                # 兼容原生 Gemini 格式
+                elif "candidates" in result and len(result["candidates"]) > 0:
+                    candidate = result["candidates"][0]
+                    parts = candidate.get("content", {}).get("parts", [])
+                    if parts:
+                        content = parts[0].get("text", "")
                 # 兼容原生的 Ollama 响应格式
                 elif "message" in result:
                     content = result.get("message", {}).get("content", "")

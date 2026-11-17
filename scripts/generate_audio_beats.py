@@ -6,7 +6,13 @@ TTS + 音频静默检测 beats 生成器
 """
 
 import os
+import sys
 from pathlib import Path
+
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8', line_buffering=True)
+if hasattr(sys.stderr, 'reconfigure'):
+    sys.stderr.reconfigure(encoding='utf-8', line_buffering=True)
 
 # 加载 .env 文件
 env_path = Path(__file__).parent.parent.resolve() / ".env"

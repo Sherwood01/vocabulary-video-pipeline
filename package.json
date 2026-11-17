@@ -39,6 +39,7 @@
   "scripts": {
     "dev": "remotion studio",
     "build": "remotion bundle",
+    "worker": "node worker-server.js",
     "upgrade": "remotion upgrade",
     "lint": "eslint src && tsc",
     "diagnose:word": "py scripts/diagnose_word.py",
